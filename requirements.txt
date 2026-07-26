@@ -1,0 +1,73 @@
+========================================================================
+                      STUDYFLOW (TASKFLOW) SYSTEM REQUIREMENTS
+========================================================================
+
+Để chạy dự án StudyFlow (TaskFlow) trên một máy tính mới, bạn cần cài đặt các môi trường
+và thực hiện các bước cài đặt dưới đây.
+
+------------------------------------------------------------------------
+1. YÊU CẦU PHẦN MỀM & MÔI TRƯỜNG (PREREQUISITES)
+------------------------------------------------------------------------
+- Node.js: Phiên bản v18.x trở lên (Khuyến nghị v20.x hoặc v22.x LTS).
+  * Tải tại: https://nodejs.org/
+- NPM: Trình quản lý gói Node.js (thường đi kèm sẵn khi cài đặt Node.js).
+- MongoDB: 
+  * Bạn có thể sử dụng MongoDB Atlas (Cloud) giống cấu hình hiện tại.
+  * Hoặc tải và cài đặt MongoDB Community Edition chạy local tại: https://www.mongodb.com/try/download/community
+- Angular CLI (Tùy chọn, dùng để gõ trực tiếp lệnh `ng` toàn hệ thống):
+  * Cài đặt global bằng lệnh: npm install -g @angular/cli@21.2.19
+
+------------------------------------------------------------------------
+2. THÔNG TIN CÁC GÓI PHỤ THUỘC (DEPENDENCIES)
+------------------------------------------------------------------------
+
+[A] Backend (Node.js + Express.js + Mongoose)
+Các thư viện chính được định nghĩa trong backend/package.json:
+  - express: Framework xây dựng RESTful API.
+  - mongoose: Thư viện kết nối và thao tác với cơ sở dữ liệu MongoDB.
+  - bcryptjs: Mã hóa và so khớp mật khẩu người dùng (băm mật khẩu).
+  - jsonwebtoken: Tạo mã JWT Token phục vụ xác thực người dùng.
+  - cors: Cấu hình CORS cho phép Frontend gọi API chéo cổng (cross-origin).
+  - dotenv: Đọc các cấu hình môi trường từ file `.env`.
+  - nodemon (Phát triển): Tự động khởi động lại server khi lưu file thay đổi code.
+
+[B] Frontend (Angular 19 Standalone)
+Các thư viện chính được định nghĩa trong frontend/package.json:
+  - @angular/core, @angular/common, @angular/router, @angular/forms: Lõi Angular 19.
+  - @angular/material, @angular/cdk: Thư viện Material UI components.
+  - @fortawesome/fontawesome-free: Icon hiển thị trên giao diện.
+  - rxjs: Thư viện xử lý dòng dữ liệu bất đồng bộ.
+
+------------------------------------------------------------------------
+3. CÁC BƯỚC THIẾT LẬP VÀ KHỞI CHẠY (SETUP & RUNNING INSTRUCTIONS)
+------------------------------------------------------------------------
+
+* LƯU Ý: Ở thư mục gốc (Root), bạn có thể chạy lệnh sau để cài đặt nhanh thư viện cho cả Backend và Frontend cùng lúc:
+  Lệnh: npm run install-all
+
+BƯỚC 1: Cấu hình biến môi trường cho Backend
+  1. Đi tới thư mục backend:
+     cd backend
+  2. Tạo file `.env` từ file ví dụ `.env.example`:
+     (Sao chép file .env.example thành .env và điền các thông tin kết nối)
+     * Cấu hình tối thiểu trong `.env`:
+       PORT=5000
+       MONGO_URI=mongodb://<username>:<password>@<host>:<port>/studyflow
+       JWT_SECRET=studyflow_secret_key
+
+BƯỚC 2: Cài đặt và chạy Backend
+  1. Trong thư mục `backend`, cài đặt thư viện:
+     npm install
+  2. Khởi chạy server ở chế độ phát triển (Development):
+     npm run dev
+  3. Server sẽ hoạt động tại cổng 5000: http://localhost:5000
+
+BƯỚC 3: Cài đặt và chạy Frontend
+  1. Mở một Terminal mới và đi tới thư mục `frontend`:
+     cd frontend
+  2. Cài đặt các thư viện:
+     npm install
+  3. Khởi chạy Angular App:
+     npm start
+     (hoặc dùng lệnh: ng serve --open)
+  4. Ứng dụng Web sẽ tự động mở trình duyệt tại địa chỉ: http://localhost:4200

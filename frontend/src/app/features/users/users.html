@@ -1,0 +1,136 @@
+<div class="users-container">
+  <div class="users-card">
+    <div class="users-header">
+      <div class="header-title">
+        <i class="ph-light ph-users icon-purple"></i>
+        <h2>User Management</h2>
+      </div>
+      <div class="header-actions" style="display: flex; align-items: center; gap: 12px;">
+        <div class="search-box">
+          <i class="ph-light ph-magnifying-glass search-icon"></i>
+          <input type="text" [(ngModel)]="searchQuery" (ngModelChange)="onSearch()" placeholder="Search by name or email...">
+        </div>
+        <button class="refresh-btn" (click)="loadUsers()" [disabled]="isLoading" title="Refresh user list">
+          <i class="ph-light ph-arrow-counter-clockwise" [class.spinning]="isLoading"></i>
+        </button>
+      </div>
+    </div>
+    <div class="user-table-container">
+      <table class="users-table">
+        <thead>
+          <tr>
+            <th class="col-user clickable-header" (click)="toggleSort()" style="cursor: pointer; user-select: none;">
+              Member / Name
+              <span class="sort-icon" style="margin-left: 4px; font-size: 12px; color: var(--text-secondary);">
+                <span *ngIf="sortDirection === 'asc'">↑</span>
+                <span *ngIf="sortDirection === 'desc'">↓</span>
+                <span *ngIf="sortDirection === ''" style="opacity: 0.35;">⇅</span>
+              </span>
+            </th>
+            <th class="col-email">Email</th>
+            <th class="col-role">Role</th>
+            <th class="col-dob">Date of Birth</th>
+            <th class="col-tasks">Total Tasks</th>
+            <th class="col-actions">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of users">
+            <td class="col-user">
+              <div class="user-info">
+                <div class="avatar" [style.background-color]="getAvatarBg(user.name)">{{ getInitial(user.name) }}</div>
+                <span class="user-name">{{ user.name }}</span>
+              </div>
+            </td>
+            <td class="col-email">{{ user.email }}</td>
+            <td class="col-role">
+              <span class="role-badge" [class.admin]="user.role === 'admin'" [class.user]="user.role !== 'admin'">
+                {{ (user.role || 'USER') | uppercase }}
+              </span>
+            </td>
+            <td class="col-dob">{{ formatDate(user.dateOfBirth) }}</td>
+            <td class="col-tasks">
+              <span class="tasks-count-badge">{{ user.taskCount || 0 }}</span>
+            </td>
+            <td class="col-actions">
+              <div class="actions-wrapper">
+                <button class="action-btn promote-btn" [disabled]="user.role === 'admin'" (click)="openPromoteModal(user)" [title]="user.role === 'admin' ? 'Cannot demote Admin role' : 'Promote to Admin'">
+                  <i class="ph-light ph-shield"></i>
+                </button>
+                <button class="action-btn delete-btn" [disabled]="user.role === 'admin'" (click)="openDeleteModal(user)" [title]="user.role === 'admin' ? 'Cannot delete Admin' : 'Delete user'">
+                  <i class="ph-light ph-trash"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="users.length === 0 && !isLoading">
+            <td colspan="6" class="empty-state">No users found.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="users-footer" *ngIf="totalUsers > 0">
+      <div class="account-total-info">
+        Showing <strong>{{ users.length }}</strong> out of <strong>{{ totalUsers }}</strong> accounts
+      </div>
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <div class="p-paginator" *ngIf="totalPages > 1">
+          <button class="p-paginator-element" [disabled]="currentPage === 1" (click)="goToPage(1)" title="First Page">
+            <i class="ph-light ph-caret-double-left"></i>
+          </button>
+          <button class="p-paginator-element" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)" title="Previous Page">
+            <i class="ph-light ph-caret-left"></i>
+          </button>
+          <span class="p-paginator-pages">
+            <button *ngFor="let page of pages" class="p-paginator-element p-paginator-page" [class.p-highlight]="page === currentPage" (click)="goToPage(page)">
+              {{ page }}
+            </button>
+          </span>
+          <button class="p-paginator-element" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)" title="Next Page">
+            <i class="ph-light ph-caret-right"></i>
+          </button>
+          <button class="p-paginator-element" [disabled]="currentPage === totalPages" (click)="goToPage(totalPages)" title="Last Page">
+            <i class="ph-light ph-caret-double-right"></i>
+          </button>
+        </div>
+        <div class="rows-per-page">
+          <select class="page-size-select" [ngModel]="pageSize" (ngModelChange)="onPageSizeChange($event)">
+            <option [ngValue]="5">5</option>
+            <option [ngValue]="10">10</option>
+            <option [ngValue]="20">20</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-overlay" *ngIf="showPromoteModal" (click)="closePromoteModal()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <i class="ph-light ph-shield icon-purple"></i>
+        <h3>Confirm Admin Promotion</h3>
+      </div>
+      <p class="modal-desc">
+        Are you sure you want to promote account <strong>{{ userToPromote?.name }}</strong> ({{ userToPromote?.email }}) to Admin?
+      </p>
+      <div class="modal-actions">
+        <button class="btn-cancel" (click)="closePromoteModal()">Cancel</button>
+        <button class="btn-confirm" (click)="confirmPromote()">Confirm Promotion</button>
+      </div>
+    </div>
+  </div>
+  <div class="modal-overlay" *ngIf="showDeleteModal" (click)="closeDeleteModal()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <i class="ph-light ph-trash icon-danger"></i>
+        <h3>Confirm Account Deletion</h3>
+      </div>
+      <p class="modal-desc">
+        Are you sure you want to delete account <strong>{{ userToDelete?.name }}</strong> ({{ userToDelete?.email }})? This action cannot be undone.
+      </p>
+      <div class="modal-actions">
+        <button class="btn-cancel" (click)="closeDeleteModal()">Cancel</button>
+        <button class="btn-danger" (click)="confirmDelete()">Delete Account</button>
+      </div>
+    </div>
+  </div>
+</div>

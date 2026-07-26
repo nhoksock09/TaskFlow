@@ -1,0 +1,42 @@
+<div class="sidebar-wrapper">
+  <div class="sidebar-top">
+    <div class="logo">
+      <div class="logo-box">
+        <i class="ph-light ph-lightning"></i>
+      </div>
+      <span>TaskFlow</span>
+    </div>
+    <nav>
+      <a routerLink="/dashboard" routerLinkActive="active">
+        <i class="ph-light ph-squares-four nav-icon"></i>
+        <span>Dashboard</span>
+      </a>
+      <a routerLink="/tasks" routerLinkActive="active">
+        <i class="ph-light ph-list-checks nav-icon"></i>
+        <span>Tasks</span>
+      </a>
+      <a routerLink="/settings" routerLinkActive="active">
+        <i class="ph-light ph-gear nav-icon"></i>
+        <span>Settings</span>
+      </a>
+      <a *ngIf="isAdmin" routerLink="/users" routerLinkActive="active">
+        <i class="ph-light ph-user-gear nav-icon"></i>
+        <span>Users</span>
+      </a>
+    </nav>
+  </div>
+  <div class="sidebar-footer" *ngIf="user">
+    <div class="user-profile">
+      <div class="user-avatar">
+        {{ getInitial(user.name) }}
+      </div>
+      <div class="user-info">
+        <span class="user-name">{{ user.name }}</span>
+        <span class="user-email">{{ user.email }}</span>
+      </div>
+    </div>
+  </div>
+  <button class="sidebar-toggle-btn" (click)="toggleRequest.emit()" [title]="isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'">
+    <i class="ph-light" [class.ph-caret-right]="isCollapsed" [class.ph-caret-left]="!isCollapsed"></i>
+  </button>
+</div>

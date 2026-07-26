@@ -1,0 +1,251 @@
+.auth-page {
+
+    width: 100%;
+    min-height: 100vh;
+    height: 100vh;
+
+    display: flex;
+
+    background: var(--bg-primary);
+    overflow: hidden;
+
+}
+
+/* ================= Left ================= */
+.left-panel {
+    flex: 1;
+    padding: 40px 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background:
+        linear-gradient(135deg,
+            #4f46e5,
+            #6366f1);
+    color: white;
+}
+
+.logo {
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 24px;
+}
+
+.left-panel h1 {
+    font-size: 38px;
+    line-height: 1.25;
+    margin-bottom: 16px;
+}
+
+.left-panel p {
+    font-size: 16px;
+    line-height: 1.6;
+    max-width: 480px;
+}
+
+/* ================= Right ================= */
+.right-panel {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background: var(--bg-primary);
+}
+
+.auth-card {
+    width: 440px;
+    background: var(--bg-card);
+    border-radius: 20px;
+    padding: 28px 36px;
+    box-shadow:
+        0 20px 40px rgba(0, 0, 0, .08);
+}
+
+.auth-card h2 {
+    font-size: 26px;
+    margin-bottom: 4px;
+    color: #0f172a;
+}
+
+.auth-card p {
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+/* ================= Responsive ================= */
+@media(max-height: 700px), (max-width: 900px) {
+    .auth-page {
+        height: auto;
+        min-height: 100vh;
+        overflow: auto;
+    }
+}
+
+@media(max-width:900px) {
+    .left-panel {
+        display: none;
+    }
+
+    .right-panel {
+        width: 100%;
+        padding: 20px 16px;
+    }
+
+    .auth-card {
+        width: 100%;
+        max-width: 440px;
+        padding: 24px 20px;
+    }
+}
+
+/* ================= Feature List ================= */
+.feature-list {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.feature-item span {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+}
+
+.feature-item p {
+    margin: 0;
+    font-size: 15px;
+}
+
+
+/* ================= Tabs ================= */
+.auth-tabs {
+    display: flex;
+    margin: 16px 0;
+    background: var(--bg-primary);
+    border-radius: 10px;
+    padding: 4px;
+}
+
+.auth-tabs button {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: .3s;
+}
+
+.auth-tabs button.active {
+    background: var(--bg-card);
+    color: #4f46e5;
+    box-shadow: 0 4px 10px rgba(0,0,0,.08);
+}
+
+/* ================= Form ================= */
+.form-group {
+    margin-bottom: 12px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 4px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    font-size: 13px;
+}
+
+.input-wrapper {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 0 14px;
+    height: 44px;
+    transition: .25s;
+    background: var(--bg-card);
+}
+
+.input-wrapper:focus-within {
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 4px rgba(79,70,229,.12);
+}
+
+.input-wrapper i:first-child {
+    color: var(--text-muted);
+    margin-right: 10px;
+    font-size: 14px;
+}
+
+.input-wrapper input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 14px;
+    background: transparent;
+    color: var(--text-primary);
+    &::-ms-reveal,
+    &::-ms-clear {
+        display: none;
+    }
+}
+
+.eye-btn {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: #64748b;
+    font-size: 15px;
+}
+
+.submit-btn {
+    width: 100%;
+    height: 44px;
+    border: none;
+    border-radius: 10px;
+    background: #4f46e5;
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .3s;
+    margin-top: 6px;
+}
+
+.submit-btn:hover {
+    background: #4338ca;
+    transform: translateY(-2px);
+}
+
+small {
+    color: #ef4444;
+    display: block;
+    margin-top: 3px;
+}
+
+.required {
+    color: #ef4444;
+    font-weight: bold;
+}
+
+.error-message {
+    color: #ef4444;
+    font-size: 11px;
+    margin-top: 3px;
+    display: block;
+}

@@ -1,0 +1,149 @@
+<div class="dashboard">
+  <!-- Statistics Cards -->
+  <div class="stats-container">
+    <div class="stat-card">
+      <div class="stat-icon total"><i class="ph-light ph-grid-four"></i></div>
+      <div class="stat-info">
+        <p class="stat-label">Total</p>
+        <p class="stat-value">{{ totalTasks }}</p>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon overdue"><i class="ph-light ph-warning-octagon"></i></div>
+      <div class="stat-info">
+        <p class="stat-label">Overdue</p>
+        <p class="stat-value">{{ overdueTasks }}</p>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon todo"><i class="ph-light ph-list-checks"></i></div>
+      <div class="stat-info">
+        <p class="stat-label">To Do</p>
+        <p class="stat-value">{{ todoTasks }}</p>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon in-progress"><i class="ph-light ph-hourglass-high"></i></div>
+      <div class="stat-info">
+        <p class="stat-label">In Progress</p>
+        <p class="stat-value">{{ inProgressTasks }}</p>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon completed"><i class="ph-light ph-check-circle"></i></div>
+      <div class="stat-info">
+        <p class="stat-label">Completed</p>
+        <p class="stat-value">{{ completedTasks }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Analytics & Dashboard widgets -->
+  <div class="dashboard-content">
+    <!-- Chart Widget -->
+    <div class="panel chart-panel">
+      <div class="chart-header">
+        <h3>Task Completion Status</h3>
+        <select class="time-filter-select" [(ngModel)]="timeFilter">
+          <option value="today">Today</option>
+          <option value="week">This Week</option>
+          <option value="month">This Month</option>
+          <option value="all">All Time</option>
+        </select>
+      </div>
+      
+      <div class="donut-chart-container">
+        <div class="donut-svg-wrapper">
+          <svg width="220" height="220" viewBox="0 0 100 100" class="donut-chart">
+            <!-- Background circle -->
+            <circle cx="50" cy="50" r="36" fill="transparent" stroke="var(--bg-primary)" stroke-width="8"></circle>
+            
+            <!-- Overdue segment (red) -->
+            <circle cx="50" cy="50" r="36" fill="transparent" 
+              stroke="#ef4444" stroke-width="8"
+              [attr.stroke-dasharray]="statusDistribution.overdue.dashArray" 
+              [attr.stroke-dashoffset]="statusDistribution.overdue.dashOffset"
+              transform="rotate(-90 50 50)" stroke-linecap="round"></circle>
+
+            <!-- Completed segment (green) -->
+            <circle cx="50" cy="50" r="36" fill="transparent" 
+              stroke="#10b981" stroke-width="8"
+              [attr.stroke-dasharray]="statusDistribution.completed.dashArray" 
+              [attr.stroke-dashoffset]="statusDistribution.completed.dashOffset"
+              transform="rotate(-90 50 50)" stroke-linecap="round"></circle>
+              
+            <!-- In progress segment (amber) -->
+            <circle cx="50" cy="50" r="36" fill="transparent" 
+              stroke="#f59e0b" stroke-width="8"
+              [attr.stroke-dasharray]="statusDistribution.progress.dashArray" 
+              [attr.stroke-dashoffset]="statusDistribution.progress.dashOffset"
+              transform="rotate(-90 50 50)" stroke-linecap="round"></circle>
+              
+            <!-- To do segment (blue) -->
+            <circle cx="50" cy="50" r="36" fill="transparent" 
+              stroke="#3b82f6" stroke-width="8"
+              [attr.stroke-dasharray]="statusDistribution.todo.dashArray" 
+              [attr.stroke-dashoffset]="statusDistribution.todo.dashOffset"
+              transform="rotate(-90 50 50)" stroke-linecap="round"></circle>
+              
+            <text x="50" y="47" text-anchor="middle" font-size="12" font-weight="700" fill="var(--text-primary)" class="donut-center-pct">
+              {{ statusDistribution.completionRate }}%
+            </text>
+            <text x="50" y="60" text-anchor="middle" font-size="6" font-weight="600" fill="var(--text-secondary)" class="donut-center-label">
+              Completed
+            </text>
+          </svg>
+        </div>
+        
+        <div class="chart-legend">
+          <div class="legend-item">
+            <span class="legend-dot todo"></span>
+            <span class="legend-label">To Do</span>
+            <span class="legend-value">{{ statusDistribution.todo.count }} ({{ statusDistribution.todo.percent }}%)</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot progress"></span>
+            <span class="legend-label">In Progress</span>
+            <span class="legend-value">{{ statusDistribution.progress.count }} ({{ statusDistribution.progress.percent }}%)</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot completed"></span>
+            <span class="legend-label">Completed</span>
+            <span class="legend-value">{{ statusDistribution.completed.count }} ({{ statusDistribution.completed.percent }}%)</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot overdue"></span>
+            <span class="legend-label">Overdue</span>
+            <span class="legend-value">{{ statusDistribution.overdue.count }} ({{ statusDistribution.overdue.percent }}%)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Upcoming Tasks Panel -->
+    <div class="panel upcoming-panel">
+      <div class="upcoming-header">
+        <h3>Upcoming Tasks</h3>
+        <button class="view-all-btn" (click)="navigateToTasks()">View All Tasks <i class="ph-light ph-arrow-right"></i></button>
+      </div>
+      <div class="upcoming-list">
+        <div class="upcoming-item" *ngFor="let task of upcomingTasks" [class.priority-high]="task.priority === 'high'"
+          [class.priority-medium]="task.priority === 'medium'" [class.priority-low]="task.priority === 'low'"
+          [class.upcoming-overdue]="isOverdue(task)">
+          <div class="upcoming-main">
+            <h4>{{ task.title }}</h4>
+            <p class="upcoming-due">Due: {{ formatDate(task.dueDate) }}</p>
+          </div>
+          <div class="upcoming-badges" style="display: flex; gap: 8px; align-items: center;">
+            <span class="status-badge overdue-badge-small" *ngIf="isOverdue(task)">OVERDUE</span>
+            <span class="status-badge in-progress-badge-small" *ngIf="task.status === 'in-progress' && !isOverdue(task)">IN PROGRESS</span>
+            <span class="priority-badge" [class]="task.priority">{{ task.priority }}</span>
+          </div>
+        </div>
+        <div *ngIf="upcomingTasks.length === 0" class="no-upcoming-message">
+          All caught up! No upcoming tasks.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

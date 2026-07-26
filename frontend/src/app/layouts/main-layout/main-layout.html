@@ -1,0 +1,26 @@
+<div class="layout">
+
+  <app-sidebar [user]="user" [isCollapsed]="isSidebarCollapsed" class="sidebar" [class.collapsed]="isSidebarCollapsed" (toggleRequest)="toggleSidebar()"></app-sidebar>
+
+  <div class="content">
+    <header class="header">
+      <div class="header-left">
+        <h2 class="greeting">Hello, {{ user?.name}}!</h2>
+        <p class="date">{{ currentDate }}</p>
+      </div>
+      <div class="header-right" style="display: flex; align-items: center; gap: 16px;">
+        <button class="theme-toggle-btn" (click)="toggleTheme()">
+          <i class="ph-light ph-moon" *ngIf="!isDarkMode"></i>
+          <i class="ph-light ph-sun" *ngIf="isDarkMode"></i>
+        </button>
+        <button class="logout-btn" (click)="logout()" title="Logout">
+          <i class="ph-light ph-sign-out"></i>
+        </button>
+      </div>
+    </header>
+    <main>
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+  <app-toast></app-toast>
+</div>

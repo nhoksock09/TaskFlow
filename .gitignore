@@ -1,0 +1,41 @@
+# Node.js dependencies
+node_modules/
+**/node_modules/
+
+# Python virtual environment (if any)
+.venv/
+venv/
+env/
+ENV/
+
+# Angular cache and build output
+.angular/
+**/.angular/
+/frontend/dist/
+/frontend/tmp/
+/frontend/out-tsc/
+/frontend/bazel-out/
+
+# Environment files containing credentials
+.env
+.env.local
+.env.*.local
+*.env
+**/.env
+**/.env.local
+**/.env.*.local
+**/*.env
+
+# IDEs and editors
+.idea/
+.vscode/
+.history/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS files
+.DS_Store
+Thumbs.db
