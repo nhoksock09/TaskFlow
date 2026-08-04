@@ -4,35 +4,35 @@
     <div class="stat-card">
       <div class="stat-icon total"><i class="ph-light ph-grid-four"></i></div>
       <div class="stat-info">
-        <p class="stat-label">Total</p>
+        <p class="stat-label">{{ 'DASHBOARD.STATS.TOTAL' | translate }}</p>
         <p class="stat-value">{{ totalTasks }}</p>
       </div>
     </div>
     <div class="stat-card">
       <div class="stat-icon overdue"><i class="ph-light ph-warning-octagon"></i></div>
       <div class="stat-info">
-        <p class="stat-label">Overdue</p>
+        <p class="stat-label">{{ 'DASHBOARD.STATS.OVERDUE' | translate }}</p>
         <p class="stat-value">{{ overdueTasks }}</p>
       </div>
     </div>
     <div class="stat-card">
       <div class="stat-icon todo"><i class="ph-light ph-list-checks"></i></div>
       <div class="stat-info">
-        <p class="stat-label">To Do</p>
+        <p class="stat-label">{{ 'DASHBOARD.STATS.TODO' | translate }}</p>
         <p class="stat-value">{{ todoTasks }}</p>
       </div>
     </div>
     <div class="stat-card">
       <div class="stat-icon in-progress"><i class="ph-light ph-hourglass-high"></i></div>
       <div class="stat-info">
-        <p class="stat-label">In Progress</p>
+        <p class="stat-label">{{ 'DASHBOARD.STATS.IN_PROGRESS' | translate }}</p>
         <p class="stat-value">{{ inProgressTasks }}</p>
       </div>
     </div>
     <div class="stat-card">
       <div class="stat-icon completed"><i class="ph-light ph-check-circle"></i></div>
       <div class="stat-info">
-        <p class="stat-label">Completed</p>
+        <p class="stat-label">{{ 'DASHBOARD.STATS.DONE' | translate }}</p>
         <p class="stat-value">{{ completedTasks }}</p>
       </div>
     </div>
@@ -43,78 +43,100 @@
     <!-- Chart Widget -->
     <div class="panel chart-panel">
       <div class="chart-header">
-        <h3>Task Completion Status</h3>
-        <select class="time-filter-select" [(ngModel)]="timeFilter">
-          <option value="today">Today</option>
-          <option value="week">This Week</option>
-          <option value="month">This Month</option>
-          <option value="all">All Time</option>
-        </select>
+        <h3>{{ 'DASHBOARD.CHART_TITLE' | translate }}</h3>
+        <p-select [(ngModel)]="timeFilter" [options]="timeFilterOptions" optionLabel="label" optionValue="value"
+          (onChange)="loadTasks()" styleClass="time-filter-select" appendTo="body">
+        </p-select>
       </div>
-      
+
       <div class="donut-chart-container">
         <div class="donut-svg-wrapper">
           <svg width="220" height="220" viewBox="0 0 100 100" class="donut-chart">
             <!-- Background circle -->
             <circle cx="50" cy="50" r="36" fill="transparent" stroke="var(--bg-primary)" stroke-width="8"></circle>
-            
-            <!-- Overdue segment (red) -->
-            <circle cx="50" cy="50" r="36" fill="transparent" 
-              stroke="#ef4444" stroke-width="8"
-              [attr.stroke-dasharray]="statusDistribution.overdue.dashArray" 
-              [attr.stroke-dashoffset]="statusDistribution.overdue.dashOffset"
-              transform="rotate(-90 50 50)" stroke-linecap="round"></circle>
 
-            <!-- Completed segment (green) -->
-            <circle cx="50" cy="50" r="36" fill="transparent" 
-              stroke="#10b981" stroke-width="8"
-              [attr.stroke-dasharray]="statusDistribution.completed.dashArray" 
-              [attr.stroke-dashoffset]="statusDistribution.completed.dashOffset"
-              transform="rotate(-90 50 50)" stroke-linecap="round"></circle>
-              
-            <!-- In progress segment (amber) -->
-            <circle cx="50" cy="50" r="36" fill="transparent" 
-              stroke="#f59e0b" stroke-width="8"
-              [attr.stroke-dasharray]="statusDistribution.progress.dashArray" 
-              [attr.stroke-dashoffset]="statusDistribution.progress.dashOffset"
-              transform="rotate(-90 50 50)" stroke-linecap="round"></circle>
-              
-            <!-- To do segment (blue) -->
-            <circle cx="50" cy="50" r="36" fill="transparent" 
-              stroke="#3b82f6" stroke-width="8"
-              [attr.stroke-dasharray]="statusDistribution.todo.dashArray" 
-              [attr.stroke-dashoffset]="statusDistribution.todo.dashOffset"
-              transform="rotate(-90 50 50)" stroke-linecap="round"></circle>
-              
-            <text x="50" y="47" text-anchor="middle" font-size="12" font-weight="700" fill="var(--text-primary)" class="donut-center-pct">
+            <!-- Overdue segment (red) — hidden when 0 -->
+            @if (statusDistribution.overdue.count > 0) {
+              <circle
+                cx="50" cy="50" r="36" fill="transparent" stroke="#ef4444" stroke-width="8"
+                [attr.stroke-dasharray]="statusDistribution.overdue.dashArray"
+                [attr.stroke-dashoffset]="statusDistribution.overdue.dashOffset" transform="rotate(-90 50 50)"
+                stroke-linecap="round"></circle>
+            }
+
+            <!-- Completed segment (green) — hidden when 0 -->
+            @if (statusDistribution.completed.count > 0) {
+              <circle
+                cx="50" cy="50" r="36" fill="transparent" stroke="#10b981" stroke-width="8"
+                [attr.stroke-dasharray]="statusDistribution.completed.dashArray"
+                [attr.stroke-dashoffset]="statusDistribution.completed.dashOffset" transform="rotate(-90 50 50)"
+                stroke-linecap="round"></circle>
+            }
+
+            <!-- In progress segment (amber) — hidden when 0 -->
+            @if (statusDistribution.progress.count > 0) {
+              <circle
+                cx="50" cy="50" r="36" fill="transparent" stroke="#f59e0b" stroke-width="8"
+                [attr.stroke-dasharray]="statusDistribution.progress.dashArray"
+                [attr.stroke-dashoffset]="statusDistribution.progress.dashOffset" transform="rotate(-90 50 50)"
+                stroke-linecap="round"></circle>
+            }
+
+            <!-- To do segment (blue) — hidden when 0 -->
+            @if (statusDistribution.todo.count > 0) {
+              <circle
+                cx="50" cy="50" r="36" fill="transparent" stroke="#3b82f6" stroke-width="8"
+                [attr.stroke-dasharray]="statusDistribution.todo.dashArray"
+                [attr.stroke-dashoffset]="statusDistribution.todo.dashOffset" transform="rotate(-90 50 50)"
+                stroke-linecap="round"></circle>
+            }
+
+            <!-- Empty state ring when no tasks at all -->
+            @if (statusDistribution.totalTasks === 0) {
+              <circle
+                cx="50" cy="50" r="36" fill="transparent" stroke="var(--border-color)" stroke-width="8"></circle>
+            }
+
+            <text x="50" y="47" text-anchor="middle" font-size="12" font-weight="700" fill="var(--text-primary)"
+              class="donut-center-pct">
               {{ statusDistribution.completionRate }}%
             </text>
-            <text x="50" y="60" text-anchor="middle" font-size="6" font-weight="600" fill="var(--text-secondary)" class="donut-center-label">
-              Completed
+            <text x="50" y="60" text-anchor="middle" font-size="6" font-weight="600" fill="var(--text-secondary)"
+              class="donut-center-label">
+              {{ 'DASHBOARD.STATS.DONE' | translate }}
             </text>
           </svg>
         </div>
-        
+
         <div class="chart-legend">
           <div class="legend-item">
             <span class="legend-dot todo"></span>
-            <span class="legend-label">To Do</span>
-            <span class="legend-value">{{ statusDistribution.todo.count }} ({{ statusDistribution.todo.percent }}%)</span>
+            <span class="legend-label">{{ 'DASHBOARD.STATS.TODO' | translate }}</span>
+            <span class="legend-value">{{ statusDistribution.todo.count }} ({{ statusDistribution.todo.percent
+              }}%)</span>
           </div>
           <div class="legend-item">
             <span class="legend-dot progress"></span>
-            <span class="legend-label">In Progress</span>
-            <span class="legend-value">{{ statusDistribution.progress.count }} ({{ statusDistribution.progress.percent }}%)</span>
+            <span class="legend-label">{{ 'DASHBOARD.STATS.IN_PROGRESS' | translate }}</span>
+            <span class="legend-value">{{ statusDistribution.progress.count }} ({{ statusDistribution.progress.percent
+              }}%)</span>
           </div>
           <div class="legend-item">
             <span class="legend-dot completed"></span>
-            <span class="legend-label">Completed</span>
-            <span class="legend-value">{{ statusDistribution.completed.count }} ({{ statusDistribution.completed.percent }}%)</span>
+            <span class="legend-label">{{ 'DASHBOARD.STATS.DONE' | translate }}</span>
+            <span class="legend-value">{{ statusDistribution.completed.count }} ({{ statusDistribution.completed.percent
+              }}%)</span>
           </div>
           <div class="legend-item">
             <span class="legend-dot overdue"></span>
-            <span class="legend-label">Overdue</span>
-            <span class="legend-value">{{ statusDistribution.overdue.count }} ({{ statusDistribution.overdue.percent }}%)</span>
+            <span class="legend-label">{{ 'DASHBOARD.STATS.OVERDUE' | translate }}</span>
+            <span class="legend-value">{{ statusDistribution.overdue.count }} ({{ statusDistribution.overdue.percent
+              }}%)</span>
+          </div>
+          <div class="legend-item total-item">
+            <span class="legend-dot total"></span>
+            <span class="legend-label">{{ 'DASHBOARD.STATS.TOTAL' | translate }}</span>
+            <span class="legend-value">{{ statusDistribution.totalTasks }}</span>
           </div>
         </div>
       </div>
@@ -123,27 +145,105 @@
     <!-- Upcoming Tasks Panel -->
     <div class="panel upcoming-panel">
       <div class="upcoming-header">
-        <h3>Upcoming Tasks</h3>
-        <button class="view-all-btn" (click)="navigateToTasks()">View All Tasks <i class="ph-light ph-arrow-right"></i></button>
+        <h3>{{ 'DASHBOARD.UPCOMING_TITLE' | translate }}</h3>
+        <p-button styleClass="view-all-btn" [text]="true" (click)="navigateToTasks()">
+          {{ 'DASHBOARD.VIEW_ALL' | translate }} <i class="ph-light ph-arrow-right"></i>
+        </p-button>
       </div>
       <div class="upcoming-list">
-        <div class="upcoming-item" *ngFor="let task of upcomingTasks" [class.priority-high]="task.priority === 'high'"
-          [class.priority-medium]="task.priority === 'medium'" [class.priority-low]="task.priority === 'low'"
-          [class.upcoming-overdue]="isOverdue(task)">
-          <div class="upcoming-main">
-            <h4>{{ task.title }}</h4>
-            <p class="upcoming-due">Due: {{ formatDate(task.dueDate) }}</p>
+        @for (group of groupedUpcomingTasks; track group.title) {
+          <div class="upcoming-group">
+            <div class="upcoming-group-header" [class]="group.class">
+              <span class="group-dot"></span>
+              <h4>{{ 'DASHBOARD.GROUPS.' + group.title.toUpperCase() | translate }}</h4>
+            </div>
+            <div class="upcoming-group-items">
+              @for (task of group.tasks; track task._id) {
+                <div class="upcoming-item" [class.priority-high]="task.priority === 'high'"
+                  [class.priority-medium]="task.priority === 'medium'" [class.priority-low]="task.priority === 'low'"
+                  [class.upcoming-overdue]="isOverdue(task)">
+                  <div class="upcoming-main">
+                    <h4>{{ task.title }}</h4>
+                    <p class="upcoming-due">{{ 'DASHBOARD.DUE' | translate:{ date: formatDate(task.dueDate) } }}</p>
+                  </div>
+                  <div class="upcoming-badges" style="display: flex; gap: 8px; align-items: center;">
+                    @if (isOverdue(task)) {
+                      <p-tag [value]="'TASKS.OVERDUE' | translate" severity="danger" icon="pi pi-exclamation-triangle"></p-tag>
+                    }
+                    @if (!isOverdue(task) && isDueSoon(task)) {
+                      <p-tag [value]="'TASKS.DUE_SOON' | translate" severity="warn" icon="pi pi-clock"></p-tag>
+                    }
+                    @if (task.status === 'in-progress' && !isOverdue(task) && !isDueSoon(task)) {
+                      <p-tag [value]="'TASKS.IN_PROGRESS' | translate" severity="info"></p-tag>
+                    }
+                    <p-tag [value]="TASK_PRIORITY_MAP[task.priority] | translate" [severity]="task.priority === 'high' ? 'danger' : (task.priority === 'medium' ? 'warn' : 'info')"></p-tag>
+                  </div>
+                </div>
+              }
+            </div>
           </div>
-          <div class="upcoming-badges" style="display: flex; gap: 8px; align-items: center;">
-            <span class="status-badge overdue-badge-small" *ngIf="isOverdue(task)">OVERDUE</span>
-            <span class="status-badge in-progress-badge-small" *ngIf="task.status === 'in-progress' && !isOverdue(task)">IN PROGRESS</span>
-            <span class="priority-badge" [class]="task.priority">{{ task.priority }}</span>
+        }
+        @if (groupedUpcomingTasks.length === 0) {
+          <div class="no-upcoming-message">
+            {{ 'DASHBOARD.NO_UPCOMING' | translate }}
           </div>
-        </div>
-        <div *ngIf="upcomingTasks.length === 0" class="no-upcoming-message">
-          All caught up! No upcoming tasks.
-        </div>
+        }
       </div>
     </div>
   </div>
+
+  <!-- Login Alert Modal -->
+  @if (showLoginAlert) {
+    <div class="modal-overlay alert-modal-overlay" (click)="closeLoginAlert()">
+      <div class="modal-content alert-modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header alert-modal-header">
+          <h3 style="display: flex; align-items: center; gap: 8px;">
+            <i class="ph-light ph-bell-ringing alert-bell-icon"></i> {{ 'DASHBOARD.ALERT_TITLE' | translate }}
+          </h3>
+        </div>
+        <div class="modal-body alert-modal-body">
+          <p class="alert-intro">{{ 'DASHBOARD.ALERT_INTRO' | translate }}</p>
+
+          <!-- Overdue Section -->
+          @if (alertOverdueTasks.length > 0) {
+            <div class="alert-section overdue-section">
+              <h4 class="section-title"><i class="ph-light ph-warning-octagon"></i> {{ 'DASHBOARD.OVERDUE_SECTION' | translate:{ count: alertOverdueTasks.length } }}</h4>
+              <ul class="alert-task-list">
+                @for (task of alertOverdueTasks; track task._id) {
+                  <li class="alert-task-item overdue">
+                    <div class="alert-task-meta">
+                      <span class="alert-badge alert-badge-overdue">🚨 {{ 'TASKS.OVERDUE' | translate }}</span>
+                      <span class="task-title" [title]="task.title">{{ task.title }}</span>
+                    </div>
+                    <span class="task-due-date">{{ 'DASHBOARD.WAS_DUE' | translate:{ date: formatDate(task.dueDate) } }}</span>
+                  </li>
+                }
+              </ul>
+            </div>
+          }
+
+          <!-- Impending Deadlines Section -->
+          @if (alertUpcomingTasks.length > 0) {
+            <div class="alert-section impending-section">
+              <h4 class="section-title"><i class="ph-light ph-clock"></i> {{ 'DASHBOARD.IMPENDING_SECTION' | translate:{ count: alertUpcomingTasks.length } }}</h4>
+              <ul class="alert-task-list">
+                @for (task of alertUpcomingTasks; track task._id) {
+                  <li class="alert-task-item impending">
+                    <div class="alert-task-meta">
+                      <span class="alert-badge alert-badge-impending">⏳ {{ 'DASHBOARD.GROUPS.TODAY' | translate | uppercase }}</span>
+                      <span class="task-title" [title]="task.title">{{ task.title }}</span>
+                    </div>
+                    <span class="task-due-date">{{ 'DASHBOARD.DUE' | translate:{ date: formatDate(task.dueDate) } }}</span>
+                  </li>
+                }
+              </ul>
+            </div>
+          }
+        </div>
+        <div class="modal-footer">
+          <p-button styleClass="close-alert-btn" (click)="closeLoginAlert()" [label]="'DASHBOARD.ACKNOWLEDGE' | translate"></p-button>
+        </div>
+      </div>
+    </div>
+  }
 </div>

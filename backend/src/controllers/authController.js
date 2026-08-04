@@ -62,12 +62,6 @@ const login = async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        if (!email || !password) {
-            return res.status(400).json({
-                message: "Please fill in all fields.",
-            });
-        }
-
         const normalizedEmail = email.toLowerCase().trim();
 
         const user = await User.findOne({ email: normalizedEmail });
@@ -86,7 +80,7 @@ const login = async (req, res) => {
             });
         }
 
-        const token = generateToken(user._id);
+        const token = generateToken(user._id, user.tokenVersion);
 
         res.status(200).json({
             message: "Login successfully.",
@@ -100,11 +94,9 @@ const login = async (req, res) => {
         });
 
     } catch (error) {
-
         res.status(500).json({
             message: error.message,
         });
-
     }
 };
 

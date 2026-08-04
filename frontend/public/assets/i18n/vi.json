@@ -1,0 +1,309 @@
+{
+  "COMMON": {
+    "CANCEL": "Hủy",
+    "CONFIRM": "Xác nhận",
+    "SAVE": "Lưu thay đổi",
+    "BTN": {
+      "SAVE": "Lưu thay đổi",
+      "CANCEL": "Hủy bỏ",
+      "CONFIRM": "Xác nhận",
+      "CHANGE_PW": "Đổi mật khẩu",
+      "SUBMIT": "Gửi",
+      "DELETE": "Xóa",
+      "SEARCH": "Tìm kiếm",
+      "REFRESH": "Làm mới",
+      "EDIT": "Chỉnh sửa",
+      "CLOSE": "Đóng"
+    },
+    "LABEL": {
+      "FULL_NAME": "Họ và tên",
+      "DOB": "Ngày sinh",
+      "EMAIL": "Email",
+      "PASSWORD": "Mật khẩu",
+      "CURRENT_PW": "Mật khẩu hiện tại",
+      "NEW_PW": "Mật khẩu mới",
+      "CONFIRM_PW": "Xác nhận mật khẩu mới",
+      "MEMBER": "Thành viên",
+      "ROLE": "Vai trò",
+      "ACTIONS": "Thao tác",
+      "TOTAL_TASKS": "Tổng công việc"
+    },
+    "PLACEHOLDER": {
+      "FULL_NAME": "Nhập họ và tên của bạn",
+      "EMAIL": "Nhập địa chỉ email",
+      "PASSWORD": "Nhập mật khẩu",
+      "CURRENT_PW": "Nhập mật khẩu hiện tại",
+      "NEW_PW": "Mật khẩu mới của bạn",
+      "CONFIRM_PW": "Nhập lại mật khẩu mới"
+    },
+    "SUCCESS": "Thành công",
+    "ERROR": "Lỗi",
+    "INFO": "Thông tin",
+    "WARNING": "Cảnh báo",
+    "TOTAL": "Tổng số",
+    "ROLE_ADMIN": "Admin",
+    "ROLE_USER": "Người dùng"
+  },
+  "API_ERROR": {
+    "EMAIL_ALREADY_EXISTS": "Email đã tồn tại trên hệ thống.",
+    "INVALID_CREDENTIALS": "Địa chỉ email hoặc mật khẩu không hợp lệ.",
+    "INCORRECT_CURRENT_PASSWORD": "Mật khẩu hiện tại không chính xác.",
+    "USER_NOT_FOUND": "Không tìm thấy thông tin người dùng.",
+    "FILL_ALL_FIELDS": "Vui lòng nhập đầy đủ các trường thông tin.",
+    "FILL_ALL_PASSWORD_FIELDS": "Vui lòng nhập đầy đủ các trường mật khẩu.",
+    "NEW_PASSWORD_MIN_LENGTH": "Mật khẩu mới phải có ít nhất 6 ký tự.",
+    "EMAIL_USERNAME_NO_LETTER": "Tên người dùng trong email phải chứa ít nhất một chữ cái.",
+    "INVALID_DOB_FORMAT": "Định dạng ngày sinh không hợp lệ.",
+    "DOB_FUTURE": "Ngày sinh không được ở trong tương lai.",
+    "TOKEN_INVALIDATED": "Phiên đăng nhập đã hết hạn hoặc không còn hiệu lực. Vui lòng đăng nhập lại."
+  },
+  "SIDEBAR": {
+    "DASHBOARD": "Bảng điều khiển",
+    "TASKS": "Công việc",
+    "SETTINGS": "Cài đặt",
+    "USERS": "Người dùng",
+    "EXPAND": "Mở rộng menu",
+    "COLLAPSE": "Thu gọn menu"
+  },
+  "HEADER": {
+    "HELLO": "Xin chào, {{ name }}!",
+    "LOGOUT": "Đăng xuất"
+  },
+  "DASHBOARD": {
+    "STATS": {
+      "TOTAL": "Tổng số",
+      "OVERDUE": "Quá hạn",
+      "TODO": "Cần làm",
+      "IN_PROGRESS": "Đang làm",
+      "DONE": "Hoàn thành"
+    },
+    "CHART_TITLE": "Trạng thái hoàn thành",
+    "UPCOMING_TITLE": "Công việc sắp tới",
+    "VIEW_ALL": "Xem tất cả công việc",
+    "NO_UPCOMING": "Tuyệt vời! Không có công việc nào sắp tới.",
+    "ALERT_TITLE": "Cảnh báo công việc cần chú ý",
+    "ALERT_INTRO": "Dưới đây là tóm tắt các công việc cần bạn xử lý ngay lập tức:",
+    "OVERDUE_SECTION": "Công việc quá hạn ({{ count }})",
+    "IMPENDING_SECTION": "Hạn hôm nay / 24 giờ tới ({{ count }})",
+    "WAS_DUE": "Đã hạn lúc: {{ date }}",
+    "DUE": "Hạn lúc: {{ date }}",
+    "ACKNOWLEDGE": "Đã ghi nhận & Tiếp tục",
+    "GROUPS": {
+      "OVERDUE": "Quá hạn",
+      "TODAY": "Hôm nay",
+      "TOMORROW": "Ngày mai"
+    },
+    "FILTERS": {
+      "TODAY": "Hôm nay",
+      "THIS_MONTH": "Tháng này",
+      "LAST_MONTH": "Tháng trước",
+      "NEXT_MONTH": "Tháng sau"
+    }
+  },
+  "TASKS": {
+    "TITLE": "Danh sách công việc",
+    "SEARCH_PLACEHOLDER": "Tìm kiếm công việc...",
+    "COLUMN_TODO": "Cần làm",
+    "COLUMN_PROGRESS": "Đang làm",
+    "COLUMN_DONE": "Hoàn thành",
+    "NO_TASKS": "Không có công việc",
+    "OVERDUE": "QUÁ HẠN",
+    "DUE_SOON": "SẮP HẾT HẠN",
+    "IN_PROGRESS": "ĐANG LÀM",
+    "ADD_TITLE": "Thêm công việc",
+    "EDIT_TITLE": "Sửa công việc",
+    "CONFIRM_DELETE_TITLE": "Xác nhận xóa",
+    "CONFIRM_DELETE_MSG": "Bạn có chắc chắn muốn xóa công việc này không?",
+    "FILTERS": {
+      "ALL_PRIORITIES": "Tất cả độ ưu tiên",
+      "HIGH": "Cao",
+      "MEDIUM": "Trung bình",
+      "LOW": "Thấp",
+      "ALL_STATUS": "Tất cả trạng thái",
+      "OVERDUE": "Quá hạn",
+      "DUE_SOON": "Sắp hết hạn",
+      "ALL_TIME": "Tất cả thời gian",
+      "TODAY": "Hôm nay",
+      "THIS_MONTH": "Tháng này",
+      "LAST_MONTH": "Tháng trước",
+      "NEXT_MONTH": "Tháng sau"
+    },
+    "FORM": {
+      "TITLE_LABEL": "Tiêu đề",
+      "TITLE_PLACEHOLDER": "Nhập tiêu đề công việc...",
+      "DESC_LABEL": "Mô tả",
+      "DESC_PLACEHOLDER": "Mô tả ngắn gọn",
+      "PRIORITY_LABEL": "Độ ưu tiên",
+      "STATUS_LABEL": "Trạng thái",
+      "DUE_DATE_LABEL": "Hạn hoàn thành"
+    },
+    "TOAST": {
+      "MOVE_SUCCESS": "Đã chuyển công việc sang {{ status }}",
+      "MOVE_FAILED": "Cập nhật trạng thái công việc thất bại.",
+      "UPDATE_SUCCESS": "Cập nhật công việc thành công! 🎉",
+      "UPDATE_FAILED": "Cập nhật công việc thất bại.",
+      "CREATE_SUCCESS": "Tạo công việc thành công! 🎉",
+      "CREATE_FAILED": "Tạo công việc thất bại.",
+      "DELETE_SUCCESS": "Xóa công việc thành công! 🗑️",
+      "DELETE_FAILED": "Xóa công việc thất bại.",
+      "IN_PROGRESS": "Công việc đang được thực hiện! ⏰",
+      "COMPLETED": "Công việc đã hoàn thành! ✅",
+      "RESTARTED": "Công việc đã được khởi động lại! ⏰"
+    },
+    "STATUS": {
+      "TODO": "Cần làm",
+      "IN_PROGRESS": "Đang làm",
+      "COMPLETED": "Hoàn thành"
+    }
+  },
+  "USERS": {
+    "TITLE": "Quản lý người dùng",
+    "SEARCH_PLACEHOLDER": "Tìm theo tên hoặc email...",
+    "NO_USERS": "Không tìm thấy người dùng.",
+    "SHOWING_INFO": "Hiển thị <strong>{{ count }}</strong> trên tổng số <strong>{{ total }}</strong> tài khoản",
+    "PROMOTE_TITLE": "Xác nhận nâng quyền Admin",
+    "PROMOTE_MSG": "Bạn có chắc chắn muốn nâng quyền tài khoản <strong>{{ name }}</strong> ({{ email }}) lên Admin không?",
+    "PROMOTE_CONFIRM": "Nâng quyền Admin",
+    "DELETE_TITLE": "Xác nhận xóa tài khoản",
+    "DELETE_MSG": "Bạn có chắc chắn muốn xóa tài khoản <strong>{{ name }}</strong> ({{ email }}) không? Hành động này không thể hoàn tác.",
+    "DELETE_CONFIRM": "Xóa tài khoản",
+    "PROMOTE_TOOLTIP": "Nâng lên Admin",
+    "DELETE_TOOLTIP": "Xóa người dùng",
+    "DEMOTE_TOOLTIP_ERROR": "Không thể hạ quyền Admin",
+    "DELETE_TOOLTIP_ERROR": "Không thể xóa Admin",
+    "TOAST": {
+      "LOAD_FAILED": "Tải danh sách người dùng thất bại.",
+      "DEMOTE_ADMIN_ERROR": "Không thể hạ vai trò của Admin khác.",
+      "PROMOTE_SUCCESS": "Nâng quyền Admin cho {{ name }} thành công.",
+      "PROMOTE_FAILED": "Nâng quyền Admin thất bại.",
+      "DELETE_ADMIN_ERROR": "Không thể xóa tài khoản Admin.",
+      "DELETE_SUCCESS": "Đã xóa tài khoản {{ name }} thành công.",
+      "DELETE_FAILED": "Xóa tài khoản thất bại."
+    }
+  },
+  "SETTINGS": {
+    "TITLE": "Cài đặt tài khoản",
+    "MODAL_TITLE": "Đổi mật khẩu",
+    "TOAST": {
+      "FILL_REQUIRED": "Vui lòng nhập đầy đủ các trường bắt buộc.",
+      "NO_CHANGES": "Không có thay đổi nào để lưu.",
+      "PROFILE_SUCCESS": "Cập nhật hồ sơ thành công!",
+      "PROFILE_FAILED": "Cập nhật hồ sơ thất bại.",
+      "PASSWORD_MISMATCH": "Xác nhận mật khẩu không khớp!",
+      "PASSWORD_SUCCESS": "Thay đổi mật khẩu thành công!",
+      "PASSWORD_FAILED": "Mật khẩu hiện tại không chính xác."
+    }
+  },
+  "AUTH": {
+    "TAGLINE": "Sắp xếp công việc của bạn hiệu quả.",
+    "SUB_TAGLINE": "Giữ tập trung, quản lý công việc và đạt mục tiêu học tập của bạn cùng TaskFlow.",
+    "FEATURE_MANAGE": "Quản lý công việc hàng ngày của bạn",
+    "FEATURE_PRODUCTIVITY": "Nâng cao năng suất mỗi ngày",
+    "WELCOME_BACK": "Chào mừng trở lại",
+    "CREATE_ACCOUNT": "Tạo tài khoản",
+    "SIGN_IN_INTRO": "Đăng nhập để tiếp tục sử dụng TaskFlow.",
+    "CREATE_INTRO": "Tạo tài khoản TaskFlow của bạn.",
+    "LOGIN_BTN": "Đăng nhập",
+    "REGISTER_BTN": "Đăng ký",
+    "TOAST": {
+      "LOGIN_SUCCESS": "Đăng nhập thành công! 🎉",
+      "LOGIN_FAILED": "Đăng nhập thất bại",
+      "REGISTRATION_SUCCESS": "Đăng ký tài khoản thành công! 🎉",
+      "REGISTRATION_FAILED": "Đăng ký tài khoản thất bại"
+    }
+  },
+  "VALIDATION": {
+    "REQUIRED": "Trường này là bắt buộc.",
+    "MINLENGTH": "Phải có ít nhất {{ minLength }} ký tự.",
+    "INVALID_FULL_NAME": "Họ tên chỉ được chứa chữ cái và khoảng trắng.",
+    "OUT_OF_AGE_RANGE": "Tuổi phải từ 10 đến 70 tuổi.",
+    "OUT_OF_AGE_RANGE_60": "Tuổi phải từ 10 đến 60 tuổi.",
+    "INVALID_EMAIL": "Vui lòng nhập địa chỉ email hợp lệ (vd: user@example.com).",
+    "EMAIL_PREFIX_TOO_SHORT": "Phần tên email trước ký tự @ phải có ít nhất 6 ký tự.",
+    "EMAIL_TYPO": "Vui lòng nhập địa chỉ email hợp lệ (vd: user@example.com).",
+    "GMAIL_CO_TYPO": "Có phải ý bạn là @gmail.com không?",
+    "PAST_DATE": "Ngày/giờ hạn hoàn thành không được ở trong quá khứ.",
+    "TOO_FAR_FUTURE": "Hạn hoàn thành không được xa hơn 6 tháng tới.",
+    "PASSWORD_REQUIREMENTS": "Mật khẩu cần phải đáp ứng tất cả các điều kiện dưới."
+  },
+  "PASSWORD_REQ": {
+    "MIN_LENGTH": "Tối thiểu 6 ký tự",
+    "UPPERCASE": "Chứa chữ cái viết hoa",
+    "LOWERCASE": "Chứa chữ cái viết thường",
+    "NUMBER": "Chứa chữ số"
+  },
+  "primeng": {
+    "accept": "Đồng ý",
+    "reject": "Hủy bỏ",
+    "choose": "Chọn",
+    "upload": "Tải lên",
+    "cancel": "Hủy",
+    "dayNames": [
+      "Chủ Nhật",
+      "Thứ Hai",
+      "Thứ Ba",
+      "Thứ Tư",
+      "Thứ Năm",
+      "Thứ Sáu",
+      "Thứ Bảy"
+    ],
+    "dayNamesShort": [
+      "CN",
+      "T2",
+      "T3",
+      "T4",
+      "T5",
+      "T6",
+      "T7"
+    ],
+    "dayNamesMin": [
+      "CN",
+      "T2",
+      "T3",
+      "T4",
+      "T5",
+      "T6",
+      "T7"
+    ],
+    "monthNames": [
+      "Tháng 1",
+      "Tháng 2",
+      "Tháng 3",
+      "Tháng 4",
+      "Tháng 5",
+      "Tháng 6",
+      "Tháng 7",
+      "Tháng 8",
+      "Tháng 9",
+      "Tháng 10",
+      "Tháng 11",
+      "Tháng 12"
+    ],
+    "monthNamesShort": [
+      "Thg 1",
+      "Thg 2",
+      "Thg 3",
+      "Thg 4",
+      "Thg 5",
+      "Thg 6",
+      "Thg 7",
+      "Thg 8",
+      "Thg 9",
+      "Thg 10",
+      "Thg 11",
+      "Thg 12"
+    ],
+    "today": "Hôm nay",
+    "clear": "Xóa",
+    "weekHeader": "Tuần",
+    "firstDayOfWeek": 1,
+    "showMonthAfterYear": false,
+    "dateFormat": "dd/mm/yy",
+    "weak": "Yếu",
+    "medium": "Vừa",
+    "strong": "Mạnh",
+    "passwordPrompt": "Nhập mật khẩu",
+    "emptyMessage": "Không tìm thấy kết quả",
+    "emptyFilterMessage": "Không tìm thấy kết quả"
+  }
+}

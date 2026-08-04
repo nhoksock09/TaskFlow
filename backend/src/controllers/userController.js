@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs");
 const User = require("../models/User");
+
 const getProfile = async (req, res) => {
     try {
         res.status(200).json(req.user);
@@ -7,6 +8,7 @@ const getProfile = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
 const updateProfile = async (req, res) => {
     try {
         const { name, dateOfBirth } = req.body;
@@ -29,6 +31,7 @@ const updateProfile = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
 const changePassword = async (req, res) => {
     try {
         const { currentPassword, newPassword } = req.body;
@@ -45,12 +48,14 @@ const changePassword = async (req, res) => {
             return res.status(400).json({ message: "Incorrect current password." });
         }
         user.password = await bcrypt.hash(newPassword, 10);
+        user.tokenVersion = (user.tokenVersion || 0) + 1;
         await user.save();
         res.status(200).json({ message: "Password changed successfully." });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
+
 const Task = require("../models/Task");
 
 const getUsers = async (req, res) => {
@@ -65,14 +70,25 @@ const getUsers = async (req, res) => {
                 ],
             };
         }
-        let sortObj = { createdAt: -1 };
-        if (sortBy === "name") {
-            sortObj = { name: sortOrder === "desc" ? -1 : 1 };
-        }
         const total = await User.countDocuments(query);
         let users = await User.find(query).select("-password");
 
+        // For taskCount sorting, we need counts for ALL users before paginating
+        let usersWithTaskCount;
+        if (sortBy === "taskCount") {
+            usersWithTaskCount = await Promise.all(
+                users.map(async (u) => {
+                    const taskCount = await Task.countDocuments({ user: u._id });
+                    return { ...u.toObject(), taskCount };
+                })
+            );
+        }
+
+        // Helper: admin = 0, user = 1
+        const roleWeight = (u) => (u.role === "admin" ? 0 : 1);
+
         if (sortBy === "name") {
+            // Sort purely by name — admin/user mixed equally
             users.sort((a, b) => {
                 const nameA = a.name ? a.name.trim() : "";
                 const nameB = b.name ? b.name.trim() : "";
@@ -88,22 +104,59 @@ const getUsers = async (req, res) => {
                 }
                 return sortOrder === "desc" ? -cmp : cmp;
             });
+        } else if (sortBy === "email") {
+            // Sort purely by email — admin/user mixed equally
+            users.sort((a, b) => {
+                const emailA = (a.email || "").toLowerCase();
+                const emailB = (b.email || "").toLowerCase();
+                const cmp = emailA.localeCompare(emailB, "en", { sensitivity: "base" });
+                return sortOrder === "desc" ? -cmp : cmp;
+            });
+        } else if (sortBy === "dateOfBirth") {
+            // Sort purely by dateOfBirth — admin/user mixed equally
+            users.sort((a, b) => {
+                const dateA = a.dateOfBirth ? new Date(a.dateOfBirth).getTime() : 0;
+                const dateB = b.dateOfBirth ? new Date(b.dateOfBirth).getTime() : 0;
+                // asc = youngest first (newest date = largest timestamp)
+                // desc = oldest first (oldest date = smallest timestamp)
+                return sortOrder === "desc" ? dateA - dateB : dateB - dateA;
+            });
+        } else if (sortBy === "taskCount" && usersWithTaskCount) {
+            // Sort purely by taskCount — admin/user mixed equally
+            usersWithTaskCount.sort((a, b) => {
+                const cmp = a.taskCount - b.taskCount;
+                return sortOrder === "desc" ? -cmp : cmp;
+            });
+        } else if (sortBy === "role") {
+            // asc = admin first, desc = user first; tie-break by createdAt
+            users.sort((a, b) => {
+                const roleCmp = roleWeight(a) - roleWeight(b);
+                if (roleCmp !== 0) return sortOrder === "desc" ? -roleCmp : roleCmp;
+                return new Date(b.createdAt) - new Date(a.createdAt);
+            });
         } else {
-            users.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            // Default (no sort): admin first, then newest first
+            users.sort((a, b) => {
+                const roleCmp = roleWeight(a) - roleWeight(b);
+                if (roleCmp !== 0) return roleCmp;
+                return new Date(b.createdAt) - new Date(a.createdAt);
+            });
         }
 
         const startIndex = (Number(page) - 1) * Number(limit);
-        const paginatedUsers = users.slice(startIndex, startIndex + Number(limit));
 
-        const dataWithTasks = await Promise.all(
-            paginatedUsers.map(async (u) => {
-                const taskCount = await Task.countDocuments({ user: u._id });
-                return {
-                    ...u.toObject(),
-                    taskCount,
-                };
-            })
-        );
+        let dataWithTasks;
+        if (sortBy === "taskCount" && usersWithTaskCount) {
+            dataWithTasks = usersWithTaskCount.slice(startIndex, startIndex + Number(limit));
+        } else {
+            const paginatedUsers = users.slice(startIndex, startIndex + Number(limit));
+            dataWithTasks = await Promise.all(
+                paginatedUsers.map(async (u) => {
+                    const taskCount = await Task.countDocuments({ user: u._id });
+                    return { ...u.toObject(), taskCount };
+                })
+            );
+        }
 
         res.status(200).json({
             success: true,
@@ -116,6 +169,7 @@ const getUsers = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
 const updateUserRole = async (req, res) => {
     try {
         const { role } = req.body;
@@ -134,6 +188,7 @@ const updateUserRole = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
 const deleteUser = async (req, res) => {
     try {
         const targetUser = await User.findById(req.params.id);
@@ -147,6 +202,7 @@ const deleteUser = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
 module.exports = {
     getProfile,
     updateProfile,

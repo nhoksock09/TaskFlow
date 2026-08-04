@@ -1,12 +1,20 @@
-import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Sidebar } from '../../shared/components/sidebar/sidebar';
-import { Toast } from '../../shared/components/toast/toast';
-import { UserService } from '../../shared/services/user.service';
+import { Sidebar } from '../sidebar/sidebar';
+import { UserService } from '../../core/services/user.service';
 import { Router } from '@angular/router';
-import { AuthService } from '../../shared/services/auth.service';
-
+import { AuthService } from '../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
+import { ButtonModule } from 'primeng/button';
+import { Select } from 'primeng/select';
+import { FormsModule } from '@angular/forms';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { User } from '../../shared/models';
+
+interface LangOption {
+  label: string;
+  value: string;
+}
 
 @Component({
   selector: 'app-main-layout',
@@ -14,8 +22,11 @@ import { CommonModule } from '@angular/common';
   imports: [
     RouterOutlet,
     Sidebar,
-    Toast,
-    CommonModule
+    CommonModule,
+    ButtonModule,
+    Select,
+    FormsModule,
+    TranslatePipe
   ],
   templateUrl: './main-layout.html',
   styleUrl: './main-layout.scss'
@@ -24,57 +35,79 @@ export class MainLayout implements OnInit {
   private userService = inject(UserService);
   public router = inject(Router);
   private authService = inject(AuthService);
-  private cdr = inject(ChangeDetectorRef);
-  
-  user: any = null;
+  private translateService = inject(TranslateService);
+
+  user: User | null = null;
   currentDate: string = '';
   isDarkMode: boolean = false;
-  isSidebarCollapsed: boolean = true;
-  toggleSidebar(): void {
+  isSidebarCollapsed: boolean = false;
+
+  currentLang: string = 'en';
+  langOptions: LangOption[] = [
+    { label: 'English', value: 'en' },
+    { label: 'Tiếng Việt', value: 'vi' }
+  ];
+
+  toggleSidebar() {
     this.isSidebarCollapsed = !this.isSidebarCollapsed;
-    this.cdr.detectChanges();
   }
-  ngOnInit(): void {
+
+  ngOnInit() {
     this.isDarkMode = localStorage.getItem('theme') === 'dark';
     this.applyTheme();
     this.user = this.authService.getUser();
-    this.cdr.detectChanges();
     this.userService.getProfile().subscribe({
       next: (user) => {
         this.user = user;
         this.authService.saveUser(user);
-        this.cdr.detectChanges();
       },
       error: (err) => console.error(err)
     });
+
+    this.currentLang = this.translateService.currentLang() || localStorage.getItem('lang') || 'en';
     this.updateDate();
+
+    // Subscribe to lang changes to keep date format in sync
+    this.translateService.onLangChange.subscribe((event) => {
+      this.currentLang = event.lang;
+      this.updateDate();
+    });
   }
 
-  updateDate(): void {
+  updateDate() {
     const now = new Date();
-    const options: Intl.DateTimeFormatOptions = { 
-      weekday: 'long', 
-      year: 'numeric', 
-      month: '2-digit', 
-      day: '2-digit' 
+    const options: Intl.DateTimeFormatOptions = {
+      weekday: 'long',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
     };
-    this.currentDate = now.toLocaleDateString('en-US', options);
-    this.cdr.detectChanges();
+    const locale = this.currentLang === 'vi' ? 'vi-VN' : 'en-US';
+    this.currentDate = now.toLocaleDateString(locale, options);
   }
 
-  logout(): void {
+  onLangChange(lang: string) {
+    this.translateService.use(lang);
+    localStorage.setItem('lang', lang);
+    this.currentLang = lang;
+  }
+
+  logout() {
     this.authService.logout();
     this.router.navigate(['/']);
   }
+
   isDashboard(): boolean {
     return this.router.url === '/dashboard';
   }
-  toggleTheme(): void {
+
+  toggleTheme() {
     this.isDarkMode = !this.isDarkMode;
     localStorage.setItem('theme', this.isDarkMode ? 'dark' : 'light');
     this.applyTheme();
   }
-  applyTheme(): void {
+  
+  applyTheme() {
     if (this.isDarkMode) {
       document.documentElement.classList.add('dark-theme', 'dark');
     } else {

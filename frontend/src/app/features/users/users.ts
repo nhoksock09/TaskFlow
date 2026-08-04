@@ -1,155 +1,225 @@
-import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, inject, OnInit, DestroyRef, ChangeDetectorRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { User } from '../../shared/models';
+import { UserService } from '../../core/services/user.service';
+import { ToastService } from '../../core/services/toast.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { UserService } from '../../shared/services/user.service';
-import { AuthService } from '../../shared/services/auth.service';
-import { ToastService } from '../../shared/services/toast.service';
-import { User } from '../../shared/models';
+import { Dialog } from 'primeng/dialog';
+import { ButtonModule } from 'primeng/button';
+import { InputText } from 'primeng/inputtext';
+import { Paginator } from 'primeng/paginator';
+import { Select } from 'primeng/select';
+import { Tag } from 'primeng/tag';
+import { TableModule } from 'primeng/table';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+
+export interface Column {
+  field: string;
+  header: string; // Translation key e.g., 'USERS.COL_MEMBER'
+  class: string;  // CSS class e.g., 'col-user'
+  sortable: boolean;
+}
+
+export const USER_ROLE_MAP: Record<string, string> = {
+  'admin': 'COMMON.ROLE_ADMIN',
+  'user': 'COMMON.ROLE_USER'
+};
+
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, Dialog, ButtonModule, InputText, Paginator, Select, Tag, TableModule, TranslatePipe],
   templateUrl: './users.html',
   styleUrl: './users.scss'
 })
 export class Users implements OnInit {
   private userService = inject(UserService);
-  private authService = inject(AuthService);
   private toastService = inject(ToastService);
+  private destroyRef = inject(DestroyRef);
   private cdr = inject(ChangeDetectorRef);
+
+  readonly USER_ROLE_MAP = USER_ROLE_MAP;
+
+  cols: Column[] = [
+    { field: 'name', header: 'COMMON.LABEL.MEMBER', class: 'col-user', sortable: true },
+    { field: 'email', header: 'COMMON.LABEL.EMAIL', class: 'col-email', sortable: true },
+    { field: 'role', header: 'COMMON.LABEL.ROLE', class: 'col-role', sortable: true },
+    { field: 'dateOfBirth', header: 'COMMON.LABEL.DOB', class: 'col-dob', sortable: true },
+    { field: 'taskCount', header: 'COMMON.LABEL.TOTAL_TASKS', class: 'col-tasks', sortable: true },
+    { field: 'actions', header: 'COMMON.LABEL.ACTIONS', class: 'col-actions', sortable: false }
+  ];
+
   users: User[] = [];
-  currentUser: User | null = null;
-  searchQuery: string = '';
-  currentPage: number = 1;
-  pageSize: number = 5;
-  totalUsers: number = 0;
-  totalPages: number = 1;
-  isLoading: boolean = false;
-  userToPromote: User | null = null;
-  userToDelete: User | null = null;
-  showPromoteModal = false;
-  showDeleteModal = false;
+  totalUsers = 0;
+  currentPage = 1;
+  pageSize = 5;
+  totalPages = 1;
+  isLoading = false;
+
+  sortField: 'name' | 'email' | 'role' | 'dateOfBirth' | 'taskCount' | '' = '';
   sortDirection: 'asc' | 'desc' | '' = '';
 
-  ngOnInit(): void {
-    this.currentUser = this.authService.getUser();
+  searchQuery = '';
+  appliedSearchQuery = '';
+
+  showPromoteModal = false;
+  userToPromote: User | null = null;
+
+  showDeleteModal = false;
+  userToDelete: User | null = null;
+
+  ngOnInit() {
     this.loadUsers();
   }
-  loadUsers(): void {
+
+  loadUsers() {
     this.isLoading = true;
-    const sortField = this.sortDirection ? 'name' : undefined;
-    const sortOrd = this.sortDirection || undefined;
-    this.userService.getUsers(this.searchQuery, this.currentPage, this.pageSize, sortField, sortOrd).subscribe({
+
+    this.userService.getUsers(
+      this.appliedSearchQuery,
+      this.currentPage,
+      this.pageSize,
+      this.sortField || undefined,
+      this.sortDirection || undefined
+    )
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
       next: (res) => {
+        this.users = res.data || [];
+        this.totalUsers = res.total || 0;
+        this.totalPages = res.totalPages || 1;
         this.isLoading = false;
-        if (res.success) {
-          this.users = res.data;
-          this.totalUsers = res.total;
-          this.totalPages = res.totalPages;
-        }
         this.cdr.detectChanges();
       },
       error: (err) => {
+        this.toastService.error('USERS.TOAST.LOAD_FAILED');
         this.isLoading = false;
-        console.error('Error loading users:', err);
-        this.toastService.error(err.error?.message || 'Failed to load user list.');
-        this.cdr.detectChanges();
       }
     });
   }
 
-  toggleSort(): void {
-    if (this.sortDirection === '') {
-      this.sortDirection = 'asc';
-    } else if (this.sortDirection === 'asc') {
-      this.sortDirection = 'desc';
+  toggleColumnSort(field: string) {
+    const validFields = ['name', 'email', 'role', 'dateOfBirth', 'taskCount'];
+    if (!validFields.includes(field)) return;
+    const typedField = field as 'name' | 'email' | 'role' | 'dateOfBirth' | 'taskCount';
+    if (this.sortField === typedField) {
+      if (this.sortDirection === 'asc') {
+        this.sortDirection = 'desc';
+      } else if (this.sortDirection === 'desc') {
+        this.sortField = '';
+        this.sortDirection = '';
+      } else {
+        this.sortDirection = 'asc';
+      }
     } else {
-      this.sortDirection = '';
+      this.sortField = typedField;
+      this.sortDirection = 'asc';
     }
     this.currentPage = 1;
     this.loadUsers();
   }
-  onSearch(): void {
+
+  onSearch() {
+    this.appliedSearchQuery = this.searchQuery.trim();
     this.currentPage = 1;
     this.loadUsers();
   }
-  goToPage(page: number): void {
+
+  goToPage(page: number) {
     if (page >= 1 && page <= this.totalPages && page !== this.currentPage) {
       this.currentPage = page;
       this.loadUsers();
     }
   }
-  onPageSizeChange(newSize: number): void {
+
+  onUserPageChange(event: any) {
+    this.currentPage = event.page + 1; // event.page is 0-based
+    this.pageSize = event.rows;
+    this.loadUsers();
+  }
+
+  onPageSizeChange(newSize: number) {
     this.pageSize = newSize;
     this.currentPage = 1;
     this.loadUsers();
   }
+
   get pages(): number[] {
     const pagesArr: number[] = [];
     for (let i = 1; i <= this.totalPages; i++) pagesArr.push(i);
     return pagesArr;
   }
-  openPromoteModal(user: User): void {
+
+  openPromoteModal(user: User) {
     if (user.role === 'admin') {
-      this.toastService.error("Cannot demote another Admin's role.");
+      this.toastService.error('USERS.TOAST.DEMOTE_ADMIN_ERROR');
       return;
     }
     this.userToPromote = user;
     this.showPromoteModal = true;
-    this.cdr.detectChanges();
   }
-  closePromoteModal(): void {
+
+  closePromoteModal() {
     this.showPromoteModal = false;
     this.userToPromote = null;
-    this.cdr.detectChanges();
   }
-  confirmPromote(): void {
+
+  confirmPromote() {
     if (!this.userToPromote || (!this.userToPromote._id && !this.userToPromote.id)) return;
     const userId = this.userToPromote._id || this.userToPromote.id!;
-    this.userService.updateUserRole(userId, 'admin').subscribe({
+    this.userService.updateUserRole(userId, 'admin')
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
       next: (res) => {
-        this.toastService.success(res.message || `Promoted ${this.userToPromote?.name} to Admin successfully.`);
+        this.toastService.show('USERS.TOAST.PROMOTE_SUCCESS', 'success', { name: this.userToPromote?.name });
         this.closePromoteModal();
         this.loadUsers();
       },
-      error: (err) => this.toastService.error(err.error?.message || 'Failed to promote user.')
+      error: (err) => this.toastService.error('USERS.TOAST.PROMOTE_FAILED')
     });
   }
-  openDeleteModal(user: User): void {
+
+  openDeleteModal(user: User) {
     if (user.role === 'admin') {
-      this.toastService.error('Cannot delete an Admin account.');
+      this.toastService.error('USERS.TOAST.DELETE_ADMIN_ERROR');
       return;
     }
     this.userToDelete = user;
     this.showDeleteModal = true;
-    this.cdr.detectChanges();
   }
-  closeDeleteModal(): void {
+
+  closeDeleteModal() {
     this.showDeleteModal = false;
     this.userToDelete = null;
-    this.cdr.detectChanges();
   }
-  confirmDelete(): void {
+
+  confirmDelete() {
     if (!this.userToDelete || (!this.userToDelete._id && !this.userToDelete.id)) return;
     const userId = this.userToDelete._id || this.userToDelete.id!;
-    this.userService.deleteUser(userId).subscribe({
+    this.userService.deleteUser(userId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
       next: (res) => {
-        this.toastService.success(res.message || `Deleted account ${this.userToDelete?.name} successfully.`);
+        this.toastService.show('USERS.TOAST.DELETE_SUCCESS', 'success', { name: this.userToDelete?.name });
         this.closeDeleteModal();
         this.loadUsers();
       },
-      error: (err) => this.toastService.error(err.error?.message || 'Failed to delete user.')
+      error: (err) => this.toastService.error('USERS.TOAST.DELETE_FAILED')
     });
   }
+
   getInitial(name: string): string {
     return name ? name.charAt(0).toUpperCase() : 'U';
   }
+
   getAvatarBg(name: string): string {
     const colors = ['#3b82f6', '#10b981', '#6366f1', '#ec4899', '#f59e0b', '#8b5cf6'];
     let hash = 0;
     for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
     return colors[Math.abs(hash) % colors.length];
   }
+
   formatDate(dateStr?: string): string {
     if (!dateStr) return '--/--/----';
     const d = new Date(dateStr);

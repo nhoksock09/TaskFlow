@@ -1,0 +1,309 @@
+{
+  "COMMON": {
+    "CANCEL": "Cancel",
+    "CONFIRM": "Confirm",
+    "SAVE": "Save Changes",
+    "BTN": {
+      "SAVE": "Save Changes",
+      "CANCEL": "Cancel",
+      "CONFIRM": "Confirm",
+      "CHANGE_PW": "Change Password",
+      "SUBMIT": "Submit",
+      "DELETE": "Delete",
+      "SEARCH": "Search",
+      "REFRESH": "Refresh",
+      "EDIT": "Edit",
+      "CLOSE": "Close"
+    },
+    "LABEL": {
+      "FULL_NAME": "Full Name",
+      "DOB": "Date of Birth",
+      "EMAIL": "Email",
+      "PASSWORD": "Password",
+      "CURRENT_PW": "Current Password",
+      "NEW_PW": "New Password",
+      "CONFIRM_PW": "Confirm New Password",
+      "MEMBER": "Member",
+      "ROLE": "Role",
+      "ACTIONS": "Actions",
+      "TOTAL_TASKS": "Total Tasks"
+    },
+    "PLACEHOLDER": {
+      "FULL_NAME": "Enter your full name",
+      "EMAIL": "Enter your email",
+      "PASSWORD": "Enter your password",
+      "CURRENT_PW": "Enter current password",
+      "NEW_PW": "Enter new password",
+      "CONFIRM_PW": "Confirm new password"
+    },
+    "SUCCESS": "Success",
+    "ERROR": "Error",
+    "INFO": "Info",
+    "WARNING": "Warning",
+    "TOTAL": "Total",
+    "ROLE_ADMIN": "Admin",
+    "ROLE_USER": "User"
+  },
+  "API_ERROR": {
+    "EMAIL_ALREADY_EXISTS": "Email already exists.",
+    "INVALID_CREDENTIALS": "Invalid email or password.",
+    "INCORRECT_CURRENT_PASSWORD": "Incorrect current password.",
+    "USER_NOT_FOUND": "User not found.",
+    "FILL_ALL_FIELDS": "Please fill in all fields.",
+    "FILL_ALL_PASSWORD_FIELDS": "Please fill in all password fields.",
+    "NEW_PASSWORD_MIN_LENGTH": "New password must be at least 6 characters.",
+    "EMAIL_USERNAME_NO_LETTER": "Email username must contain at least one letter.",
+    "INVALID_DOB_FORMAT": "Invalid date of birth format.",
+    "DOB_FUTURE": "Date of birth cannot be in the future.",
+    "TOKEN_INVALIDATED": "Token is no longer valid. Please log in again."
+  },
+  "SIDEBAR": {
+    "DASHBOARD": "Dashboard",
+    "TASKS": "Tasks",
+    "SETTINGS": "Settings",
+    "USERS": "Users",
+    "EXPAND": "Expand sidebar",
+    "COLLAPSE": "Collapse sidebar"
+  },
+  "HEADER": {
+    "HELLO": "Hello, {{ name }}!",
+    "LOGOUT": "Logout"
+  },
+  "DASHBOARD": {
+    "STATS": {
+      "TOTAL": "Total",
+      "OVERDUE": "Overdue",
+      "TODO": "To Do",
+      "IN_PROGRESS": "In Progress",
+      "DONE": "Done"
+    },
+    "CHART_TITLE": "Task Completion Status",
+    "UPCOMING_TITLE": "Upcoming Tasks",
+    "VIEW_ALL": "View All Tasks",
+    "NO_UPCOMING": "All caught up! No upcoming tasks.",
+    "ALERT_TITLE": "Tasks Attention Required",
+    "ALERT_INTRO": "Here is a quick summary of your tasks requiring immediate attention:",
+    "OVERDUE_SECTION": "Overdue Tasks ({{ count }})",
+    "IMPENDING_SECTION": "Due Today / Next 24h ({{ count }})",
+    "WAS_DUE": "Was due: {{ date }}",
+    "DUE": "Due: {{ date }}",
+    "ACKNOWLEDGE": "Acknowledge & Continue",
+    "GROUPS": {
+      "OVERDUE": "Overdue",
+      "TODAY": "Today",
+      "TOMORROW": "Tomorrow"
+    },
+    "FILTERS": {
+      "TODAY": "Today",
+      "THIS_MONTH": "This Month",
+      "LAST_MONTH": "Last Month",
+      "NEXT_MONTH": "Next Month"
+    }
+  },
+  "TASKS": {
+    "TITLE": "Tasks List",
+    "SEARCH_PLACEHOLDER": "Search tasks...",
+    "COLUMN_TODO": "To Do",
+    "COLUMN_PROGRESS": "In Progress",
+    "COLUMN_DONE": "Done",
+    "NO_TASKS": "No tasks",
+    "OVERDUE": "OVERDUE",
+    "DUE_SOON": "DUE SOON",
+    "IN_PROGRESS": "IN PROGRESS",
+    "ADD_TITLE": "Add Task",
+    "EDIT_TITLE": "Edit Task",
+    "CONFIRM_DELETE_TITLE": "Confirm Delete",
+    "CONFIRM_DELETE_MSG": "Are you sure you want to delete this task?",
+    "FILTERS": {
+      "ALL_PRIORITIES": "All Priorities",
+      "HIGH": "High",
+      "MEDIUM": "Medium",
+      "LOW": "Low",
+      "ALL_STATUS": "All Status",
+      "OVERDUE": "Overdue",
+      "DUE_SOON": "Due Soon",
+      "ALL_TIME": "All Time",
+      "TODAY": "Today",
+      "THIS_MONTH": "This Month",
+      "LAST_MONTH": "Last Month",
+      "NEXT_MONTH": "Next Month"
+    },
+    "FORM": {
+      "TITLE_LABEL": "Title",
+      "TITLE_PLACEHOLDER": "Enter task title...",
+      "DESC_LABEL": "Description",
+      "DESC_PLACEHOLDER": "Short description",
+      "PRIORITY_LABEL": "Priority",
+      "STATUS_LABEL": "Status",
+      "DUE_DATE_LABEL": "Due Date"
+    },
+    "TOAST": {
+      "MOVE_SUCCESS": "Moved task to {{ status }}",
+      "MOVE_FAILED": "Failed to update task status.",
+      "UPDATE_SUCCESS": "Task updated successfully! 🎉",
+      "UPDATE_FAILED": "Failed to update task.",
+      "CREATE_SUCCESS": "Task created successfully! 🎉",
+      "CREATE_FAILED": "Failed to create task.",
+      "DELETE_SUCCESS": "Task deleted successfully! 🗑️",
+      "DELETE_FAILED": "Failed to delete task.",
+      "IN_PROGRESS": "Task is in progress! ⏰",
+      "COMPLETED": "Task completed! ✅",
+      "RESTARTED": "Task restarted! ⏰"
+    },
+    "STATUS": {
+      "TODO": "To Do",
+      "IN_PROGRESS": "In Progress",
+      "COMPLETED": "Done"
+    }
+  },
+  "USERS": {
+    "TITLE": "User Management",
+    "SEARCH_PLACEHOLDER": "Search by name or email...",
+    "NO_USERS": "No users found.",
+    "SHOWING_INFO": "Showing <strong>{{ count }}</strong> of <strong>{{ total }}</strong> accounts",
+    "PROMOTE_TITLE": "Confirm Admin Promotion",
+    "PROMOTE_MSG": "Are you sure you want to promote account <strong>{{ name }}</strong> ({{ email }}) to Admin?",
+    "PROMOTE_CONFIRM": "Confirm Promotion",
+    "DELETE_TITLE": "Confirm Account Deletion",
+    "DELETE_MSG": "Are you sure you want to delete account <strong>{{ name }}</strong> ({{ email }})? This action cannot be undone.",
+    "DELETE_CONFIRM": "Delete Account",
+    "PROMOTE_TOOLTIP": "Promote to Admin",
+    "DELETE_TOOLTIP": "Delete user",
+    "DEMOTE_TOOLTIP_ERROR": "Cannot demote Admin role",
+    "DELETE_TOOLTIP_ERROR": "Cannot delete Admin",
+    "TOAST": {
+      "LOAD_FAILED": "Failed to load users list.",
+      "DEMOTE_ADMIN_ERROR": "Cannot demote another Admin's role.",
+      "PROMOTE_SUCCESS": "Promoted {{ name }} to Admin successfully.",
+      "PROMOTE_FAILED": "Failed to promote user.",
+      "DELETE_ADMIN_ERROR": "Cannot delete an Admin account.",
+      "DELETE_SUCCESS": "Deleted account {{ name }} successfully.",
+      "DELETE_FAILED": "Failed to delete user."
+    }
+  },
+  "SETTINGS": {
+    "TITLE": "Account Settings",
+    "MODAL_TITLE": "Change Password",
+    "TOAST": {
+      "FILL_REQUIRED": "Please fill in all required fields.",
+      "NO_CHANGES": "No changes to save.",
+      "PROFILE_SUCCESS": "Profile updated successfully!",
+      "PROFILE_FAILED": "Failed to update profile.",
+      "PASSWORD_MISMATCH": "Password confirmation does not match!",
+      "PASSWORD_SUCCESS": "Password changed successfully!",
+      "PASSWORD_FAILED": "Incorrect current password."
+    }
+  },
+  "AUTH": {
+    "TAGLINE": "Organize your tasks efficiently.",
+    "SUB_TAGLINE": "Stay focused, manage your tasks, and achieve your learning goals with TaskFlow.",
+    "FEATURE_MANAGE": "Manage your daily tasks",
+    "FEATURE_PRODUCTIVITY": "Increase productivity every day",
+    "WELCOME_BACK": "Welcome Back",
+    "CREATE_ACCOUNT": "Create Account",
+    "SIGN_IN_INTRO": "Sign in to continue using TaskFlow.",
+    "CREATE_INTRO": "Create your TaskFlow account.",
+    "LOGIN_BTN": "Login",
+    "REGISTER_BTN": "Register",
+    "TOAST": {
+      "LOGIN_SUCCESS": "Login successful! 🎉",
+      "LOGIN_FAILED": "Login failed",
+      "REGISTRATION_SUCCESS": "Registration successful! 🎉",
+      "REGISTRATION_FAILED": "Registration failed"
+    }
+  },
+  "VALIDATION": {
+    "REQUIRED": "This field is required.",
+    "MINLENGTH": "Must be at least {{ minLength }} characters.",
+    "INVALID_FULL_NAME": "Full name can only contain letters and spaces.",
+    "OUT_OF_AGE_RANGE": "You must be between 10 and 70 years old.",
+    "OUT_OF_AGE_RANGE_60": "You must be between 10 and 60 years old.",
+    "INVALID_EMAIL": "Please enter a valid email address (e.g., user@example.com).",
+    "EMAIL_PREFIX_TOO_SHORT": "Email prefix before @ must be at least 6 characters.",
+    "EMAIL_TYPO": "Please enter a valid email address (e.g., user@example.com).",
+    "GMAIL_CO_TYPO": "Did you mean @gmail.com?",
+    "PAST_DATE": "Due date/time cannot be in the past.",
+    "TOO_FAR_FUTURE": "Due date cannot be more than 6 months in the future.",
+    "PASSWORD_REQUIREMENTS": "Password must meet all checklist requirements."
+  },
+  "PASSWORD_REQ": {
+    "MIN_LENGTH": "At least 6 characters",
+    "UPPERCASE": "Contains uppercase letter",
+    "LOWERCASE": "Contains lowercase letter",
+    "NUMBER": "Contains number"
+  },
+  "primeng": {
+    "accept": "Yes",
+    "reject": "No",
+    "choose": "Choose",
+    "upload": "Upload",
+    "cancel": "Cancel",
+    "dayNames": [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday"
+    ],
+    "dayNamesShort": [
+      "Sun",
+      "Mon",
+      "Tue",
+      "Wed",
+      "Thu",
+      "Fri",
+      "Sat"
+    ],
+    "dayNamesMin": [
+      "Su",
+      "Mo",
+      "Tu",
+      "We",
+      "Th",
+      "Fr",
+      "Sa"
+    ],
+    "monthNames": [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December"
+    ],
+    "monthNamesShort": [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
+    ],
+    "today": "Today",
+    "clear": "Clear",
+    "weekHeader": "Wk",
+    "firstDayOfWeek": 0,
+    "showMonthAfterYear": false,
+    "dateFormat": "mm/dd/yy",
+    "weak": "Weak",
+    "medium": "Medium",
+    "strong": "Strong",
+    "passwordPrompt": "Enter a password",
+    "emptyMessage": "No results found",
+    "emptyFilterMessage": "No results found"
+  }
+}

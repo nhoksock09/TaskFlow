@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { ApiService } from '../../core/services/api.service';
+import { ApiService } from './api.service';
 
 interface Task {
   _id?: string;

@@ -5,22 +5,34 @@
   <div class="content">
     <header class="header">
       <div class="header-left">
-        <h2 class="greeting">Hello, {{ user?.name}}!</h2>
+        <h2 class="greeting">{{ 'HEADER.HELLO' | translate:{ name: user?.name } }}</h2>
         <p class="date">{{ currentDate }}</p>
       </div>
       <div class="header-right" style="display: flex; align-items: center; gap: 16px;">
-        <button class="theme-toggle-btn" (click)="toggleTheme()">
-          <i class="ph-light ph-moon" *ngIf="!isDarkMode"></i>
-          <i class="ph-light ph-sun" *ngIf="isDarkMode"></i>
-        </button>
-        <button class="logout-btn" (click)="logout()" title="Logout">
+        <p-select 
+          [(ngModel)]="currentLang" 
+          [options]="langOptions" 
+          optionLabel="label" 
+          optionValue="value"
+          (onChange)="onLangChange($event.value)" 
+          styleClass="lang-select" 
+          appendTo="body"
+        ></p-select>
+
+        <p-button styleClass="theme-toggle-btn" (click)="toggleTheme()">
+          @if (!isDarkMode) {
+            <i class="ph-light ph-moon"></i>
+          } @else {
+            <i class="ph-light ph-sun"></i>
+          }
+        </p-button>
+        <p-button styleClass="logout-btn" (click)="logout()" [title]="'HEADER.LOGOUT' | translate">
           <i class="ph-light ph-sign-out"></i>
-        </button>
+        </p-button>
       </div>
     </header>
     <main>
       <router-outlet></router-outlet>
     </main>
   </div>
-  <app-toast></app-toast>
-</div>
+</div>

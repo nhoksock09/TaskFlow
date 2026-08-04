@@ -1,0 +1,55 @@
+<p-drawer 
+  [visible]="true" 
+  [modal]="false" 
+  [showCloseIcon]="false" 
+  [dismissible]="false" 
+  appendTo="self"
+  styleClass="sidebar-drawer"
+>
+  <div class="sidebar-wrapper">
+    <div class="sidebar-top">
+      <div class="logo">
+        <div class="logo-box">
+          <i class="ph-light ph-lightning"></i>
+        </div>
+        <span>TaskFlow</span>
+      </div>
+      <nav>
+        <a routerLink="/dashboard" routerLinkActive="active">
+          <i class="ph-light ph-squares-four nav-icon"></i>
+          <span>{{ 'SIDEBAR.DASHBOARD' | translate }}</span>
+        </a>
+        <a routerLink="/tasks" routerLinkActive="active">
+          <i class="ph-light ph-list-checks nav-icon"></i>
+          <span>{{ 'SIDEBAR.TASKS' | translate }}</span>
+        </a>
+        <a routerLink="/settings" routerLinkActive="active">
+          <i class="ph-light ph-gear nav-icon"></i>
+          <span>{{ 'SIDEBAR.SETTINGS' | translate }}</span>
+        </a>
+        @if (isAdmin) {
+          <a routerLink="/users" routerLinkActive="active">
+            <i class="ph-light ph-user-gear nav-icon"></i>
+            <span>{{ 'SIDEBAR.USERS' | translate }}</span>
+          </a>
+        }
+      </nav>
+    </div>
+    @if (user) {
+      <div class="sidebar-footer">
+        <div class="user-profile">
+          <div class="user-avatar">
+            {{ getInitial(user.name) }}
+          </div>
+          <div class="user-info">
+            <span class="user-name">{{ user.name }}</span>
+            <span class="user-email">{{ user.email }}</span>
+          </div>
+        </div>
+      </div>
+    }
+    <p-button styleClass="sidebar-toggle-btn" (click)="toggleRequest.emit()" [title]="(isCollapsed ? 'SIDEBAR.EXPAND' : 'SIDEBAR.COLLAPSE') | translate">
+      <i class="ph-light" [class.ph-caret-right]="isCollapsed" [class.ph-caret-left]="!isCollapsed"></i>
+    </p-button>
+  </div>
+</p-drawer>

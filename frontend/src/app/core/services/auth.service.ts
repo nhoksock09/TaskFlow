@@ -3,14 +3,14 @@ import { HttpClient } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
 
-import { ApiService } from '../../core/services/api.service';
-import { User } from '../models';
+import { ApiService } from './api.service';
+import { User } from '../../shared/models';
 
 import {
     LoginRequest,
     RegisterRequest,
     AuthResponse
-} from '../models';
+} from '../../shared/models';
 
 @Injectable({
     providedIn: 'root'
@@ -70,6 +70,8 @@ export class AuthService {
         localStorage.removeItem(this.TOKEN_KEY);
 
         localStorage.removeItem(this.USER_KEY);
+
+        sessionStorage.removeItem('hasShownLoginAlert');
     }
 
     isLoggedIn(): boolean {

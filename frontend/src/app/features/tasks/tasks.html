@@ -1,196 +1,280 @@
 <div class="tasks-container-page">
   <div class="dashboard-content-full">
-    <!-- Task List Panel -->
+    <!-- Tasks List Panel -->
     <div class="panel task-list-panel-full">
       <div class="panel-header">
-        <h3>Tasks List</h3>
+        <h3>{{ 'TASKS.TITLE' | translate }}</h3>
         <div class="header-actions" style="display: flex; align-items: center; gap: 12px;">
-          <div class="search-box">
-            <i class="ph-light ph-magnifying-glass search-icon"></i>
-            <input type="text" [(ngModel)]="searchQuery" placeholder="Search tasks...">
+          <div class="search-bar">
+            <input type="text" pInputText [(ngModel)]="searchQuery"
+              (input)="searchQuery.trim() === '' ? onSearch() : null" (keyup.enter)="onSearch()"
+              [placeholder]="'TASKS.SEARCH_PLACEHOLDER' | translate" class="search-input">
+            <p-button styleClass="search-icon-btn" [text]="true" type="button" (click)="onSearch()" [title]="'COMMON.BTN.SEARCH' | translate">
+              <i class="ph-light ph-magnifying-glass"></i>
+            </p-button>
           </div>
-          <button class="btn-primary add-task-trigger-btn" (click)="openAddModal()">
-            <i class="ph-light ph-plus" style="margin-right: 4px;"></i> Add Task
-          </button>
         </div>
       </div>
-      
-      <!-- Status Tabs inside Tasks page -->
-      <div class="status-tabs-container">
-        <button class="status-tab" [class.active]="activeStatusFilter === 'all'" (click)="setStatusFilter('all')">
-          All ({{ tasks.length }})
-        </button>
-        <button class="status-tab status-tab-overdue" [class.active]="activeStatusFilter === 'overdue'" (click)="setStatusFilter('overdue')">
-          Overdue ({{ overdueTasksCount }})
-        </button>
-        <button class="status-tab" [class.active]="activeStatusFilter === 'todo'" (click)="setStatusFilter('todo')">
-          To Do ({{ tasks.filter(t => t.status === 'todo').length }})
-        </button>
-        <button class="status-tab" [class.active]="activeStatusFilter === 'in-progress'" (click)="setStatusFilter('in-progress')">
-          In Progress ({{ tasks.filter(t => t.status === 'in-progress').length }})
-        </button>
-        <button class="status-tab" [class.active]="activeStatusFilter === 'completed'" (click)="setStatusFilter('completed')">
-          Completed ({{ tasks.filter(t => t.status === 'completed').length }})
-        </button>
+
+      <div class="filters-container">
+        <div class="filter-item">
+          <!-- Dropdown 1: Priority -->
+          <p-select [(ngModel)]="activeFilter" [options]="priorityFilterOptions" optionLabel="label" optionValue="value"
+            (onChange)="filterTasks()" styleClass="w-full" appendTo="body">
+          </p-select>
+        </div>
+        <div class="filter-item">
+          <!-- Dropdown 2: Status -->
+          <p-select [(ngModel)]="activeStatusFilter" [options]="statusFilterOptions" optionLabel="label"
+            optionValue="value" (onChange)="filterTasks()" styleClass="w-full" appendTo="body">
+          </p-select>
+        </div>
+        <div class="filter-item">
+          <!-- Dropdown 3: Timeframe -->
+          <p-select [(ngModel)]="activeTimeframeFilter" [options]="timeframeOptions" optionLabel="label"
+            optionValue="value" (onChange)="filterTasks()" styleClass="w-full" appendTo="body">
+          </p-select>
+        </div>
       </div>
-      
-      <div class="filter-buttons">
-        <button class="filter-btn" [class.active]="activeFilter === 'all'" (click)="setFilter('all')">All Priorities</button>
-        <button class="filter-btn filter-high" [class.active]="activeFilter === 'high'" (click)="setFilter('high')">High</button>
-        <button class="filter-btn filter-medium" [class.active]="activeFilter === 'medium'" (click)="setFilter('medium')">Medium</button>
-        <button class="filter-btn filter-low" [class.active]="activeFilter === 'low'" (click)="setFilter('low')">Low</button>
-      </div>
-      
-      <div class="task-list-container">
-        <div class="task-list">
-          <div class="task-item" *ngFor="let task of filteredTasks" [class.priority-high]="task.priority === 'high'"
-            [class.priority-medium]="task.priority === 'medium'" [class.priority-low]="task.priority === 'low'"
-            [class.completed]="task.status === 'completed'" [class.task-overdue]="isOverdue(task)">
-            <div class="task-left">
-              <div class="task-content">
-                <h4 style="display: flex; align-items: center; gap: 8px;">
-                  <span class="urgent-indicator" *ngIf="isUrgent(task)" title="Due in less than 1 hour!">
-                    <i class="ph-light ph-bell-ringing pulsing-urgent"></i>
-                  </span>
-                  {{ task.title }}
-                </h4>
-                <div class="task-due-row" style="display: flex; align-items: center; gap: 12px; margin-bottom: 4px;">
-                  <p class="task-due">Due: {{ formatDate(task.dueDate) }}</p>
-                  <span class="overdue-badge" *ngIf="isOverdue(task)">
-                    <i class="ph-light ph-warning-octagon"></i>
-                    {{ getOverdueTime(task) }}
-                  </span>
+
+      <!-- Tasks List Container -->
+      <div class="tasks-board" cdkDropListGroup>
+
+        <!-- Column: To Do -->
+        <div class="tasks-column">
+          <div class="column-header">
+            <div class="header-left">
+              <span class="status-dot todo"></span>
+              <h4>{{ 'TASKS.COLUMN_TODO' | translate }}</h4>
+              <p-badge [value]="getTasksCountByStatus('todo')" severity="secondary"></p-badge>
+            </div>
+            <p-button icon="pi pi-plus" [text]="true" [rounded]="true" size="small" (click)="openAddModal('todo')"
+              [title]="'TASKS.ADD_TITLE' | translate"></p-button>
+          </div>
+
+          <div class="column-tasks-container" cdkDropList [id]="'todo'" [cdkDropListData]="getTasksByStatus('todo')"
+            (cdkDropListDropped)="onDrop($event)">
+
+            <p-scrollarea style="height: 480px;" class="w-full">
+              <p-scrollarea-content class="space-y-3 pr-2">
+                @for (task of getTasksByStatus('todo'); track task._id) {
+                  <div class="task-card" cdkDrag [cdkDragData]="task"
+                    [class.priority-high]="task.priority === 'high'" [class.priority-medium]="task.priority === 'medium'"
+                    [class.priority-low]="task.priority === 'low'" [class.task-overdue]="isOverdue(task)">
+                    <div class="task-card-header">
+                      <h5>{{ task.title }}</h5>
+                      <div class="task-card-header-right">
+                        @if (isOverdue(task)) {
+                        <p-tag [value]="'TASKS.OVERDUE' | translate" severity="danger" icon="pi pi-exclamation-triangle"></p-tag>
+                        }
+                        @if (!isOverdue(task) && isDueSoon(task)) {
+                        <p-tag [value]="'TASKS.DUE_SOON' | translate" severity="warn" icon="pi pi-clock"></p-tag>
+                        }
+                        <!-- Actions -->
+                        <div class="task-card-actions">
+                          <p-button icon="pi pi-pencil" [text]="true" [rounded]="true" severity="secondary" size="small"
+                            (click)="editTask(task)" [title]="'COMMON.BTN.EDIT' | translate"></p-button>
+                          <p-button icon="pi pi-trash" [text]="true" [rounded]="true" severity="danger" size="small"
+                            (click)="deleteTask(task._id!)" [title]="'COMMON.BTN.DELETE' | translate"></p-button>
+                        </div>
+                      </div>
+                    </div>
+                    @if (task.description) {
+                    <p class="task-card-desc">{{ task.description }}</p>
+                    }
+
+                    <div class="task-card-footer">
+                      <p-tag [value]="TASK_PRIORITY_MAP[task.priority] | translate"
+                        [severity]="task.priority === 'high' ? 'danger' : (task.priority === 'medium' ? 'warn' : 'info')"></p-tag>
+                      <span class="due-date" [class.overdue]="isOverdue(task)">
+                        <i class="ph-light ph-calendar"></i> {{ formatDate(task.dueDate) }}
+                      </span>
+                    </div>
+                  </div>
+                }
+                @if (getTasksCountByStatus('todo') === 0) {
+                <div class="column-empty-message">
+                  {{ 'TASKS.NO_TASKS' | translate }}
                 </div>
-                <p class="task-description" *ngIf="task.description">Description: {{ task.description }}</p>
-              </div>
-            </div>
-            <div class="task-actions">
-              <!-- Active complete action toggler -->
-              <button class="action-btn complete" *ngIf="task.status !== 'completed'" (click)="completeTask(task)"
-                [title]="task.status === 'todo' ? 'Start Task' : 'Complete Task'">
-                <i class="ph-light ph-circle" *ngIf="task.status === 'todo'"></i>
-                <i class="ph-light ph-clock" *ngIf="task.status === 'in-progress'" style="color: #f59e0b;"></i>
-              </button>
-              
-              <!-- Restart and Completed status for completed tasks -->
-              <button class="action-btn complete completed-checked" *ngIf="task.status === 'completed'" disabled>
-                <i class="ph-light ph-check-circle" style="color: #10b981;"></i>
-              </button>
-              <button class="action-btn restart" *ngIf="task.status === 'completed'" (click)="completeTask(task)" title="Restart Task">
-                <i class="ph-light ph-arrow-counter-clockwise" style="color: #6366f1;"></i>
-              </button>
+                }
+              </p-scrollarea-content>
+              <p-scrollarea-scrollbar orientation="vertical"><p-scrollarea-handle /></p-scrollarea-scrollbar>
+            </p-scrollarea>
+          </div>
+        </div>
 
-              <!-- Edit and Delete actions (hidden for completed tasks) -->
-              <button class="action-btn edit" *ngIf="task.status !== 'completed'" (click)="editTask(task)"><i class="ph-light ph-pencil-simple"></i></button>
-              <button class="action-btn delete" *ngIf="task.status !== 'completed'" (click)="deleteTask(task._id!)"><i class="ph-light ph-trash"></i></button>
+        <!-- Column: In Progress -->
+        <div class="tasks-column">
+          <div class="column-header">
+            <div class="header-left">
+              <span class="status-dot in-progress"></span>
+              <h4>{{ 'TASKS.COLUMN_PROGRESS' | translate }}</h4>
+              <p-badge [value]="getTasksCountByStatus('in-progress')" severity="secondary"></p-badge>
             </div>
           </div>
-          <div *ngIf="filteredTasks.length === 0" class="no-tasks-message">
-            No tasks found matching current filters.
-          </div>
-        </div>
-      </div>
 
-      <!-- Task Pagination & Summary -->
-      <div class="tasks-footer" *ngIf="allFilteredTasks.length > 0">
-        <div class="task-total-info">
-          Showing <strong>{{ paginatedTasks.length }}</strong> out of <strong>{{ allFilteredTasks.length }}</strong> tasks
-        </div>
-        <div style="display: flex; align-items: center; gap: 16px;">
-          <div class="p-paginator" *ngIf="totalTaskPages >= 1">
-            <button class="p-paginator-element" [disabled]="taskPage === 1" (click)="setTaskPage(1)" title="First Page">
-              <i class="ph-light ph-caret-double-left"></i>
-            </button>
-            <button class="p-paginator-element" [disabled]="taskPage === 1" (click)="setTaskPage(taskPage - 1)" title="Previous Page">
-              <i class="ph-light ph-caret-left"></i>
-            </button>
-            <span class="p-paginator-pages">
-              <button *ngFor="let page of taskPages" class="p-paginator-element p-paginator-page" [class.p-highlight]="page === taskPage"
-                (click)="setTaskPage(page)">{{ page }}</button>
-            </span>
-            <button class="p-paginator-element" [disabled]="taskPage === totalTaskPages" (click)="setTaskPage(taskPage + 1)" title="Next Page">
-              <i class="ph-light ph-caret-right"></i>
-            </button>
-            <button class="p-paginator-element" [disabled]="taskPage === totalTaskPages" (click)="setTaskPage(totalTaskPages)" title="Last Page">
-              <i class="ph-light ph-caret-double-right"></i>
-            </button>
+          <div class="column-tasks-container" cdkDropList [id]="'in-progress'"
+            [cdkDropListData]="getTasksByStatus('in-progress')" (cdkDropListDropped)="onDrop($event)">
+
+            <p-scrollarea style="height: 480px;" class="w-full">
+              <p-scrollarea-content class="space-y-3 pr-2">
+                @for (task of getTasksByStatus('in-progress'); track task._id) {
+                  <div class="task-card" cdkDrag [cdkDragData]="task"
+                    [class.priority-high]="task.priority === 'high'" [class.priority-medium]="task.priority === 'medium'"
+                    [class.priority-low]="task.priority === 'low'" [class.task-overdue]="isOverdue(task)">
+                    <div class="task-card-header">
+                      <h5>{{ task.title }}</h5>
+                      <div class="task-card-header-right">
+                        @if (isOverdue(task)) {
+                        <p-tag [value]="'TASKS.OVERDUE' | translate" severity="danger" icon="pi pi-exclamation-triangle"></p-tag>
+                        }
+                        @if (!isOverdue(task) && isDueSoon(task)) {
+                        <p-tag [value]="'TASKS.DUE_SOON' | translate" severity="warn" icon="pi pi-clock"></p-tag>
+                        }
+                        <!-- Actions -->
+                        <div class="task-card-actions">
+                          <p-button icon="pi pi-pencil" [text]="true" [rounded]="true" severity="secondary" size="small"
+                            (click)="editTask(task)" [title]="'COMMON.BTN.EDIT' | translate"></p-button>
+                          <p-button icon="pi pi-trash" [text]="true" [rounded]="true" severity="danger" size="small"
+                            (click)="deleteTask(task._id!)" [title]="'COMMON.BTN.DELETE' | translate"></p-button>
+                        </div>
+                      </div>
+                    </div>
+                    @if (task.description) {
+                    <p class="task-card-desc">{{ task.description }}</p>
+                    }
+
+                    <div class="task-card-footer">
+                      <p-tag [value]="TASK_PRIORITY_MAP[task.priority] | translate"
+                        [severity]="task.priority === 'high' ? 'danger' : (task.priority === 'medium' ? 'warn' : 'info')"></p-tag>
+                      <span class="due-date" [class.overdue]="isOverdue(task)">
+                        <i class="ph-light ph-calendar"></i> {{ formatDate(task.dueDate) }}
+                      </span>
+                    </div>
+                  </div>
+                }
+                @if (getTasksCountByStatus('in-progress') === 0) {
+                <div class="column-empty-message">
+                  {{ 'TASKS.NO_TASKS' | translate }}
+                </div>
+                }
+              </p-scrollarea-content>
+              <p-scrollarea-scrollbar orientation="vertical"><p-scrollarea-handle /></p-scrollarea-scrollbar>
+            </p-scrollarea>
           </div>
-          <div class="rows-per-page">
-            <select class="page-size-select" [ngModel]="taskPageSize" (ngModelChange)="onPageSizeChange($event)">
-              <option [ngValue]="5">5</option>
-              <option [ngValue]="10">10</option>
-              <option [ngValue]="20">20</option>
-            </select>
+        </div>
+
+        <!-- Column: Done -->
+        <div class="tasks-column">
+          <div class="column-header">
+            <div class="header-left">
+              <span class="status-dot completed"></span>
+              <h4>{{ 'TASKS.COLUMN_DONE' | translate }}</h4>
+              <p-badge [value]="getTasksCountByStatus('completed')" severity="secondary"></p-badge>
+            </div>
+          </div>
+
+          <div class="column-tasks-container" cdkDropList [id]="'completed'"
+            [cdkDropListData]="getTasksByStatus('completed')" (cdkDropListDropped)="onDrop($event)">
+
+            <p-scrollarea style="height: 480px;" class="w-full">
+              <p-scrollarea-content class="space-y-3 pr-2">
+                @for (task of getTasksByStatus('completed'); track task._id) {
+                  <div class="task-card completed" cdkDrag
+                    [cdkDragData]="task" [class.priority-high]="task.priority === 'high'"
+                    [class.priority-medium]="task.priority === 'medium'" [class.priority-low]="task.priority === 'low'">
+                    <div class="task-card-header">
+                      <h5>{{ task.title }}</h5>
+                      <div class="task-card-header-right">
+                        @if (isOverdue(task)) {
+                        <p-tag [value]="'TASKS.OVERDUE' | translate" severity="danger" icon="pi pi-exclamation-triangle"></p-tag>
+                        }
+                        @if (!isOverdue(task) && isDueSoon(task)) {
+                        <p-tag [value]="'TASKS.DUE_SOON' | translate" severity="warn" icon="pi pi-clock"></p-tag>
+                        }
+                        <!-- Actions -->
+                        <div class="task-card-actions">
+                          <p-button icon="pi pi-pencil" [text]="true" [rounded]="true" severity="secondary" size="small"
+                            (click)="editTask(task)" [title]="'COMMON.BTN.EDIT' | translate"></p-button>
+                          <p-button icon="pi pi-trash" [text]="true" [rounded]="true" severity="danger" size="small"
+                            (click)="deleteTask(task._id!)" [title]="'COMMON.BTN.DELETE' | translate"></p-button>
+                        </div>
+                      </div>
+                    </div>
+                    @if (task.description) {
+                    <p class="task-card-desc">{{ task.description }}</p>
+                    }
+
+                    <div class="task-card-footer">
+                      <p-tag [value]="TASK_PRIORITY_MAP[task.priority] | translate"
+                        [severity]="task.priority === 'high' ? 'danger' : (task.priority === 'medium' ? 'warn' : 'info')"></p-tag>
+                      <span class="due-date">
+                        <i class="ph-light ph-calendar"></i> {{ formatDate(task.dueDate) }}
+                      </span>
+                    </div>
+                  </div>
+                }
+                @if (getTasksCountByStatus('completed') === 0) {
+                <div class="column-empty-message">
+                  {{ 'TASKS.NO_TASKS' | translate }}
+                </div>
+                }
+              </p-scrollarea-content>
+              <p-scrollarea-scrollbar orientation="vertical"><p-scrollarea-handle /></p-scrollarea-scrollbar>
+            </p-scrollarea>
           </div>
         </div>
+
       </div>
     </div>
   </div>
 
-  <!-- Add/Edit Task Modal -->
-  <div class="modal-overlay" *ngIf="showAddEditModal" (click)="closeAddEditModal()">
-    <div class="modal-content" (click)="$event.stopPropagation()">
-      <div class="modal-header">
-        <h3>{{ editingTaskId ? 'Edit Task' : 'Add Task' }}</h3>
-        <button class="modal-close" (click)="closeAddEditModal()"><i class="ph-light ph-x"></i></button>
+    <!-- Add/Edit Task Modal -->
+    @if (showAddEditModal) {
+      <div class="modal-overlay" (click)="closeAddEditModal()">
+        <div class="modal-card" (click)="$event.stopPropagation()">
+          <div class="card-header">
+            <div class="header-icon">
+              <i class="ph-light" [class.ph-pencil-simple-line]="editingTaskId" [class.ph-plus]="!editingTaskId"></i>
+            </div>
+            <h2>{{ (editingTaskId ? 'TASKS.EDIT_TITLE' : 'TASKS.ADD_TITLE') | translate }}</h2>
+          </div>
+          <form [formGroup]="taskForm" (ngSubmit)="addTask()">
+            <formly-form
+              [form]="taskForm"
+              [fields]="taskFields"
+              [model]="taskModel">
+            </formly-form>
+            <div class="modal-actions">
+              <p-button type="button" styleClass="btn-cancel" (click)="closeAddEditModal()" [label]="'COMMON.BTN.CANCEL' | translate"></p-button>
+              <p-button type="submit" styleClass="btn-confirm" [label]="(editingTaskId ? 'COMMON.BTN.SAVE' : 'TASKS.ADD_TITLE') | translate"></p-button>
+            </div>
+          </form>
+        </div>
       </div>
-      <form (ngSubmit)="addTask()" [formGroup]="taskForm">
-        <div class="modal-body">
-          <div class="form-group">
-            <label>Title <span class="required">*</span></label>
-            <input type="text" formControlName="title" placeholder="Example: Complete Angular Form">
-            <small class="error-message" *ngIf="taskForm.get('title')?.touched && taskForm.get('title')?.invalid">
-              Title is required.
-            </small>
-          </div>
-          <div class="form-group">
-            <label>Description</label>
-            <textarea formControlName="description" placeholder="Short description" rows="3"></textarea>
-          </div>
-          <div class="form-group">
-            <label>Priority</label>
-            <select formControlName="priority">
-              <option value="high">High</option>
-              <option value="medium" selected>Medium</option>
-              <option value="low">Low</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Due Date</label>
-            <input type="datetime-local" formControlName="dueDate" [min]="minDateTime">
-            <small class="error-message" *ngIf="taskForm.get('dueDate')?.touched && taskForm.get('dueDate')?.hasError('pastDate')">
-              Due date/time cannot be in the past.
-            </small>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn-secondary" (click)="closeAddEditModal()">Cancel</button>
-          <button type="submit" class="btn-primary submit-btn-modal">{{ editingTaskId ? 'Update Task' : 'Add Task' }}</button>
-        </div>
-      </form>
-    </div>
-  </div>
+    }
 
   <!-- Delete Confirmation Modal -->
-  <div class="modal-overlay" *ngIf="showDeleteModal" (click)="closeDeleteModal()">
-    <div class="modal-content" (click)="$event.stopPropagation()">
-      <div class="modal-header">
-        <h3 style="display: flex; align-items: center; gap: 8px;">
-          <i class="ph-light ph-trash" style="color: #ef4444;"></i> Confirm Delete
-        </h3>
-        <button class="modal-close" (click)="closeDeleteModal()"><i class="ph-light ph-x"></i></button>
-      </div>
-      <div class="modal-body">
-        <p>Are you sure you want to delete this task?</p>
-        <div class="task-preview">
-          <h4>{{ taskToDelete?.title }}</h4>
-          <p>{{ taskToDelete?.description }}</p>
+  @if (showDeleteModal) {
+    <div class="modal-overlay" (click)="closeDeleteModal()">
+      <div class="modal-card" style="max-width: 440px;" (click)="$event.stopPropagation()">
+        <div class="card-header" style="padding-left: 0; padding-right: 0;">
+          <h2 style="font-size: 20px; font-weight: 700; color: var(--text-primary); margin: 0;">{{ 'TASKS.CONFIRM_DELETE_TITLE' | translate }}</h2>
+        </div>
+        <div class="modal-body" style="padding-top: 8px;">
+          <p style="color: var(--text-secondary); line-height: 1.5; margin-bottom: 16px; font-size: 14px;">{{ 'TASKS.CONFIRM_DELETE_MSG' | translate }}</p>
+          <div class="task-preview"
+            [style.border-left]="taskToDelete?.priority === 'high' ? '4px solid #ef4444' : (taskToDelete?.priority === 'medium' ? '4px solid #f59e0b' : '4px solid #3b82f6')"
+            style="background: var(--bg-primary); padding: 14px; border-radius: 10px; margin-bottom: 8px;">
+            <h4 style="margin: 0 0 6px 0; color: var(--text-primary); font-size: 15px; font-weight: 600;">{{ taskToDelete?.title }}</h4>
+            <p style="margin: 0; color: var(--text-secondary); font-size: 13px; line-height: 1.45;">{{ taskToDelete?.description }}</p>
+          </div>
+        </div>
+        <div class="modal-actions" style="margin-top: 16px;">
+          <p-button type="button" styleClass="btn-cancel" (click)="closeDeleteModal()" [label]="'COMMON.BTN.CANCEL' | translate"></p-button>
+          <p-button type="button" styleClass="btn-confirm btn-danger" (click)="confirmDelete()" [label]="'COMMON.BTN.DELETE' | translate"></p-button>
         </div>
       </div>
-      <div class="modal-footer">
-        <button class="btn-secondary" (click)="closeDeleteModal()">Cancel</button>
-        <button class="btn-danger" (click)="confirmDelete()">Delete</button>
-      </div>
     </div>
-  </div>
+  }
 </div>

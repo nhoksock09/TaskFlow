@@ -1,194 +1,58 @@
 <div class="auth-page">
 
     <div class="left-panel">
-
         <div class="logo" style="display: flex; align-items: center;">
             <i class="ph-light ph-lightning" style="margin-right: 8px;"></i> TaskFlow
         </div>
-
-        <h1>
-            Organize your tasks efficiently.
-        </h1>
-
-        <p>
-            Stay focused, manage your tasks, and achieve your learning goals with TaskFlow.
-        </p>
-
+        <h1>{{ 'AUTH.TAGLINE' | translate }}</h1>
+        <p>{{ 'AUTH.SUB_TAGLINE' | translate }}</p>
         <div class="feature-list">
-
             <div class="feature-item">
                 <span>✔</span>
-                <p>Manage your daily tasks</p>
+                <p>{{ 'AUTH.FEATURE_MANAGE' | translate }}</p>
             </div>
-
             <div class="feature-item">
                 <span>✔</span>
-                <p>Increase productivity every day</p>
+                <p>{{ 'AUTH.FEATURE_PRODUCTIVITY' | translate }}</p>
             </div>
         </div>
-
     </div>
+
     <div class="right-panel">
         <div class="auth-card">
-            <h2>
-                {{ isLogin() ? 'Welcome Back' : 'Create Account' }}
-            </h2>
+            <h2>{{ (isLogin() ? 'AUTH.WELCOME_BACK' : 'AUTH.CREATE_ACCOUNT') | translate }}</h2>
             <p>
-                {{
-                isLogin()
-                ? 'Sign in to continue using TaskFlow.'
-                : 'Create your TaskFlow account.'
+                {{ (isLogin()
+                  ? 'AUTH.SIGN_IN_INTRO'
+                  : 'AUTH.CREATE_INTRO') | translate
                 }}
             </p>
 
             <div class="auth-tabs">
-                <button [class.active]="isLogin()" (click)="switchMode(true)">
-                    Login
-                </button>
-
-                <button [class.active]="!isLogin()" (click)="switchMode(false)">
-                    Register
-                </button>
-
+                <p-button [styleClass]="isLogin() ? 'active' : ''" (click)="switchMode(true)" [label]="'AUTH.LOGIN_BTN' | translate"></p-button>
+                <p-button [styleClass]="!isLogin() ? 'active' : ''" (click)="switchMode(false)" [label]="'AUTH.REGISTER_BTN' | translate"></p-button>
             </div>
+
             @if (isLogin()) {
             <form [formGroup]="loginForm" (ngSubmit)="login()">
-                <div class="form-group">
-                    <label>Email <span class="required">*</span></label>
-                    <div class="input-wrapper">
-                        <i class="fa-solid fa-envelope"></i>
-                        <input type="email" formControlName="email" placeholder="Enter your email">
-                    </div>
-                    @if (loginForm.get('email')?.touched &&
-                    loginForm.get('email')?.invalid) {
-                    <small class="error-message">
-                        @if (loginForm.get('email')?.hasError('required')) { Email is required. }
-                        @if (loginForm.get('email')?.hasError('noLetterInUsername')) { Email username must contain at least one letter. }
-                        @if (loginForm.get('email')?.hasError('gmailCoTypo')) { Did you mean @gmail.com? Please enter a valid email address. }
-                        @if (loginForm.get('email')?.hasError('pattern') || loginForm.get('email')?.hasError('emailTypo')) { Please enter a valid email address }
-                    </small>
-                    }
-
-                </div>
-                <div class="form-group">
-                    <label>Password <span class="required">*</span></label>
-                    <div class="input-wrapper">
-                        <i class="ph-light ph-lock"></i>
-                        <input [type]="hidePassword() ? 'password' : 'text'" formControlName="password"
-                            placeholder="Enter your password">
-                        <button type="button" class="eye-btn" (click)="togglePassword()">
-                            <i class="ph-light" [class.ph-eye]="hidePassword()" [class.ph-eye-slash]="!hidePassword()">
-                            </i>
-                        </button>
-                    </div>
-                    @if (loginForm.get('password')?.touched &&
-                    loginForm.get('password')?.invalid) {
-                    <small class="error-message">Password is required.</small>
-                    }
-                </div>
-
-                <button class="submit-btn" type="submit">
-                    Login
-                </button>
-
+                <formly-form
+                  [form]="loginForm"
+                  [fields]="loginFields"
+                  [model]="loginModel">
+                </formly-form>
+                <p-button styleClass="submit-btn" type="submit" [label]="'AUTH.LOGIN_BTN' | translate"></p-button>
             </form>
-
             }
             @else {
-
             <form [formGroup]="registerForm" (ngSubmit)="register()">
-
-                <div class="form-group">
-
-                    <label>Full Name <span class="required">*</span></label>
-
-                    <div class="input-wrapper">
-
-                        <i class="fa-solid fa-user"></i>
-
-                        <input type="text" formControlName="name" placeholder="Your full name">
-
-                    </div>
-
-                    @if (registerForm.get('name')?.touched &&
-                    registerForm.get('name')?.invalid) {
-
-                    <small class="error-message">Full name is required.</small>
-
-                    }
-
-                </div>
-
-                <div class="form-group">
-
-                    <label>Email <span class="required">*</span></label>
-
-                    <div class="input-wrapper">
-
-                        <i class="fa-solid fa-envelope"></i>
-
-                        <input type="email" formControlName="email" placeholder="Enter your email">
-
-                    </div>
-
-                    @if (registerForm.get('email')?.touched &&
-                    registerForm.get('email')?.invalid) {
-                    <small class="error-message">
-                        @if (registerForm.get('email')?.hasError('required')) { Email is required. }
-                        @if (registerForm.get('email')?.hasError('noLetterInUsername')) { Email username must contain at least one letter. }
-                        @if (registerForm.get('email')?.hasError('gmailCoTypo')) { Did you mean @gmail.com? Please enter a valid email address. }
-                        @if (registerForm.get('email')?.hasError('pattern') || registerForm.get('email')?.hasError('emailTypo')) { Please enter a valid email address }
-                    </small>
-                    }
-
-                </div>
-
-                <div class="form-group">
-
-                    <label>Password <span class="required">*</span></label>
-
-                    <div class="input-wrapper">
-                        <i class="ph-light ph-lock"></i>
-                        <input [type]="hidePassword() ? 'password' : 'text'" formControlName="password"
-                            placeholder="Create password">
-                        <button class="eye-btn" type="button" (click)="togglePassword()">
-                            <i class="ph-light" [class.ph-eye]="hidePassword()" [class.ph-eye-slash]="!hidePassword()">
-                            </i>
-                        </button>
-                    </div>
-
-                    @if (registerForm.get('password')?.touched &&
-                    registerForm.get('password')?.invalid) {
-
-                    <small class="error-message">
-                        @if (registerForm.get('password')?.hasError('required')) { Password is required. }
-                        @if (registerForm.get('password')?.hasError('minlength')) { Password must be at least 6 characters. }
-                    </small>
-
-                    }
-
-                </div>
-
-                <div class="form-group">
-                    <label>Date of Birth</label>
-                    <div class="input-wrapper">
-                        <i class="fa-solid fa-calendar"></i>
-                        <input type="date" formControlName="dateOfBirth">
-                    </div>
-                    @if (registerForm.get('dateOfBirth')?.touched && registerForm.get('dateOfBirth')?.invalid) {
-                    <small class="error-message">
-                        @if (registerForm.get('dateOfBirth')?.hasError('futureDob')) { Date of birth cannot be in the future. }
-                        @if (registerForm.get('dateOfBirth')?.hasError('invalidDob')) { Invalid date of birth format. }
-                    </small>
-                    }
-                </div>
-
-                <button class="submit-btn" type="submit">
-                    Register
-                </button>
+                <formly-form
+                  [form]="registerForm"
+                  [fields]="registerFields"
+                  [model]="registerModel">
+                </formly-form>
+                <p-button styleClass="submit-btn" type="submit" [label]="'AUTH.REGISTER_BTN' | translate"></p-button>
             </form>
             }
         </div>
     </div>
-    <app-toast></app-toast>
 </div>

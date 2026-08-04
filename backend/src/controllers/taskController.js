@@ -1,9 +1,26 @@
 const Task = require("../models/Task");
 
-// Get all tasks for a user
 const getTasks = async (req, res) => {
     try {
-        const tasks = await Task.find({ user: req.user.id }).sort({ createdAt: -1 });
+        const sixMonthsAgo = new Date();
+        sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+
+        // 1. Permanently delete all tasks older than 6 months based on dueDate
+        await Task.deleteMany({
+            user: req.user.id,
+            dueDate: { $ne: null, $lt: sixMonthsAgo },
+        });
+
+        // 2. Fetch all tasks within rolling 6-month window (dueDate >= now - 6 months or dueDate is null) and isDeleted !== true
+        const tasks = await Task.find({
+            user: req.user.id,
+            isDeleted: { $ne: true },
+            $or: [
+                { dueDate: null },
+                { dueDate: { $gte: sixMonthsAgo } }
+            ]
+        }).sort({ createdAt: -1 });
+
         res.json({
             success: true,
             data: tasks,
@@ -16,10 +33,9 @@ const getTasks = async (req, res) => {
     }
 };
 
-// Get a single task
 const getTask = async (req, res) => {
     try {
-        const task = await Task.findOne({ _id: req.params.id, user: req.user.id });
+        const task = await Task.findOne({ _id: req.params.id, user: req.user.id, isDeleted: { $ne: true } });
         if (!task) {
             return res.status(404).json({
                 success: false,
@@ -38,7 +54,6 @@ const getTask = async (req, res) => {
     }
 };
 
-// Create a new task
 const createTask = async (req, res) => {
     try {
         const { title, description, priority, dueDate, status } = req.body;
@@ -64,7 +79,6 @@ const createTask = async (req, res) => {
     }
 };
 
-// Update a task
 const updateTask = async (req, res) => {
     try {
         const { title, description, priority, dueDate, status } = req.body;
@@ -73,7 +87,7 @@ const updateTask = async (req, res) => {
             updateData.completedAt = status === "completed" ? new Date() : null;
         }
         const task = await Task.findOneAndUpdate(
-            { _id: req.params.id, user: req.user.id },
+            { _id: req.params.id, user: req.user.id, isDeleted: { $ne: true } },
             updateData,
             { new: true, runValidators: true }
         );
@@ -95,10 +109,9 @@ const updateTask = async (req, res) => {
     }
 };
 
-// Delete a task
 const deleteTask = async (req, res) => {
     try {
-        const task = await Task.findOneAndDelete({ _id: req.params.id, user: req.user.id });
+        const task = await Task.findOneAndDelete({ _id: req.params.id, user: req.user.id, isDeleted: { $ne: true } });
 
         if (!task) {
             return res.status(404).json({
