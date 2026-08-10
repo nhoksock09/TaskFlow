@@ -38,8 +38,8 @@ const changePassword = async (req, res) => {
         if (!currentPassword || !newPassword) {
             return res.status(400).json({ message: "Please fill in all password fields." });
         }
-        if (newPassword.length < 6) {
-            return res.status(400).json({ message: "New password must be at least 6 characters." });
+        if (newPassword.length < 8) {
+            return res.status(400).json({ message: "New password must be at least 8 characters." });
         }
         const user = await User.findById(req.user.id).select("+password");
         if (!user) return res.status(404).json({ message: "User not found." });

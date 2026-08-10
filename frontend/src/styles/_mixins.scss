@@ -1,0 +1,209 @@
+@use 'variables' as vars;
+
+@mixin flex-center($display: flex) {
+  display: $display;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin collapsed-label-hidden {
+  width: 0;
+  opacity: 0;
+  visibility: hidden;
+  margin-left: 0;
+}
+
+@mixin abs-center-y {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+@mixin inherit-typography {
+  color: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+@mixin custom-scrollbar(
+  $thumb-color: var(--border-color),
+  $thumb-hover-color: var(--text-muted),
+  $track-color: transparent,
+  $width: vars.$scrollbar-width,
+  $thumb-radius: vars.$radius-xs
+) {
+  &::-webkit-scrollbar {
+    width: $width;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $track-color;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $thumb-color;
+    border-radius: $thumb-radius;
+  }
+
+  @if $thumb-hover-color {
+    &::-webkit-scrollbar-thumb:hover {
+      background: $thumb-hover-color;
+    }
+  }
+}
+
+@mixin hide-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@mixin circle-icon-button($size: 40px, $font-size: 20px) {
+  width: $size;
+  height: $size;
+  border-radius: vars.$radius-circle;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: $font-size;
+  box-shadow: none;
+
+  i {
+    font-size: $font-size;
+  }
+}
+
+@mixin search-box(
+  $focus-border-color: var(--primary-color),
+  $focus-shadow-color-rgb: var(--primary-color-rgb)
+) {
+  position: relative;
+  width: 100%;
+  max-width: 320px;
+
+  .search-icon {
+    @include abs-center-y;
+    left: 16px;
+    color: var(--text-muted);
+    font-size: 15px;
+  }
+
+  input {
+    width: 100%;
+    height: 48px;
+    padding: 0 40px 0 46px;
+    border: vars.$border-default;
+    border-radius: vars.$radius-2xl;
+    font-size: 14px;
+    color: var(--text-primary);
+    background: var(--bg-primary);
+    outline: none;
+    transition: all vars.$transition-base;
+
+    &:focus {
+      border-color: $focus-border-color;
+      box-shadow: 0 0 0 4px rgba($focus-shadow-color-rgb, 0.1);
+    }
+
+    &::placeholder {
+      color: var(--text-muted);
+    }
+  }
+
+  .search-clear-btn {
+    @include abs-center-y;
+    right: 14px;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    border-radius: vars.$radius-circle;
+    transition: all vars.$transition-base;
+
+    &:hover {
+      background: rgba(var(--gray-rgb), 0.15);
+      color: var(--text-primary);
+    }
+  }
+}
+
+@mixin search-icon-btn {
+  flex-shrink: 0;
+  width: 38px;
+  height: 40px;
+  border-radius: 0 vars.$radius-xl vars.$radius-xl 0;
+  background: transparent;
+  color: var(--text-secondary);
+  border: none;
+  border-left: vars.$border-default;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background vars.$transition-fast, color vars.$transition-fast;
+  padding: 0;
+  margin: 0;
+
+  i {
+    font-size: 17px;
+  }
+
+  &:hover {
+    background: rgba(var(--primary-rgb), 0.08);
+    color: var(--indigo-600);
+  }
+}
+
+@mixin focus-ring($color-rgb: var(--primary-rgb), $opacity: 0.15, $spread: 3px) {
+  box-shadow: 0 0 0 $spread rgba($color-rgb, $opacity);
+}
+
+@mixin date-input-layout {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-right: 0;
+  width: 100%;
+
+  &::-webkit-datetime-edit {
+    flex-grow: 1;
+    display: flex;
+  }
+}
+
+@mixin modal-action-btn-base {
+  border: none;
+  border-radius: vars.$radius-lg;
+  height: 40px;
+  padding: 0 18px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: none;
+}
+
+@mixin paginator-item-base {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  min-width: 32px;
+  height: 32px;
+  border-radius: vars.$radius-circle;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all vars.$transition-base;
+}

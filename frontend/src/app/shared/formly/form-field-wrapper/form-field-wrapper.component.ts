@@ -2,7 +2,7 @@ import { Component, ElementRef, inject } from '@angular/core';
 import { FieldWrapper, FieldTypeConfig, FormlyModule } from '@ngx-formly/core';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
-import { PasswordRequirementsComponent } from '../components/password-requirements/password-requirements.component';
+import { PasswordRequirementsComponent } from '../../components/password-requirements/password-requirements.component';
 
 @Component({
   selector: 'formly-wrapper-form-field',

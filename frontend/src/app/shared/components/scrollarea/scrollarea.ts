@@ -26,9 +26,9 @@ export class ScrollAreaScrollbar {
 @Component({
   selector: 'p-scrollarea',
   standalone: true,
-  template: '<ng-content></ng-content>',
+  templateUrl: './scrollarea.html',
   styleUrl: './scrollarea.scss'
 })
 export class ScrollArea {
-  @Input() style: any;
+  @Input() style: string | Record<string, string> | null = null;
 }

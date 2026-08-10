@@ -1,25 +1,17 @@
 import { Component, inject, OnInit, DestroyRef, ChangeDetectorRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { User } from '../../shared/models';
+import { User, Column } from '@core/models';
 import { UserService } from '../../core/services/user.service';
 import { ToastService } from '../../core/services/toast.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Dialog } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { InputText } from 'primeng/inputtext';
-import { Paginator } from 'primeng/paginator';
+import { Paginator, PaginatorState } from 'primeng/paginator';
 import { Select } from 'primeng/select';
 import { Tag } from 'primeng/tag';
 import { TableModule } from 'primeng/table';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-
-export interface Column {
-  field: string;
-  header: string; // Translation key e.g., 'USERS.COL_MEMBER'
-  class: string;  // CSS class e.g., 'col-user'
-  sortable: boolean;
-}
+import { TranslatePipe } from '@ngx-translate/core';
 
 export const USER_ROLE_MAP: Record<string, string> = {
   'admin': 'COMMON.ROLE_ADMIN',
@@ -29,7 +21,7 @@ export const USER_ROLE_MAP: Record<string, string> = {
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [CommonModule, FormsModule, Dialog, ButtonModule, InputText, Paginator, Select, Tag, TableModule, TranslatePipe],
+  imports: [CommonModule, FormsModule, ButtonModule, InputText, Paginator, Select, Tag, TableModule, TranslatePipe],
   templateUrl: './users.html',
   styleUrl: './users.scss'
 })
@@ -92,7 +84,7 @@ export class Users implements OnInit {
         this.isLoading = false;
         this.cdr.detectChanges();
       },
-      error: (err) => {
+      error: () => {
         this.toastService.error('USERS.TOAST.LOAD_FAILED');
         this.isLoading = false;
       }
@@ -126,16 +118,9 @@ export class Users implements OnInit {
     this.loadUsers();
   }
 
-  goToPage(page: number) {
-    if (page >= 1 && page <= this.totalPages && page !== this.currentPage) {
-      this.currentPage = page;
-      this.loadUsers();
-    }
-  }
-
-  onUserPageChange(event: any) {
-    this.currentPage = event.page + 1; // event.page is 0-based
-    this.pageSize = event.rows;
+  onUserPageChange(event: PaginatorState) {
+    this.currentPage = (event.page ?? 0) + 1;
+    this.pageSize = event.rows ?? this.pageSize;
     this.loadUsers();
   }
 
@@ -143,12 +128,6 @@ export class Users implements OnInit {
     this.pageSize = newSize;
     this.currentPage = 1;
     this.loadUsers();
-  }
-
-  get pages(): number[] {
-    const pagesArr: number[] = [];
-    for (let i = 1; i <= this.totalPages; i++) pagesArr.push(i);
-    return pagesArr;
   }
 
   openPromoteModal(user: User) {
@@ -171,12 +150,12 @@ export class Users implements OnInit {
     this.userService.updateUserRole(userId, 'admin')
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-      next: (res) => {
+      next: () => {
         this.toastService.show('USERS.TOAST.PROMOTE_SUCCESS', 'success', { name: this.userToPromote?.name });
         this.closePromoteModal();
         this.loadUsers();
       },
-      error: (err) => this.toastService.error('USERS.TOAST.PROMOTE_FAILED')
+      error: () => this.toastService.error('USERS.TOAST.PROMOTE_FAILED')
     });
   }
 
@@ -200,17 +179,17 @@ export class Users implements OnInit {
     this.userService.deleteUser(userId)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-      next: (res) => {
+      next: () => {
         this.toastService.show('USERS.TOAST.DELETE_SUCCESS', 'success', { name: this.userToDelete?.name });
         this.closeDeleteModal();
         this.loadUsers();
       },
-      error: (err) => this.toastService.error('USERS.TOAST.DELETE_FAILED')
+      error: () => this.toastService.error('USERS.TOAST.DELETE_FAILED')
     });
   }
 
   getInitial(name: string): string {
-    return name ? name.charAt(0).toUpperCase() : 'U';
+    return name.charAt(0).toUpperCase();
   }
 
   getAvatarBg(name: string): string {

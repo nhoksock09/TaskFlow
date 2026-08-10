@@ -1,20 +1,17 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, inject, OnInit, DestroyRef } from '@angular/core';
+import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { Sidebar } from '../sidebar/sidebar';
 import { UserService } from '../../core/services/user.service';
-import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
+import { ToastService } from '../../core/services/toast.service';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { Select } from 'primeng/select';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { User } from '../../shared/models';
-
-interface LangOption {
-  label: string;
-  value: string;
-}
+import { User, SelectOption } from '@core/models';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-main-layout',
@@ -36,20 +33,28 @@ export class MainLayout implements OnInit {
   public router = inject(Router);
   private authService = inject(AuthService);
   private translateService = inject(TranslateService);
+  private toastService = inject(ToastService);
+  private destroyRef = inject(DestroyRef);
 
   user: User | null = null;
   currentDate: string = '';
   isDarkMode: boolean = false;
-  isSidebarCollapsed: boolean = false;
+  isSidebarCollapsed: boolean = typeof window !== 'undefined' ? window.innerWidth < 768 : false;
 
   currentLang: string = 'en';
-  langOptions: LangOption[] = [
+  langOptions: SelectOption[] = [
     { label: 'English', value: 'en' },
     { label: 'Tiếng Việt', value: 'vi' }
   ];
 
   toggleSidebar() {
     this.isSidebarCollapsed = !this.isSidebarCollapsed;
+  }
+
+  closeSidebarOnMobile() {
+    if (window.innerWidth < 768) {
+      this.isSidebarCollapsed = true;
+    }
   }
 
   ngOnInit() {
@@ -61,7 +66,7 @@ export class MainLayout implements OnInit {
         this.user = user;
         this.authService.saveUser(user);
       },
-      error: (err) => console.error(err)
+      error: () => this.toastService.error('SETTINGS.TOAST.LOAD_FAILED')
     });
 
     this.currentLang = this.translateService.currentLang() || localStorage.getItem('lang') || 'en';
@@ -72,6 +77,16 @@ export class MainLayout implements OnInit {
       this.currentLang = event.lang;
       this.updateDate();
     });
+
+    // Auto-close sidebar on router navigation on mobile screens
+    this.router.events
+      .pipe(
+        filter(event => event instanceof NavigationEnd),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe(() => {
+        this.closeSidebarOnMobile();
+      });
   }
 
   updateDate() {
@@ -97,16 +112,12 @@ export class MainLayout implements OnInit {
     this.router.navigate(['/']);
   }
 
-  isDashboard(): boolean {
-    return this.router.url === '/dashboard';
-  }
-
   toggleTheme() {
     this.isDarkMode = !this.isDarkMode;
     localStorage.setItem('theme', this.isDarkMode ? 'dark' : 'light');
     this.applyTheme();
   }
-  
+
   applyTheme() {
     if (this.isDarkMode) {
       document.documentElement.classList.add('dark-theme', 'dark');

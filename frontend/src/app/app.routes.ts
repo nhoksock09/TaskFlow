@@ -4,8 +4,10 @@ import { Dashboard } from './features/dashboard/dashboard';
 import { Tasks } from './features/tasks/tasks';
 import { Settings } from './features/settings/settings';
 import { Users } from './features/users/users';
+import { AccessDenied } from './features/access-denied/access-denied';
 import { MainLayout } from './layouts/main-layout/main-layout';
 import { authGuard } from './core/guards/auth.guard';
+import { adminGuard } from './core/guards/admin.guard';
 
 export const routes: Routes = [
   {
@@ -31,7 +33,17 @@ export const routes: Routes = [
       },
       {
         path: 'users',
-        component: Users
+        component: Users,
+        canActivate: [adminGuard]
+      },
+      {
+        path: '403',
+        component: AccessDenied
+      },
+      {
+        path: 'access-denied',
+        redirectTo: '403',
+        pathMatch: 'full'
       }
     ]
   },
@@ -39,4 +51,4 @@ export const routes: Routes = [
     path: '**',
     redirectTo: ''
   }
-];
+];

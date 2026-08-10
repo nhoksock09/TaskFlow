@@ -1,3 +1,6 @@
+@use 'variables' as vars;
+@use 'mixins';
+
 .tasks-container-page {
   display: flex;
   flex-direction: column;
@@ -23,7 +26,7 @@
   border-radius: 12px;
   padding: 24px;
   box-shadow: 0 1px 3px rgba(var(--black-rgb), 0.1);
-  border: 1px solid var(--border-color);
+  border: vars.$border-default;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -76,7 +79,7 @@
   padding: 10px 18px;
   background: var(--bg-card);
   color: var(--text-secondary);
-  border: 1px solid var(--border-color);
+  border: vars.$border-default;
   border-radius: 8px;
   font-size: 14px;
   font-weight: 600;
@@ -108,7 +111,7 @@
 /* Status tabs styling */
 .status-tabs-container {
   display: flex;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: vars.$border-default;
   margin-bottom: 12px;
   gap: 16px;
 }
@@ -140,63 +143,13 @@
 }
 
 .search-box {
-  position: relative;
-  width: 100%;
-  max-width: 320px;
-
-  .search-icon {
-    position: absolute;
-    left: 16px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--text-muted);
-    font-size: 15px;
-  }
-
-  input {
-    width: 100%;
-    height: 48px;
-    padding: 0 40px 0 46px;
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    font-size: 14px;
-    color: var(--text-primary);
-    background: var(--bg-primary);
-    outline: none;
-    transition: all 0.2s ease;
-
-    &:focus {
-      border-color: var(--indigo-600);
-      box-shadow: 0 0 0 4px rgba(var(--primary-rgb), 0.1);
-    }
-
-    &::placeholder {
-      color: var(--text-muted);
-    }
-  }
-
-  .search-clear-btn {
-    position: absolute;
-    right: 14px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: transparent;
-    border: none;
-    color: var(--text-muted);
-    cursor: pointer;
-    font-size: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 4px;
-    border-radius: 50%;
-    transition: all 0.2s ease;
-
-    &:hover {
-      background: rgba(var(--gray-rgb), 0.15);
-      color: var(--text-primary);
-    }
-  }
+  // Note: this component's focus ring uses --indigo-600/--primary-rgb while
+  // users.scss's otherwise-identical search box uses --primary-color/
+  // --primary-color-rgb — passed as mixin args to keep both behaviors intact.
+  @include mixins.search-box(
+    $focus-border-color: var(--indigo-600),
+    $focus-shadow-color-rgb: var(--primary-rgb)
+  );
 }
 
 .filter-row {
@@ -218,7 +171,7 @@
 .filter-btn {
   padding: 8px 16px;
   background: var(--bg-card);
-  border: 1px solid var(--border-color);
+  border: vars.$border-default;
   border-radius: 6px;
   font-size: 13px;
   font-weight: 500;
@@ -264,253 +217,260 @@
   align-items: stretch;
   padding-bottom: 8px;
   margin-top: 16px;
-}
 
-.tasks-column {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  flex: 1;
-  min-width: 300px;
-  /* Do not shrink or grow excessively, standard bounds */
-  max-width: 500px;
-  background: var(--bg-primary);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.column-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 16px;
-  background: var(--bg-card);
-  border-bottom: 1px solid var(--border-color);
-
-  .header-left {
+  .tasks-column {
     display: flex;
-    align-items: center;
-    gap: 8px;
-
-    .status-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      display: inline-block;
-
-      &.todo {
-        background: var(--gray-400);
-      }
-
-      &.in-progress {
-        background: var(--progress-color);
-      }
-
-      &.completed {
-        background: var(--completed-color);
-      }
-    }
-
-    h4 {
-      margin: 0;
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text-primary);
-    }
-
-    .count-badge {
-      background: var(--border-color);
-      color: var(--text-secondary);
-      font-size: 11px;
-      font-weight: 600;
-      padding: 2px 6px;
-      border-radius: 10px;
-    }
-  }
-
-  .add-btn-quick {
-    background: transparent;
-    border: none;
-    color: var(--text-secondary);
-    cursor: pointer;
-    padding: 4px;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-
-    &:hover {
-      background: var(--bg-primary);
-      color: var(--text-primary);
-    }
-  }
-}
-
-.tasks-board .tasks-column .column-tasks-container {
-  flex: 1;
-  overflow-y: hidden;
-  padding: 12px 6px 12px 12px;
-  display: flex;
-  flex-direction: column;
-  height: 504px;
-  box-sizing: border-box;
-
-  p-scrollarea,
-  .p-scrollarea {
-    background: transparent;
-    border: none;
-  }
-}
-
-.tasks-column .task-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
-  padding: 12px;
-  box-shadow: 0 1px 2px rgba(var(--black-rgb), 0.05);
-  cursor: grab;
-  position: relative;
-  transition: transform 0.2s, box-shadow 0.2s;
-  margin-bottom: 12px;
-  /* Keep: Formly dynamic field margin spacing override */
-
-  &:active {
-    cursor: grabbing;
-  }
-
-  &.priority-high {
-    border-left: 3px solid var(--danger);
-  }
-
-  &.priority-medium {
-    border-left: 3px solid var(--progress-color);
-  }
-
-  &.priority-low {
-    border-left: 3px solid var(--todo-color);
-  }
-
-  &.task-overdue {
-    background: rgba(var(--danger-rgb), 0.08);
-    border-color: rgba(var(--danger-rgb), 0.4);
-    box-shadow: 0 0 6px rgba(var(--danger-rgb), 0.15);
-  }
-
-  &.completed {
-    opacity: 0.7;
+    flex-direction: column;
+    height: 100%;
+    flex: 1;
+    min-width: 300px;
+    max-width: 500px;
     background: var(--bg-primary);
+    border: vars.$border-default;
+    border-radius: 8px;
+    overflow: hidden;
 
-    h5 {
-      text-decoration: line-through;
-      color: var(--text-muted);
-    }
-  }
-
-  .task-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 8px;
-    margin-bottom: 6px;
-
-    h5 {
-      margin: 0;
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text-primary);
-      line-height: 1.4;
-      flex: 1;
-    }
-
-    .task-card-header-right {
+    .column-header {
       display: flex;
       align-items: center;
-      gap: 6px;
-      flex-shrink: 0;
+      justify-content: space-between;
+      padding: 12px 16px;
+      background: var(--bg-card);
+      border-bottom: vars.$border-default;
 
-      .task-card-actions {
+      .header-left {
         display: flex;
-        gap: 4px;
-        opacity: 1;
+        align-items: center;
+        gap: 8px;
 
-        .card-action-btn {
-          background: transparent;
-          border: none;
+        .status-dot {
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          display: inline-block;
+
+          &.todo {
+            background: var(--gray-400);
+          }
+
+          &.in-progress {
+            background: var(--progress-color);
+          }
+
+          &.completed {
+            background: var(--completed-color);
+          }
+        }
+
+        h4 {
+          margin: 0;
+          font-size: 14px;
+          font-weight: 600;
+          color: var(--text-primary);
+        }
+
+        .count-badge {
+          background: var(--border-color);
           color: var(--text-secondary);
-          cursor: pointer;
-          padding: 2px 4px;
-          border-radius: 4px;
-          display: flex;
-          align-items: center;
+          font-size: 11px;
+          font-weight: 600;
+          padding: 2px 6px;
+          border-radius: 10px;
+        }
+      }
 
-          &:hover {
-            background: var(--bg-primary);
-            color: var(--text-primary);
-          }
+      .add-btn-quick {
+        background: transparent;
+        border: none;
+        color: var(--text-secondary);
+        cursor: pointer;
+        padding: 4px;
+        border-radius: 4px;
+        @include mixins.flex-center;
+        transition: all 0.2s;
 
-          &.delete:hover {
-            color: var(--danger);
-          }
+        &:hover {
+          background: var(--bg-primary);
+          color: var(--text-primary);
         }
       }
     }
-  }
 
-  &:hover {
-    box-shadow: 0 4px 12px rgba(var(--black-rgb), 0.08);
-
-    .task-card-header .task-card-header-right .task-card-actions {
-      opacity: 1;
-    }
-  }
-
-  .task-card-desc {
-    margin: 0 0 10px 0;
-    font-size: 13px;
-    color: var(--text-secondary);
-    line-height: 1.4;
-    word-break: break-word;
-  }
-
-  .task-card-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 11px;
-
-    .priority-label {
-      font-weight: 700;
-      padding: 1px 4px;
-      border-radius: 3px;
-      text-transform: uppercase;
-
-      &.high {
-        color: var(--danger);
-        background: rgba(var(--danger-rgb), 0.1);
-      }
-
-      &.medium {
-        color: var(--progress-color);
-        background: rgba(var(--amber-500-rgb), 0.1);
-      }
-
-      &.low {
-        color: var(--todo-color);
-        background: rgba(var(--blue-500-rgb), 0.1);
-      }
-    }
-
-    .due-date {
-      color: var(--text-muted);
+    .column-tasks-container {
+      flex: 1;
+      overflow-y: hidden;
+      padding: 12px 6px 12px 12px;
       display: flex;
-      align-items: center;
-      gap: 3px;
+      flex-direction: column;
+      height: 504px;
+      box-sizing: border-box;
 
-      &.overdue {
-        color: var(--danger);
-        font-weight: 600;
+      p-scrollarea,
+      .p-scrollarea {
+        background: transparent;
+        border: none;
+      }
+    }
+
+    .column-empty-message {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 13px;
+      padding: 24px 0;
+      border: 1px dashed var(--border-color);
+      border-radius: 6px;
+      background: rgba(var(--black-rgb), 0.01);
+    }
+
+    .task-card {
+      background: var(--bg-card);
+      border: vars.$border-default;
+      border-radius: 6px;
+      padding: 12px;
+      box-shadow: 0 1px 2px rgba(var(--black-rgb), 0.05);
+      cursor: grab;
+      position: relative;
+      transition: transform 0.2s, box-shadow 0.2s;
+      margin-bottom: 12px;
+      /* Keep: Formly dynamic field margin spacing override */
+
+      &:active {
+        cursor: grabbing;
+      }
+
+      &.priority-high {
+        border-left: 3px solid var(--danger);
+      }
+
+      &.priority-medium {
+        border-left: 3px solid var(--progress-color);
+      }
+
+      &.priority-low {
+        border-left: 3px solid var(--todo-color);
+      }
+
+      &.task-overdue {
+        background: rgba(var(--danger-rgb), 0.08);
+        border-color: rgba(var(--danger-rgb), 0.4);
+        box-shadow: 0 0 6px rgba(var(--danger-rgb), 0.15);
+      }
+
+      &.completed {
+        opacity: 0.7;
+        background: var(--bg-primary);
+
+        h5 {
+          text-decoration: line-through;
+          color: var(--text-muted);
+        }
+      }
+
+      .task-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 8px;
+        margin-bottom: 6px;
+
+        h5 {
+          margin: 0;
+          font-size: 14px;
+          font-weight: 600;
+          color: var(--text-primary);
+          line-height: 1.4;
+          flex: 1;
+        }
+
+        .task-card-header-right {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          flex-shrink: 0;
+
+          .task-card-actions {
+            display: flex;
+            gap: 4px;
+            opacity: 1;
+
+            .card-action-btn {
+              background: transparent;
+              border: none;
+              color: var(--text-secondary);
+              cursor: pointer;
+              padding: 2px 4px;
+              border-radius: 4px;
+              display: flex;
+              align-items: center;
+
+              &:hover {
+                background: var(--bg-primary);
+                color: var(--text-primary);
+              }
+
+              &.delete:hover {
+                color: var(--danger);
+              }
+            }
+          }
+        }
+      }
+
+      &:hover {
+        box-shadow: 0 4px 12px rgba(var(--black-rgb), 0.08);
+
+        .task-card-header .task-card-header-right .task-card-actions {
+          opacity: 1;
+        }
+      }
+
+      .task-card-desc {
+        margin: 0 0 10px 0;
+        font-size: 13px;
+        color: var(--text-secondary);
+        line-height: 1.4;
+        word-break: break-word;
+      }
+
+      .task-card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 11px;
+
+        .priority-label {
+          font-weight: 700;
+          padding: 1px 4px;
+          border-radius: 3px;
+          text-transform: uppercase;
+
+          &.high {
+            color: var(--danger);
+            background: rgba(var(--danger-rgb), 0.1);
+          }
+
+          &.medium {
+            color: var(--progress-color);
+            background: rgba(var(--amber-500-rgb), 0.1);
+          }
+
+          &.low {
+            color: var(--todo-color);
+            background: rgba(var(--blue-500-rgb), 0.1);
+          }
+        }
+
+        .due-date {
+          color: var(--text-muted);
+          display: flex;
+          align-items: center;
+          gap: 3px;
+
+          &.overdue {
+            color: var(--danger);
+            font-weight: 600;
+          }
+        }
       }
     }
   }
@@ -524,16 +484,6 @@
   letter-spacing: 0.3px;
   min-width: 80px;
   justify-content: center;
-}
-
-.column-empty-message {
-  text-align: center;
-  color: var(--text-muted);
-  font-size: 13px;
-  padding: 24px 0;
-  border: 1px dashed var(--border-color);
-  border-radius: 6px;
-  background: rgba(var(--black-rgb), 0.01);
 }
 
 /* Angular CDK Drag and Drop animations & states */
@@ -563,20 +513,34 @@
 
 .task-preview {
   background: var(--bg-primary);
-  border-radius: 8px;
-  padding: 16px;
-  border-left: 4px solid var(--danger);
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 8px;
+  border-left: 4px solid var(--todo-color);
+
+  &.priority-high {
+    border-left: 4px solid var(--danger);
+  }
+
+  &.priority-medium {
+    border-left: 4px solid var(--progress-color);
+  }
+
+  &.priority-low {
+    border-left: 4px solid var(--todo-color);
+  }
 
   h4 {
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 600;
     color: var(--text-primary);
-    margin: 0 0 8px 0;
+    margin: 0 0 6px 0;
   }
 
   p {
-    font-size: 14px;
-    color: var(--slate-500);
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.45;
     margin: 0;
   }
 }
@@ -599,10 +563,8 @@
   }
 }
 
-.required {
-  color: var(--danger);
-  font-weight: bold;
-}
+// .required is styled globally in styles/_forms.scss with the same values —
+// the local copy was pure duplication and has been removed.
 
 .error-message {
   color: var(--danger);
@@ -617,28 +579,13 @@
 }
 
 .urgent-indicator {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  @include mixins.flex-center(inline-flex);
   flex-shrink: 0;
 }
 
 .pulsing-urgent {
   color: var(--danger);
-  animation: urgentPulse 1s infinite alternate ease-in-out;
-}
-
-@keyframes urgentPulse {
-  0% {
-    transform: scale(1);
-    opacity: 0.8;
-  }
-
-  100% {
-    transform: scale(1.25);
-    opacity: 1;
-    filter: drop-shadow(0 0 6px rgba(var(--danger-rgb), 0.6));
-  }
+  animation: urgentPulse 1s infinite alternate ease-in-out; // keyframe defined once in styles/_animations.scss
 }
 
 /* Filter Dropdowns Horizontally Aligned */
@@ -652,7 +599,7 @@
 }
 
 .filter-item {
-  width: 170px;
+  width: 140px;
 }
 
 /* Custom Dialog/Modal Form Controls Width, Spacing and Error Layout Override */
@@ -710,6 +657,10 @@ html body .modal-card {
       }
     }
   }
+
+  .modal-actions {
+    margin-top: 16px;
+  }
 }
 
 :host ::ng-deep {
@@ -717,15 +668,15 @@ html body .modal-card {
     p-select,
     .p-select {
       width: 100%;
-      height: 38px;
-      font-size: 14px;
+      height: 32px;
+      font-size: 12px;
       display: flex;
       align-items: center;
       box-shadow: none;
 
       .p-select-label {
-        padding: 0 12px;
-        font-size: 13px;
+        padding: 0 10px;
+        font-size: 12px;
         height: 100%;
         display: flex;
         align-items: center;
@@ -734,8 +685,8 @@ html body .modal-card {
       }
 
       .p-select-dropdown {
-        width: 24px;
-        height: 24px;
+        width: 20px;
+        height: 20px;
         margin-right: 4px;
       }
     }
@@ -743,28 +694,6 @@ html body .modal-card {
 
   /* Search bar button override */
   .search-icon-btn.p-button {
-    flex-shrink: 0;
-    width: 38px;
-    height: 40px;
-    border-radius: 0 10px 10px 0;
-    background: transparent;
-    color: var(--text-secondary);
-    border: none;
-    border-left: 1px solid var(--border-color);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.15s ease, color 0.15s ease;
-    padding: 0;
-    margin: 0;
-
-    i {
-      font-size: 17px;
-    }
-
-    &:hover {
-      background: rgba(var(--primary-rgb), 0.08);
-      color: var(--indigo-600);
-    }
+    @include mixins.search-icon-btn;
   }
 }

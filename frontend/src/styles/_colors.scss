@@ -1,0 +1,129 @@
+:root {
+  color-scheme: light;
+  --font-primary: "Inter", sans-serif;
+  /* Color Palette Constants */
+  --white: #ffffff;
+  --white-rgb: 255, 255, 255;
+  --black: #000000;
+  --color-transparent: rgba(255, 255, 255, 0);
+  --black-rgb: 0, 0, 0;
+  --slate-200: #e2e8f0;
+  --slate-500: #64748b;
+  --slate-600: #475569;
+  --indigo-400: #818cf8;
+  --indigo-500: #6366f1;
+  --indigo-600: #4f46e5;
+  --indigo-700: #4338ca;
+  --indigo-50: #eef2ff;
+  --primary-rgb: 79, 70, 229;
+  --indigo-500-rgb: 99, 102, 241;
+  --cyan-500: #06b6d4;
+  --logo-gradient: linear-gradient(135deg, var(--indigo-600), var(--cyan-500));
+  --modal-overlay-rgb: 15, 23, 42;
+  --backdrop-bg: rgba(0, 0, 0, 0.5);
+  --primary-color: #5b4bf5;
+  --primary-color-rgb: 91, 75, 245;
+  --primary-hover: #4c3ce0;
+
+  --todo-color: #3b82f6;
+  --progress-color: #f59e0b;
+  --completed-color: #10b981;
+  --completed-color-rgb: 16, 185, 129;
+
+  --amber-500: #f59e0b;
+  --amber-500-rgb: 245, 158, 11;
+  --amber-600: #d97706;
+  --blue-500: #3b82f6;
+  --blue-500-rgb: 59, 130, 246;
+  --blue-400: #60a5fa;
+  --emerald-50: #f0fdf4;
+  --emerald-400: #34d399;
+  --emerald-600: #16a34a;
+  --emerald-600-rgb: 22, 163, 74;
+  --red-600: #dc2626;
+  --red-400: #f87171;
+  --red-50: #fef2f2;
+  --amber-50: #fffbeb;
+  --gray-rgb: 128, 128, 128;
+  --gray-400: #9ca3af;
+  --danger: #ef4444;
+  --danger-rgb: 239, 68, 68;
+
+  --bg-primary: #f1f5f9;
+  --bg-card: #ffffff;
+  --bg-input: #f8fafc;
+  --bg-sidebar: #ffffff;
+  --text-sidebar-nav: #334155;
+  --text-sidebar-nav-hover: #0f172a;
+  --border-color: #e2e8f0;
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #475569;
+  --shadow-card: 0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+  --bg-auth-gradient: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%);
+  --bg-stat-total: #e0e7ff;
+  --text-stat-total: #4338ca;
+  --bg-stat-todo: #dbeafe;
+  --text-stat-todo: #1d4ed8;
+  --bg-stat-progress: #fef3c7;
+  --text-stat-progress: #b45309;
+  --bg-stat-completed: #d1fae5;
+  --text-stat-completed: #065f46;
+  --bg-stat-overdue: rgba(var(--danger-rgb), 0.1);
+  --text-stat-overdue: var(--danger);
+  --bg-stat-in-progress: var(--bg-stat-progress);
+  --text-stat-in-progress: var(--text-stat-progress);
+
+  /* Semantic highlights */
+  --paginator-highlight-bg: var(--text-primary);
+  --paginator-highlight-text: var(--bg-card);
+
+  /* Badge semantic colors — light mode */
+  --badge-overdue-bg: #dc2626;
+  --badge-overdue-text: var(--white);
+  --badge-overdue-border: #b91c1c;
+  --badge-warn-bg: #d97706;
+  --badge-warn-text: var(--white);
+  --badge-warn-border: #b45309;
+  --badge-warn-rgb: 245, 158, 11;
+}
+
+html.dark-theme,
+html.dark {
+  color-scheme: dark;
+  --bg-primary: #0f172a;
+  --bg-card: #1e293b;
+  --bg-input: var(--bg-primary);
+  --bg-sidebar: #1e1b4b;
+  --text-sidebar-nav: #94a3b8;
+  --text-sidebar-nav-hover: #f8fafc;
+  --border-color: #334155;
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --shadow-card: 0 20px 25px -5px rgba(var(--black-rgb), 0.5), 0 8px 10px -6px rgba(var(--black-rgb), 0.3);
+  --bg-auth-gradient: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-sidebar) 50%, var(--bg-primary) 100%);
+  --bg-stat-total: rgba(99, 102, 241, 0.15);
+  --text-stat-total: #a5b4fc;
+  --bg-stat-todo: rgba(59, 130, 246, 0.15);
+  --text-stat-todo: #93c5fd;
+  --bg-stat-progress: rgba(245, 158, 11, 0.15);
+  --text-stat-progress: #fde047;
+  --bg-stat-completed: rgba(16, 185, 129, 0.15);
+  --text-stat-completed: #6ee7b7;
+  --bg-stat-overdue: rgba(var(--danger-rgb), 0.15);
+  --bg-stat-in-progress: var(--bg-stat-progress);
+  --text-stat-in-progress: var(--text-stat-progress);
+
+  /* Semantic highlights */
+  --paginator-highlight-bg: var(--text-primary);
+  --paginator-highlight-text: var(--bg-primary);
+
+  /* Badge semantic colors — dark mode overrides */
+  --badge-overdue-bg: rgba(239, 68, 68, 0.2);
+  --badge-overdue-text: #fca5a5;
+  --badge-overdue-border: rgba(252, 165, 165, 0.4);
+  --badge-warn-bg: rgba(245, 158, 11, 0.2);
+  --badge-warn-text: #fcd34d;
+  --badge-warn-border: rgba(253, 224, 71, 0.4);
+}

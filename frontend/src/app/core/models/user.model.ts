@@ -1,12 +1,10 @@
-export interface User {
-  _id?: string;
-  id?: string;
+import { BaseDocument } from './common.model';
+
+export interface User extends BaseDocument {
   name: string;
   email: string;
-  role: 'user' | 'admin' | string;
-  dateOfBirth?: string;
-  createdAt?: string;
-  updatedAt?: string;
+  role: 'user' | 'admin';
+  dateOfBirth: string;
   taskCount?: number;
 }
 

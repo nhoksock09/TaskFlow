@@ -1,20 +1,16 @@
+@use 'mixins';
+
 :host {
   display: block;
   height: 480px;
   overflow-y: auto;
   width: 100%;
-}
-:host {
   scrollbar-width: thin;
   scrollbar-color: rgba(var(--gray-rgb), 0.2) transparent;
-}
-:host::-webkit-scrollbar {
-  width: 6px;
-}
-:host::-webkit-scrollbar-track {
-  background: transparent;
-}
-:host::-webkit-scrollbar-thumb {
-  background: rgba(var(--gray-rgb), 0.2);
-  border-radius: 3px;
+
+  @include mixins.custom-scrollbar(
+    $thumb-color: rgba(var(--gray-rgb), 0.2),
+    $thumb-hover-color: null,
+    $track-color: transparent
+  );
 }

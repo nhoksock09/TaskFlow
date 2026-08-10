@@ -16,7 +16,7 @@ export function dobAgeValidator(control: AbstractControl): ValidationErrors | nu
   let age = today.getFullYear() - dob.getFullYear();
   const monthDiff = today.getMonth() - dob.getMonth();
   if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) age--;
-  return (age < 10 || age > 70) ? { outOfAgeRange: true } : null;
+  return (age < 18 || age > 60) ? { outOfAgeRange: true } : null;
 }
 
 export function emailTypoValidator(control: AbstractControl): ValidationErrors | null {

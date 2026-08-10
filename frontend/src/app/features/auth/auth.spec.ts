@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { Auth } from './auth';
 import { FormlyModule } from '@ngx-formly/core';
-import { FormFieldWrapperComponent } from '../../shared/formly/form-field-wrapper.component';
+import { FormFieldWrapperComponent } from '../../shared/formly/form-field-wrapper/form-field-wrapper.component';
 
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';

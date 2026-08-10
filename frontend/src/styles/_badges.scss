@@ -1,0 +1,136 @@
+@use 'variables' as vars;
+@use 'mixins';
+
+.overdue-badge,
+.due-soon-badge {
+  @include mixins.flex-center(inline-flex);
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: vars.$radius-md;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  height: 24px;
+  box-sizing: border-box;
+
+  i {
+    font-size: 12px;
+  }
+}
+
+/* Badge colors use semantic variables — light/dark handled via :root overrides */
+.overdue-badge {
+  background: var(--badge-overdue-bg);
+  color: var(--badge-overdue-text);
+  border: 1px solid var(--badge-overdue-border);
+}
+
+.due-soon-badge {
+  background: var(--badge-warn-bg);
+  color: var(--badge-warn-text);
+  border: 1px solid var(--badge-warn-border);
+}
+
+/* PrimeNG p-tag Custom Overrides (Tasks & Dashboard badges) */
+p-tag {
+  .p-tag {
+    @include mixins.flex-center(inline-flex);
+    gap: 6px;
+    line-height: 1;
+  }
+
+  .p-tag-icon,
+  .p-tag-icon i,
+  .p-tag-icon span {
+    @include mixins.flex-center(inline-flex);
+    line-height: 1;
+  }
+
+  // Base layout styles shared by all custom tags
+  &.overdue-tag,
+  &.due-soon-tag,
+  &.priority-tag,
+  &.status-in-progress-tag {
+    border: none;
+    height: auto;
+    @include mixins.flex-center(inline-flex);
+    letter-spacing: 0.3px;
+  }
+
+  // Overdue and Due Soon Tags
+  &.overdue-tag,
+  &.due-soon-tag {
+    font-weight: 700;
+    border-radius: vars.$radius-2xl;
+    padding: 3px 8px;
+    font-size: 11px;
+    color: var(--white);
+  }
+
+  &.overdue-tag {
+    background-color: var(--danger);
+  }
+
+  &.due-soon-tag {
+    background-color: var(--progress-color);
+  }
+
+  // Priority and Status Tags
+  &.priority-tag,
+  &.status-in-progress-tag {
+    border-radius: vars.$radius-md;
+    padding: 2px 6px;
+    font-size: 11px;
+    font-weight: 600;
+
+    // Color configurations based on severity classes
+    &.p-tag-danger {
+      background-color: rgba(var(--danger-rgb), 0.15);
+      color: var(--danger);
+    }
+
+    &.p-tag-warn {
+      background-color: rgba(var(--amber-500-rgb), 0.15);
+      color: var(--progress-color);
+    }
+
+    &.p-tag-info {
+      background-color: rgba(var(--blue-500-rgb), 0.15);
+      color: var(--todo-color);
+    }
+  }
+
+  // Specific labels & icons should inherit colors/styles from parent tags
+  &.overdue-tag,
+  &.due-soon-tag,
+  &.priority-tag,
+  &.status-in-progress-tag,
+  &.role-tag {
+    .p-tag-label {
+      @include mixins.inherit-typography;
+    }
+  }
+
+  &.overdue-tag,
+  &.due-soon-tag {
+    .p-tag-icon {
+      @include mixins.inherit-typography;
+    }
+  }
+}
+
+// Role Tag overrides (specifically scoped to html body for PrimeNG override specificity)
+html body p-tag.role-tag {
+  &, .p-tag {
+    border: none;
+    font-weight: 700;
+    border-radius: vars.$radius-2xl;
+    padding: 3px 8px;
+    font-size: 13px;
+    letter-spacing: 0.3px;
+    height: auto;
+    @include mixins.flex-center(inline-flex);
+  }
+}

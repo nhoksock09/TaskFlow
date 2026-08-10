@@ -1,0 +1,275 @@
+@use 'variables' as vars;
+@use 'mixins';
+
+/* PrimeNG Paginator Custom Overrides */
+.p-paginator .p-paginator-page.p-paginator-page-selected,
+.p-paginator .p-paginator-page.p-highlight,
+.p-paginator-page-selected,
+.p-paginator-page.p-highlight,
+.p-paginator-page.p-paginator-page-selected {
+  background-color: var(--paginator-highlight-bg);
+  color: var(--paginator-highlight-text);
+  border-radius: vars.$radius-circle;
+}
+
+.p-paginator .p-paginator-page:not(.p-paginator-page-selected):not(.p-highlight):hover {
+  background-color: rgba(var(--primary-rgb), 0.08);
+}
+
+/* Global Select Override — targeting .p-select.p-component naturally wins specificity */
+p-select.p-component,
+.p-select.p-component {
+  width: 100%;
+  height: 48px;
+  border-radius: vars.$radius-xl;
+  border: vars.$border-default;
+  background: var(--bg-input);
+  display: flex;
+  align-items: center;
+  transition: vars.$transition-input;
+  box-shadow: none;
+
+  html.dark-theme &,
+  html.dark & {
+    background: var(--bg-input);
+  }
+
+  .p-select-label {
+    padding: 0 14px;
+    font-size: 14px;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    background: transparent;
+    border: none;
+  }
+
+  .p-select-dropdown {
+    width: 32px;
+    height: 32px;
+    @include mixins.flex-center;
+    color: var(--text-muted);
+    margin-right: 8px;
+  }
+
+  &:focus-within,
+  &:hover {
+    border-color: var(--indigo-600);
+  }
+
+  &.p-focus {
+    border-color: var(--indigo-600);
+    @include mixins.focus-ring;
+  }
+}
+
+/* =========================================
+   Paginator Custom Override (PrimeNG)
+   ========================================= */
+.p-paginator {
+  background: transparent;
+  border: none;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  width: auto;
+  box-sizing: border-box;
+
+  .p-paginator-element {
+    @include mixins.paginator-item-base;
+    font-size: 13px;
+    padding: 0;
+    margin: 0 1px;
+
+    &:hover:not(.p-disabled):not(.p-highlight) {
+      background: rgba(var(--white-rgb), 0.05);
+      color: var(--text-primary);
+    }
+
+    &.p-disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+  }
+
+  .p-paginator-pages {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .p-paginator-page {
+    @include mixins.paginator-item-base;
+    margin: 0 2px;
+
+    &:hover:not(.p-highlight) {
+      background: rgba(var(--white-rgb), 0.05);
+      color: var(--text-primary);
+    }
+
+    &.p-highlight {
+      background: rgba(var(--completed-color-rgb), 0.16);
+      color: var(--emerald-400);
+      border: 1.5px solid rgba(var(--completed-color-rgb), 0.35);
+      font-weight: 700;
+    }
+  }
+
+  /* Specific styling for navigation arrows */
+  .p-paginator-first,
+  .p-paginator-prev {
+    font-weight: 700;
+  }
+
+  .p-paginator-next,
+  .p-paginator-last {
+    color: var(--text-secondary);
+    font-weight: 700;
+
+    &:hover:not(.p-disabled) {
+      color: var(--emerald-400);
+    }
+  }
+}
+
+/* Rows per Page Dropdown override */
+.rows-select-compact.p-select {
+  background: var(--bg-card);
+  border: vars.$border-default;
+  border-radius: vars.$radius-lg;
+  height: 38px;
+  width: 76px;
+  min-width: 76px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--indigo-600);
+  }
+
+  .p-select-label {
+    padding: 0 0 0 16px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    background: transparent;
+    border: none;
+  }
+
+  .p-select-dropdown {
+    width: 28px;
+    height: 100%;
+    @include mixins.flex-center;
+    color: var(--text-secondary);
+    margin: 0;
+    padding-right: 6px;
+  }
+}
+
+/* =========================================
+   Global PrimeNG Select Options Panel Override
+   ========================================= */
+html body {
+  .p-select-overlay {
+    background: var(--bg-card);
+    border: vars.$border-default;
+    border-radius: vars.$radius-xl;
+    box-shadow: 0 10px 25px -5px rgba(var(--black-rgb), 0.35), 0 8px 10px -6px rgba(var(--black-rgb), 0.35);
+    padding: 6px;
+  }
+
+  .p-select-list {
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .p-select-option {
+    padding: 8px 14px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    border-radius: vars.$radius-md;
+    transition: background 0.15s ease, color 0.15s ease, transform 0.1s ease;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+
+    &:hover,
+    &.p-focus {
+      background: rgba(var(--white-rgb), 0.05);
+      color: var(--text-primary);
+    }
+
+    &.p-select-option-selected {
+      background: rgba(var(--primary-rgb), 0.15);
+      color: var(--indigo-400);
+      font-weight: 600;
+    }
+  }
+}
+
+html body {
+  /* =========================================
+     Global PrimeNG Toast Notification Custom Styling
+     ========================================= */
+  .p-toast {
+    top: 20px;
+    right: 20px;
+
+    .p-toast-message {
+      margin-bottom: 1rem;
+      border-radius: vars.$radius-2xl;
+      box-shadow: 0 10px 25px -5px rgba(var(--black-rgb), 0.25), 0 8px 10px -6px rgba(var(--black-rgb), 0.25);
+      border: vars.$border-default;
+
+      .p-toast-message-content {
+        padding: 1rem 1.25rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+
+        .p-toast-icon-close,
+        button.p-toast-close-button {
+          margin-left: auto;
+          padding: 4px;
+          @include mixins.flex-center;
+          color: var(--text-secondary);
+          transition: color 0.15s ease;
+
+          &:hover {
+            color: var(--text-primary);
+          }
+        }
+
+        .p-toast-message-text {
+          margin-left: 0.25rem;
+          
+          .p-toast-summary {
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+            display: block;
+            font-size: 14px;
+          }
+
+          .p-toast-detail {
+            margin-top: 0.25rem;
+            display: block;
+            font-size: 13px;
+            color: var(--text-secondary);
+          }
+        }
+      }
+    }
+  }
+}

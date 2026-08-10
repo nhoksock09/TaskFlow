@@ -1,7 +1,7 @@
 <div class="settings-container">
   <div class="settings-card">
     <div class="card-header">
-      <div class="header-icon"><i class="ph-light ph-gear"></i></div>
+      <div class="header-icon"><i class="pi pi-cog"></i></div>
       <h2>{{ 'SETTINGS.TITLE' | translate }}</h2>
     </div>
     <form [formGroup]="profileForm" (ngSubmit)="onSaveProfile()">
@@ -12,10 +12,10 @@
       </formly-form>
       <div class="form-group">
         <p-button type="button" styleClass="btn-change-password" (click)="openPasswordModal()">
-          <i class="ph-light ph-lock"></i> {{ 'COMMON.BTN.CHANGE_PW' | translate }}
+          <i class="pi pi-lock"></i> {{ 'COMMON.BTN.CHANGE_PW' | translate }}
         </p-button>
       </div>
-      <div style="display: flex; justify-content: center; width: 100%; margin-top: 20px;">
+      <div class="btn-save-container">
         <p-button type="submit" styleClass="btn-save" [label]="'COMMON.BTN.SAVE' | translate"></p-button>
       </div>
     </form>
@@ -26,7 +26,7 @@
     <div class="modal-overlay" (click)="closePasswordModal()">
       <div class="modal-card" (click)="$event.stopPropagation()">
         <div class="card-header">
-          <div class="header-icon"><i class="ph-light ph-lock"></i></div>
+          <div class="header-icon"><i class="pi pi-lock"></i></div>
           <h2>{{ 'SETTINGS.MODAL_TITLE' | translate }}</h2>
         </div>
         <form [formGroup]="passwordForm" (ngSubmit)="onChangePassword()">

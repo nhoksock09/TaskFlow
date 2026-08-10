@@ -1,0 +1,12 @@
+@use 'mixins';
+
+/* Internal Scrollbar for Large Row Selection */
+.task-list-container,
+.user-table-container {
+  max-height: calc(100vh - 280px);
+  min-height: 200px;
+  overflow-y: auto;
+  padding-right: 4px;
+
+  @include mixins.custom-scrollbar;
+}

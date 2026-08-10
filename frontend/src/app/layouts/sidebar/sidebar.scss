@@ -1,3 +1,9 @@
+@use 'variables' as vars;
+@use 'mixins';
+
+$rail-size: 44px;
+$label-gap: 12px; // khoảng cách từ icon sang nhãn chữ
+
 :host {
   position: relative;
   width: 260px;
@@ -6,57 +12,103 @@
   color: var(--text-primary);
   padding: 24px 24px 12px 24px;
   border-right: 1px solid var(--border-color);
-  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease, border-color 0.3s ease, padding 0.3s ease;
+  transition: width 0.3s vars.$ease-standard, background vars.$transition-slow, border-color vars.$transition-slow, padding vars.$transition-slow;
   overflow: visible; /* Allow toggle button to float outside sidebar */
   height: 100%;
   display: block;
-}
-:host(.collapsed) {
-  width: 80px;
-  padding: 24px 18px 12px 18px;
-  .logo {
-    justify-content: center;
-    .logo-box {
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
+
+  ::ng-deep {
+    .sidebar-toggle-btn.p-button {
+      position: absolute;
+      top: 68px;
+      right: -14px;
+      width: 28px;
+      height: 28px;
+      border-radius: vars.$radius-circle;
+      border: 1.5px solid var(--border-color);
+      background: var(--bg-card);
+      color: var(--text-secondary);
+      cursor: pointer;
+      @include mixins.flex-center;
+      font-size: 13px;
+      box-shadow: 0 2px 8px rgba(var(--black-rgb), 0.12);
+      z-index: 200;
+      padding: 0;
+
+      i {
+        font-size: 13px;
+      }
+
+      &:hover {
+        background: var(--bg-sidebar);
+        color: var(--text-primary);
+        border-color: var(--indigo-600);
+        box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.18);
+      }
     }
-    span {
-      width: 0;
-      opacity: 0;
-      visibility: hidden;
-      margin-left: 0;
+
+    /* Inline overrides for PrimeNG Drawer component to keep layout exactly as-is */
+    .p-drawer-mask:has(.sidebar-drawer) {
+      position: static;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      pointer-events: auto;
+      display: flex;
+      flex-direction: column;
+      z-index: auto;
+    }
+
+    .sidebar-drawer.p-drawer {
+      position: static;
+      height: 100%;
+      width: 100%;
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      transition: none;
+      transform: none;
+
+      .p-drawer-content {
+        padding: 0;
+        background: transparent;
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        overflow: visible;
+      }
     }
   }
-  nav a {
-    width: 44px;
-    height: 44px;
-    padding: 0;
-    justify-content: center;
-    border-radius: 12px;
-    span {
-      width: 0;
-      opacity: 0;
-      visibility: hidden;
-      margin-left: 0;
-    }
-  }
-  .sidebar-footer {
-    .user-profile {
+
+  &.collapsed {
+    width: 80px;
+    padding: 24px 18px 12px 18px;
+    
+    .logo,
+    nav a,
+    .sidebar-footer .user-profile {
       justify-content: center;
     }
-    .user-avatar {
-      width: 44px;
-      height: 44px;
+
+    // Ẩn nhãn chữ nhưng vẫn giữ chỗ trong flow để transition chạy mượt
+    .logo span,
+    nav a span,
+    .sidebar-footer .user-info {
+      @include mixins.collapsed-label-hidden;
     }
-    .user-info {
-      width: 0;
-      opacity: 0;
-      visibility: hidden;
-      margin-left: 0;
+
+    nav a {
+      width: $rail-size;
+      height: $rail-size;
+      padding: 0;
     }
   }
 }
+
 .sidebar-wrapper {
   height: 100%;
   display: flex;
@@ -64,184 +116,123 @@
   justify-content: space-between;
   overflow: visible;
 }
+
 .sidebar-top {
   display: flex;
   flex-direction: column;
   gap: 36px;
 }
+
 .logo {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  transition: all 0.3s ease;
+  transition: all vars.$transition-slow;
+
   .logo-box {
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
+    width: $rail-size;
+    height: $rail-size;
+    border-radius: vars.$radius-2xl;
     background: var(--logo-gradient);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    @include mixins.flex-center;
     color: var(--white);
     font-size: 18px;
     flex-shrink: 0;
   }
+
   span {
     font-size: 22px;
     font-weight: 700;
     color: var(--text-primary);
     white-space: nowrap;
-    transition: all 0.3s ease;
-    margin-left: 12px;
+    transition: all vars.$transition-slow;
+    margin-left: $label-gap;
   }
 }
+
 nav {
   display: flex;
   flex-direction: column;
   gap: 8px;
-}
-nav a {
-  color: var(--text-sidebar-nav);
-  text-decoration: none;
-  padding: 12px 16px;
-  border-radius: 12px;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  transition: all 0.2s ease;
-  .nav-icon {
-    font-size: 18px;
-    width: 20px;
-    text-align: center;
+
+  a {
     color: var(--text-sidebar-nav);
-    transition: color 0.2s ease;
-    flex-shrink: 0;
-  }
-  span {
-    white-space: nowrap;
-    transition: opacity 0.2s ease, width 0.2s ease;
-    margin-left: 12px;
-  }
-  &:hover {
-    background: var(--bg-primary);
-    color: var(--text-sidebar-nav-hover);
+    text-decoration: none;
+    padding: 12px 16px;
+    border-radius: vars.$radius-2xl;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    transition: all vars.$transition-base;
+
     .nav-icon {
+      font-size: 18px;
+      width: 20px;
+      text-align: center;
+      color: inherit;
+      transition: color vars.$transition-base;
+      flex-shrink: 0;
+    }
+
+    span {
+      white-space: nowrap;
+      transition: opacity vars.$transition-base, width vars.$transition-base;
+      margin-left: $label-gap;
+    }
+
+    &:hover {
+      background: var(--bg-primary);
       color: var(--text-sidebar-nav-hover);
     }
-  }
-  &.active {
-    background: var(--logo-gradient);
-    color: var(--white);
-    .nav-icon {
+
+    &.active {
+      background: var(--logo-gradient);
       color: var(--white);
     }
   }
 }
+
 .sidebar-footer {
   margin-top: auto;
   padding-top: 16px;
   border-top: 1px solid var(--border-color);
+
   .user-profile {
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    transition: all 0.3s ease;
+    transition: all vars.$transition-slow;
   }
+
   .user-avatar {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
+    width: $rail-size;
+    height: $rail-size;
+    border-radius: vars.$radius-circle;
     background: var(--logo-gradient);
     color: var(--white);
     font-weight: 700;
     font-size: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    @include mixins.flex-center;
     flex-shrink: 0;
   }
+
   .user-info {
     display: flex;
     flex-direction: column;
     white-space: nowrap;
-    transition: all 0.3s ease;
-    margin-left: 12px;
+    transition: all vars.$transition-slow;
+    margin-left: $label-gap;
   }
+
   .user-name {
     font-size: 14px;
     font-weight: 700;
     color: var(--text-primary);
   }
+
   .user-email {
     font-size: 12px;
     color: var(--text-secondary);
-  }
-}
-:host ::ng-deep {
-  .sidebar-toggle-btn.p-button {
-    position: absolute;
-    top: 68px;
-    right: -14px;
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    border: 1.5px solid var(--border-color);
-    background: var(--bg-card);
-    color: var(--text-secondary);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 13px;
-    box-shadow: 0 2px 8px rgba(var(--black-rgb), 0.12);
-    z-index: 200;
-    padding: 0;
-
-    i {
-      font-size: 13px;
-    }
-    &:hover {
-      background: var(--bg-sidebar);
-      color: var(--text-primary);
-      border-color: var(--indigo-600);
-      box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.18);
-    }
-  }
-
-  /* Inline overrides for PrimeNG Drawer component to keep layout exactly as-is */
-  .p-drawer-mask:has(.sidebar-drawer) {
-    position: static;
-    width: 100%;
-    height: 100%;
-    background: transparent;
-    pointer-events: auto;
-    display: flex;
-    flex-direction: column;
-    z-index: auto;
-  }
-
-  .sidebar-drawer.p-drawer {
-    position: static;
-    height: 100%;
-    width: 100%;
-    background: transparent;
-    border: none;
-    box-shadow: none;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    transition: none;
-    transform: none;
-
-    .p-drawer-content {
-      padding: 0;
-      background: transparent;
-      height: 100%;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      overflow: visible;
-    }
   }
 }

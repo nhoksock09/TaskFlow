@@ -51,7 +51,7 @@
     "USER_NOT_FOUND": "Không tìm thấy thông tin người dùng.",
     "FILL_ALL_FIELDS": "Vui lòng nhập đầy đủ các trường thông tin.",
     "FILL_ALL_PASSWORD_FIELDS": "Vui lòng nhập đầy đủ các trường mật khẩu.",
-    "NEW_PASSWORD_MIN_LENGTH": "Mật khẩu mới phải có ít nhất 6 ký tự.",
+    "NEW_PASSWORD_MIN_LENGTH": "Mật khẩu mới phải có ít nhất 8 ký tự.",
     "EMAIL_USERNAME_NO_LETTER": "Tên người dùng trong email phải chứa ít nhất một chữ cái.",
     "INVALID_DOB_FORMAT": "Định dạng ngày sinh không hợp lệ.",
     "DOB_FUTURE": "Ngày sinh không được ở trong tương lai.",
@@ -84,7 +84,7 @@
     "ALERT_TITLE": "Cảnh báo công việc cần chú ý",
     "ALERT_INTRO": "Dưới đây là tóm tắt các công việc cần bạn xử lý ngay lập tức:",
     "OVERDUE_SECTION": "Công việc quá hạn ({{ count }})",
-    "IMPENDING_SECTION": "Hạn hôm nay / 24 giờ tới ({{ count }})",
+    "IMPENDING_SECTION": "Hạn hôm nay / 1 ngày tới ({{ count }})",
     "WAS_DUE": "Đã hạn lúc: {{ date }}",
     "DUE": "Hạn lúc: {{ date }}",
     "ACKNOWLEDGE": "Đã ghi nhận & Tiếp tục",
@@ -140,6 +140,8 @@
     "TOAST": {
       "MOVE_SUCCESS": "Đã chuyển công việc sang {{ status }}",
       "MOVE_FAILED": "Cập nhật trạng thái công việc thất bại.",
+      "LOAD_FAILED": "Tải danh sách công việc thất bại.",
+      "NO_CHANGES": "Không có thay đổi nào để lưu.",
       "UPDATE_SUCCESS": "Cập nhật công việc thành công! 🎉",
       "UPDATE_FAILED": "Cập nhật công việc thất bại.",
       "CREATE_SUCCESS": "Tạo công việc thành công! 🎉",
@@ -178,7 +180,8 @@
       "PROMOTE_FAILED": "Nâng quyền Admin thất bại.",
       "DELETE_ADMIN_ERROR": "Không thể xóa tài khoản Admin.",
       "DELETE_SUCCESS": "Đã xóa tài khoản {{ name }} thành công.",
-      "DELETE_FAILED": "Xóa tài khoản thất bại."
+      "DELETE_FAILED": "Xóa tài khoản thất bại.",
+      "ACCESS_DENIED": "Từ chối truy cập: Yêu cầu quyền Admin."
     }
   },
   "SETTINGS": {
@@ -187,6 +190,7 @@
     "TOAST": {
       "FILL_REQUIRED": "Vui lòng nhập đầy đủ các trường bắt buộc.",
       "NO_CHANGES": "Không có thay đổi nào để lưu.",
+      "LOAD_FAILED": "Tải thông tin hồ sơ thất bại.",
       "PROFILE_SUCCESS": "Cập nhật hồ sơ thành công!",
       "PROFILE_FAILED": "Cập nhật hồ sơ thất bại.",
       "PASSWORD_MISMATCH": "Xác nhận mật khẩu không khớp!",
@@ -216,8 +220,8 @@
     "REQUIRED": "Trường này là bắt buộc.",
     "MINLENGTH": "Phải có ít nhất {{ minLength }} ký tự.",
     "INVALID_FULL_NAME": "Họ tên chỉ được chứa chữ cái và khoảng trắng.",
-    "OUT_OF_AGE_RANGE": "Tuổi phải từ 10 đến 70 tuổi.",
-    "OUT_OF_AGE_RANGE_60": "Tuổi phải từ 10 đến 60 tuổi.",
+    "OUT_OF_AGE_RANGE": "Tuổi phải từ 18 đến 60 tuổi.",
+    "OUT_OF_AGE_RANGE_60": "Tuổi phải từ 18 đến 60 tuổi.",
     "INVALID_EMAIL": "Vui lòng nhập địa chỉ email hợp lệ (vd: user@example.com).",
     "EMAIL_PREFIX_TOO_SHORT": "Phần tên email trước ký tự @ phải có ít nhất 6 ký tự.",
     "EMAIL_TYPO": "Vui lòng nhập địa chỉ email hợp lệ (vd: user@example.com).",
@@ -227,7 +231,7 @@
     "PASSWORD_REQUIREMENTS": "Mật khẩu cần phải đáp ứng tất cả các điều kiện dưới."
   },
   "PASSWORD_REQ": {
-    "MIN_LENGTH": "Tối thiểu 6 ký tự",
+    "MIN_LENGTH": "Tối thiểu 8 ký tự",
     "UPPERCASE": "Chứa chữ cái viết hoa",
     "LOWERCASE": "Chứa chữ cái viết thường",
     "NUMBER": "Chứa chữ số"
@@ -305,5 +309,10 @@
     "passwordPrompt": "Nhập mật khẩu",
     "emptyMessage": "Không tìm thấy kết quả",
     "emptyFilterMessage": "Không tìm thấy kết quả"
+  },
+  "ACCESS_DENIED": {
+    "TITLE": "Truy cập bị từ chối",
+    "SUBTITLE": "Bạn không có quyền quản trị cần thiết để xem trang này.",
+    "BACK_BUTTON": "Quay về trang chủ"
   }
 }

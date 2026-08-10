@@ -6,7 +6,7 @@ import { FormGroup, ReactiveFormsModule, AbstractControl } from '@angular/forms'
 import { UserService } from '../../core/services/user.service';
 import { AuthService } from '../../core/services/auth.service';
 import { ToastService } from '../../core/services/toast.service';
-import { User } from '../../shared/models';
+import { User, ProfileFormModel, PasswordFormModel } from '@core/models';
 import { FormlyModule, FormlyFieldConfig } from '@ngx-formly/core';
 import { FormlyPrimeNGModule } from '@ngx-formly/primeng';
 import { ButtonModule } from 'primeng/button';
@@ -14,19 +14,7 @@ import { PASSWORD_REQUIREMENTS } from '../../shared/constants/password-rules';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { fullNameValidator, dobAgeValidator } from '../../shared/validators/form.validators';
 
-export interface ProfileFormModel {
-  name: string;
-  dateOfBirth: Date | string | null;
-}
-
-export interface PasswordFormModel {
-  currentPassword: string;
-  newPassword: string;
-  confirmPassword: string;
-}
-
 // ── Component ─────────────────────────────────────────────────────────────────
-
 @Component({
   selector: 'app-settings',
   standalone: true,
@@ -45,10 +33,6 @@ export class Settings implements OnInit {
 
   user: User | null = null;
   showPasswordModal = false;
-
-  hideCurrentPassword = true;
-  hideNewPassword = true;
-  hideConfirmPassword = true;
 
   minDob: string = '';
   maxDob: string = '';
@@ -112,8 +96,8 @@ export class Settings implements OnInit {
 
   ngOnInit() {
     const today = new Date();
-    const maxDate = new Date(today.getFullYear() - 10, today.getMonth(), today.getDate());
-    const minDate = new Date(today.getFullYear() - 70, today.getMonth(), today.getDate());
+    const maxDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+    const minDate = new Date(today.getFullYear() - 60, today.getMonth(), today.getDate());
     this.maxDob = this.getFormattedDateOnly(maxDate);
     this.minDob = this.getFormattedDateOnly(minDate);
 
@@ -147,7 +131,7 @@ export class Settings implements OnInit {
           keepCharPositions: true,
           dateFormat: 'dd/mm/yy',
           minDate: new Date(new Date().getFullYear() - 60, new Date().getMonth(), new Date().getDate()),
-          maxDate: new Date(new Date().getFullYear() - 10, new Date().getMonth(), new Date().getDate()),
+          maxDate: new Date(new Date().getFullYear() - 18, new Date().getMonth(), new Date().getDate()),
           appendTo: 'body'
         },
         validators: {
@@ -158,7 +142,6 @@ export class Settings implements OnInit {
         }
       }
     ];
-
     this.loadProfile();
   }
 
@@ -168,14 +151,11 @@ export class Settings implements OnInit {
       .subscribe({
         next: (user) => {
           this.user = user;
-          let dobDate: Date | null = null;
-          if (user.dateOfBirth) dobDate = new Date(user.dateOfBirth);
-          // Spread into a new object so Formly's OnPush-style checks detect the reference change,
-          // then immediately mark the view dirty so the data appears on first navigation.
+          const dobDate = user.dateOfBirth ? new Date(user.dateOfBirth) : '';
           this.profileModel = { ...this.profileModel, name: user.name, dateOfBirth: dobDate };
           this.cdr.detectChanges();
         },
-        error: (err) => console.error('Error loading profile:', err)
+        error: () => this.toastService.error('SETTINGS.TOAST.LOAD_FAILED')
       });
   }
 
@@ -213,7 +193,7 @@ export class Settings implements OnInit {
             this.authService.saveUser({ ...this.user, name: res.user.name, dateOfBirth: res.user.dateOfBirth });
           }
         },
-        error: (err) => this.toastService.error('SETTINGS.TOAST.PROFILE_FAILED')
+        error: () => this.toastService.error('SETTINGS.TOAST.PROFILE_FAILED')
       });
   }
 
@@ -240,13 +220,13 @@ export class Settings implements OnInit {
     this.userService.changePassword({ currentPassword, newPassword })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (res) => {
+        next: () => {
           this.toastService.success('SETTINGS.TOAST.PASSWORD_SUCCESS');
           this.closePasswordModal();
           this.authService.logout();
           this.router.navigate(['/login']);
         },
-        error: (err) => this.toastService.error('SETTINGS.TOAST.PASSWORD_FAILED')
+        error: () => this.toastService.error('SETTINGS.TOAST.PASSWORD_FAILED')
       });
   }
 

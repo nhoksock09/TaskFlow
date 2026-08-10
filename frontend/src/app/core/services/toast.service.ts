@@ -9,7 +9,7 @@ const API_ERRORS_MAP: { [key: string]: string } = {
   "User not found.": "API_ERROR.USER_NOT_FOUND",
   "Please fill in all fields.": "API_ERROR.FILL_ALL_FIELDS",
   "Please fill in all password fields.": "API_ERROR.FILL_ALL_PASSWORD_FIELDS",
-  "New password must be at least 6 characters.": "API_ERROR.NEW_PASSWORD_MIN_LENGTH",
+  "New password must be at least 8 characters.": "API_ERROR.NEW_PASSWORD_MIN_LENGTH",
   "Email username must contain at least one letter.": "API_ERROR.EMAIL_USERNAME_NO_LETTER",
   "Invalid date of birth format.": "API_ERROR.INVALID_DOB_FORMAT",
   "Date of birth cannot be in the future.": "API_ERROR.DOB_FUTURE",
@@ -24,7 +24,7 @@ export class ToastService {
   private translateService = inject(TranslateService);
   private activeToasts = new Set<string>();
 
-  show(messageKey: string, type: 'success' | 'error' | 'info' = 'success', params?: any): void {
+  show(messageKey: string, type: 'success' | 'error' | 'info' = 'success', params?: Record<string, unknown>) {
     const finalKey = API_ERRORS_MAP[messageKey] || messageKey;
     const key = `${type}:${finalKey}`;
     if (this.activeToasts.has(key)) {
@@ -52,16 +52,15 @@ export class ToastService {
     }, 2000);
   }
 
-  success(message: string): void {
+  success(message: string) {
     this.show(message, 'success');
   }
 
-  error(message: string): void {
+  error(message: string) {
     this.show(message, 'error');
   }
 
-  info(message: string): void {
+  info(message: string) {
     this.show(message, 'info');
   }
 }
-

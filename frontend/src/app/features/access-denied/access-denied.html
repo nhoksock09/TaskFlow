@@ -1,0 +1,17 @@
+<div class="access-denied-page">
+  <div class="access-denied-card">
+    <div class="icon-wrapper">
+      <i class="pi pi-lock"></i>
+    </div>
+
+    <h1 class="title">403 — {{ 'ACCESS_DENIED.TITLE' | translate }}</h1>
+    <p class="subtitle">{{ 'ACCESS_DENIED.SUBTITLE' | translate }}</p>
+
+    <p-button
+      id="btn-back-to-dashboard"
+      [label]="'ACCESS_DENIED.BACK_BUTTON' | translate"
+      icon="pi pi-arrow-left"
+      (onClick)="goToDashboard()"
+    />
+  </div>
+</div>

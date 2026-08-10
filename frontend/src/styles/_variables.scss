@@ -1,0 +1,26 @@
+// ---- Border radius scale ----
+$radius-xs: 3px;
+$radius-sm: 4px;
+$radius-md: 6px;
+$radius-lg: 8px;
+$radius-xl: 10px;
+$radius-2xl: 12px;
+$radius-3xl: 16px;
+$radius-4xl: 20px;
+$radius-pill: 9999px;
+$radius-circle: 50%;
+
+// ---- Transition timings (duration + easing reused verbatim everywhere) ----
+$transition-fast: 0.15s ease;
+$transition-base: 0.2s ease;
+$transition-slow: 0.3s ease;
+$ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+
+$border-default: 1px solid var(--border-color);
+
+// ---- Common scrollbar thickness ----
+$scrollbar-width: 6px;
+
+// ---- Shared transition shorthand for form controls (input/select/textarea
+// all used the same "border-color 0.2s, box-shadow 0.2s" verbatim) ----
+$transition-input: border-color 0.2s, box-shadow 0.2s;

@@ -1,3 +1,6 @@
+@use 'variables' as vars;
+@use 'mixins';
+
 .layout {
   display: flex;
   height: 100vh;
@@ -11,56 +14,60 @@
   flex-direction: column;
   min-width: 0; /* Prevent flex child overflow */
   overflow: hidden;
-  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1), flex 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: margin-left 0.3s vars.$ease-standard, width 0.3s vars.$ease-standard, flex 0.3s vars.$ease-standard;
 }
+
 .header {
   height: 70px;
   min-height: 70px;
   flex-shrink: 0;
   background: var(--bg-card);
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: vars.$border-default;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 30px;
-  transition: background 0.3s ease, border-color 0.3s ease;
+  transition: background vars.$transition-slow, border-color vars.$transition-slow;
   position: sticky;
   top: 0;
   z-index: 100;
 }
+
 .header-left {
   display: flex;
   flex-direction: column;
 }
+
+// Nhóm điều khiển bên phải header (chọn ngôn ngữ / sáng-tối / đăng xuất).
+// Trước đây div này KHÔNG có style nào: nó là block, nên p-select và 2 p-button
+// bị xếp chồng dọc, khối cao ~120px và tràn ra ngoài header cao 70px.
+// display:flex ép 3 phần tử về một hàng bất kể PrimeNG đặt display gì cho host.
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
 .greeting {
   font-size: 20px;
   font-weight: 600;
   color: var(--text-primary);
   margin: 0;
 }
+
 .date {
   font-size: 14px;
   color: var(--text-secondary);
   margin: 0;
 }
+
 :host ::ng-deep {
+  // .theme-toggle-btn and .logout-btn were two near-identical 40x40 round
+  // icon-button blocks — only the hover color differed.
   .theme-toggle-btn.p-button {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: none;
-    background: transparent;
-    color: var(--text-secondary);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    box-shadow: none;
-    
-    i {
-      font-size: 20px;
-    }
+    @include mixins.circle-icon-button;
+
     &:hover {
       background: var(--bg-primary);
       color: var(--text-primary);
@@ -68,22 +75,8 @@
   }
 
   .logout-btn.p-button {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: none;
-    background: transparent;
-    color: var(--text-secondary);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    box-shadow: none;
-    
-    i {
-      font-size: 20px;
-    }
+    @include mixins.circle-icon-button;
+
     &:hover {
       background: rgba(var(--danger-rgb), 0.08);
       color: var(--danger);
@@ -92,21 +85,26 @@
 
   .lang-select.p-select {
     background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
+    border: vars.$border-default;
+    border-radius: vars.$radius-lg;
     height: 40px;
+    // Rule toàn cục `p-select.p-component` đặt width:100% cho ô select trong
+    // form; ở header thì nó khiến dropdown ngôn ngữ giãn hết chỗ và đẩy 2 nút
+    // còn lại đi. Ghi đè lại thành co theo nội dung.
+    width: auto;
+    min-width: 120px;
     display: flex;
     align-items: center;
     padding-left: 8px;
     font-size: 14px;
     color: var(--text-primary);
     box-shadow: none;
-    transition: border-color 0.2s ease;
-    
+    transition: border-color vars.$transition-base;
+
     &:not(.p-disabled):hover {
       border-color: var(--indigo-500);
     }
-    
+
     .p-select-label {
       padding: 0 8px 0 0;
       display: flex;
@@ -118,31 +116,19 @@
     }
   }
 }
+
 main {
   flex: 1;
   background: var(--bg-primary);
   padding: 30px;
   overflow-y: auto;
   overflow-x: hidden;
-  transition: background 0.3s ease;
+  transition: background vars.$transition-slow;
   /* Hide scrollbar but keep scroll functionality */
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE/Edge */
-  &::-webkit-scrollbar {
-    display: none; /* Chrome/Safari */
-  }
+  @include mixins.hide-scrollbar;
 }
+
 main > * {
   display: block;
-  animation: routeFadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) both;
-}
-@keyframes routeFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  animation: routeFadeIn 0.3s vars.$ease-standard both; // keyframe defined once in styles/_animations.scss
 }

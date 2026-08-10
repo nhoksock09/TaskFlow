@@ -1,0 +1,216 @@
+@use 'variables' as vars;
+
+/* ── Tablet: 1024px and below ───────────────────────────────────────────────── */
+@media (max-width: 1023px) {
+  html body {
+    .user-table-container,
+    .task-list-container {
+      overflow-x: auto;
+      max-width: 100%;
+    }
+
+    .users-container .users-card {
+      padding: 20px;
+    }
+
+    .layout .content {
+      .header {
+        padding: 0 16px;
+
+        .header-left .greeting {
+          font-size: 17px;
+        }
+      }
+
+      main {
+        padding: 20px;
+
+        .stats-container {
+          grid-template-columns: repeat(3, 1fr);
+        }
+
+        .filter-row {
+          flex-wrap: wrap;
+          gap: 10px;
+        }
+
+        .tasks-board {
+          overflow-x: auto;
+        }
+      }
+    }
+  }
+}
+
+/* ── Mobile: 768px and below ─────────────────────────────────────────────────── */
+@media (max-width: 767px) {
+  html body {
+    .users-container .users-card {
+      padding: 16px 14px;
+      border-radius: 14px;
+    }
+
+    // Hide sidebar circular button completely on mobile since hamburger button handles toggling
+    app-sidebar .sidebar-toggle-btn,
+    .sidebar-toggle-btn {
+      display: none;
+    }
+
+    .sidebar-backdrop {
+      display: none;
+      position: fixed;
+      top: 70px; /* Under the header */
+      inset: 70px 0 0 0;
+      background: var(--backdrop-bg);
+      z-index: 999;
+
+      &.active {
+        display: block;
+      }
+    }
+
+    .layout {
+      app-sidebar.sidebar {
+        position: fixed;
+        top: 70px; /* Under the header */
+        left: 0;
+        height: calc(100vh - 70px);
+        width: 260px;
+        z-index: 1000;
+        transform: translateX(-100%); /* Default is collapsed/offscreen (avoids initial slide-in on load) */
+        transition: transform 0.3s ease-in-out;
+        border-right: vars.$border-default;
+
+        &:not(.collapsed) {
+          transform: translateX(0); /* Expanded state */
+        }
+
+        &.collapsed {
+          width: 260px; /* Keep fixed width off-screen */
+          padding: 24px 24px 12px 24px;
+        }
+      }
+
+      .p-toast {
+        top: 12px;
+        right: 12px;
+        left: 12px;
+        max-width: calc(100vw - 24px);
+      }
+
+      .content {
+        .header {
+          padding: 0 12px;
+          gap: 8px;
+
+          .mobile-menu-btn-host {
+            display: block;
+          }
+
+          .mobile-menu-btn.p-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: vars.$radius-lg;
+            border: vars.$border-default;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            cursor: pointer;
+            margin-right: 8px;
+            padding: 0;
+            box-shadow: none;
+
+            &:hover {
+              background: var(--bg-primary);
+              border-color: var(--border-color);
+            }
+          }
+
+          .header-left {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 12px;
+
+            // Stack greeting and date vertically
+            & > div {
+              display: flex;
+              flex-direction: column;
+              gap: 2px;
+            }
+
+            .greeting {
+              font-size: 15px;
+              line-height: 1.2;
+            }
+            .date {
+              display: block;
+              font-size: 12px;
+              color: var(--text-secondary);
+              margin-top: 2px;
+            }
+          }
+        }
+
+        main {
+          padding: 12px;
+
+          .stats-container {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+          }
+
+          .dashboard-grid,
+          .alert-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .filter-row {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+          }
+
+          .filter-buttons {
+            flex-wrap: wrap;
+            gap: 6px;
+          }
+
+          .tasks-board {
+            overflow-x: auto;
+            flex-wrap: nowrap;
+          }
+
+          .users-container .users-card {
+            .users-header {
+              flex-direction: column;
+              align-items: flex-start;
+              gap: 12px;
+            }
+
+            .search-box {
+              max-width: 100%;
+              width: 100%;
+            }
+
+            .user-table-container {
+              overflow-x: auto;
+              max-width: 100%;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/* ── Hide Mobile Backdrop on Desktop ───────────────────────────────── */
+@media (min-width: 768px) {
+  html body {
+    .sidebar-backdrop {
+      display: none;
+    }
+  }
+}

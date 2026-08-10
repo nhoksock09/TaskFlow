@@ -51,7 +51,7 @@
     "USER_NOT_FOUND": "User not found.",
     "FILL_ALL_FIELDS": "Please fill in all fields.",
     "FILL_ALL_PASSWORD_FIELDS": "Please fill in all password fields.",
-    "NEW_PASSWORD_MIN_LENGTH": "New password must be at least 6 characters.",
+    "NEW_PASSWORD_MIN_LENGTH": "New password must be at least 8 characters.",
     "EMAIL_USERNAME_NO_LETTER": "Email username must contain at least one letter.",
     "INVALID_DOB_FORMAT": "Invalid date of birth format.",
     "DOB_FUTURE": "Date of birth cannot be in the future.",
@@ -84,7 +84,7 @@
     "ALERT_TITLE": "Tasks Attention Required",
     "ALERT_INTRO": "Here is a quick summary of your tasks requiring immediate attention:",
     "OVERDUE_SECTION": "Overdue Tasks ({{ count }})",
-    "IMPENDING_SECTION": "Due Today / Next 24h ({{ count }})",
+    "IMPENDING_SECTION": "Due Today / Next 1 Day ({{ count }})",
     "WAS_DUE": "Was due: {{ date }}",
     "DUE": "Due: {{ date }}",
     "ACKNOWLEDGE": "Acknowledge & Continue",
@@ -140,6 +140,8 @@
     "TOAST": {
       "MOVE_SUCCESS": "Moved task to {{ status }}",
       "MOVE_FAILED": "Failed to update task status.",
+      "LOAD_FAILED": "Failed to load tasks.",
+      "NO_CHANGES": "No changes to save.",
       "UPDATE_SUCCESS": "Task updated successfully! 🎉",
       "UPDATE_FAILED": "Failed to update task.",
       "CREATE_SUCCESS": "Task created successfully! 🎉",
@@ -178,7 +180,8 @@
       "PROMOTE_FAILED": "Failed to promote user.",
       "DELETE_ADMIN_ERROR": "Cannot delete an Admin account.",
       "DELETE_SUCCESS": "Deleted account {{ name }} successfully.",
-      "DELETE_FAILED": "Failed to delete user."
+      "DELETE_FAILED": "Failed to delete user.",
+      "ACCESS_DENIED": "Access Denied: Admin privileges required."
     }
   },
   "SETTINGS": {
@@ -187,6 +190,7 @@
     "TOAST": {
       "FILL_REQUIRED": "Please fill in all required fields.",
       "NO_CHANGES": "No changes to save.",
+      "LOAD_FAILED": "Failed to load profile.",
       "PROFILE_SUCCESS": "Profile updated successfully!",
       "PROFILE_FAILED": "Failed to update profile.",
       "PASSWORD_MISMATCH": "Password confirmation does not match!",
@@ -216,8 +220,8 @@
     "REQUIRED": "This field is required.",
     "MINLENGTH": "Must be at least {{ minLength }} characters.",
     "INVALID_FULL_NAME": "Full name can only contain letters and spaces.",
-    "OUT_OF_AGE_RANGE": "You must be between 10 and 70 years old.",
-    "OUT_OF_AGE_RANGE_60": "You must be between 10 and 60 years old.",
+    "OUT_OF_AGE_RANGE": "You must be between 18 and 60 years old.",
+    "OUT_OF_AGE_RANGE_60": "You must be between 18 and 60 years old.",
     "INVALID_EMAIL": "Please enter a valid email address (e.g., user@example.com).",
     "EMAIL_PREFIX_TOO_SHORT": "Email prefix before @ must be at least 6 characters.",
     "EMAIL_TYPO": "Please enter a valid email address (e.g., user@example.com).",
@@ -227,7 +231,7 @@
     "PASSWORD_REQUIREMENTS": "Password must meet all checklist requirements."
   },
   "PASSWORD_REQ": {
-    "MIN_LENGTH": "At least 6 characters",
+    "MIN_LENGTH": "At least 8 characters",
     "UPPERCASE": "Contains uppercase letter",
     "LOWERCASE": "Contains lowercase letter",
     "NUMBER": "Contains number"
@@ -305,5 +309,10 @@
     "passwordPrompt": "Enter a password",
     "emptyMessage": "No results found",
     "emptyFilterMessage": "No results found"
+  },
+  "ACCESS_DENIED": {
+    "TITLE": "Access Denied",
+    "SUBTITLE": "You do not have the required admin permissions to view this page.",
+    "BACK_BUTTON": "Back to Dashboard"
   }
 }

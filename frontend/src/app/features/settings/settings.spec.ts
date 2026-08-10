@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Settings } from './settings';
 import { FormlyModule } from '@ngx-formly/core';
-import { FormFieldWrapperComponent } from '../../shared/formly/form-field-wrapper.component';
-import { FormlyFieldDatePicker } from '../../shared/formly/datepicker.type';
+import { FormFieldWrapperComponent } from '../../shared/formly/form-field-wrapper/form-field-wrapper.component';
+import { FormlyFieldDatePicker } from '../../shared/formly/datepicker/datepicker.type';
 
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';

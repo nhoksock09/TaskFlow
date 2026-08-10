@@ -10,26 +10,26 @@
     <div class="sidebar-top">
       <div class="logo">
         <div class="logo-box">
-          <i class="ph-light ph-lightning"></i>
+          <i class="pi pi-bolt"></i>
         </div>
         <span>TaskFlow</span>
       </div>
       <nav>
         <a routerLink="/dashboard" routerLinkActive="active">
-          <i class="ph-light ph-squares-four nav-icon"></i>
+          <i class="pi pi-th-large nav-icon"></i>
           <span>{{ 'SIDEBAR.DASHBOARD' | translate }}</span>
         </a>
         <a routerLink="/tasks" routerLinkActive="active">
-          <i class="ph-light ph-list-checks nav-icon"></i>
+          <i class="pi pi-check-square nav-icon"></i>
           <span>{{ 'SIDEBAR.TASKS' | translate }}</span>
         </a>
         <a routerLink="/settings" routerLinkActive="active">
-          <i class="ph-light ph-gear nav-icon"></i>
+          <i class="pi pi-cog nav-icon"></i>
           <span>{{ 'SIDEBAR.SETTINGS' | translate }}</span>
         </a>
         @if (isAdmin) {
           <a routerLink="/users" routerLinkActive="active">
-            <i class="ph-light ph-user-gear nav-icon"></i>
+            <i class="pi pi-user-edit nav-icon"></i>
             <span>{{ 'SIDEBAR.USERS' | translate }}</span>
           </a>
         }
@@ -49,7 +49,7 @@
       </div>
     }
     <p-button styleClass="sidebar-toggle-btn" (click)="toggleRequest.emit()" [title]="(isCollapsed ? 'SIDEBAR.EXPAND' : 'SIDEBAR.COLLAPSE') | translate">
-      <i class="ph-light" [class.ph-caret-right]="isCollapsed" [class.ph-caret-left]="!isCollapsed"></i>
+      <i class="pi" [class.pi-chevron-right]="isCollapsed" [class.pi-chevron-left]="!isCollapsed"></i>
     </p-button>
   </div>
 </p-drawer>

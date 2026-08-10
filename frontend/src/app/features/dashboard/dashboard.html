@@ -1,41 +1,17 @@
 <div class="dashboard">
   <!-- Statistics Cards -->
   <div class="stats-container">
-    <div class="stat-card">
-      <div class="stat-icon total"><i class="ph-light ph-grid-four"></i></div>
-      <div class="stat-info">
-        <p class="stat-label">{{ 'DASHBOARD.STATS.TOTAL' | translate }}</p>
-        <p class="stat-value">{{ totalTasks }}</p>
+    @for (card of statCards; track card.type) {
+      <div class="stat-card">
+        <div class="stat-icon" [ngClass]="card.type">
+          <i [class]="card.icon"></i>
+        </div>
+        <div class="stat-info">
+          <p class="stat-label">{{ card.label | translate }}</p>
+          <p class="stat-value">{{ card.value }}</p>
+        </div>
       </div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-icon overdue"><i class="ph-light ph-warning-octagon"></i></div>
-      <div class="stat-info">
-        <p class="stat-label">{{ 'DASHBOARD.STATS.OVERDUE' | translate }}</p>
-        <p class="stat-value">{{ overdueTasks }}</p>
-      </div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-icon todo"><i class="ph-light ph-list-checks"></i></div>
-      <div class="stat-info">
-        <p class="stat-label">{{ 'DASHBOARD.STATS.TODO' | translate }}</p>
-        <p class="stat-value">{{ todoTasks }}</p>
-      </div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-icon in-progress"><i class="ph-light ph-hourglass-high"></i></div>
-      <div class="stat-info">
-        <p class="stat-label">{{ 'DASHBOARD.STATS.IN_PROGRESS' | translate }}</p>
-        <p class="stat-value">{{ inProgressTasks }}</p>
-      </div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-icon completed"><i class="ph-light ph-check-circle"></i></div>
-      <div class="stat-info">
-        <p class="stat-label">{{ 'DASHBOARD.STATS.DONE' | translate }}</p>
-        <p class="stat-value">{{ completedTasks }}</p>
-      </div>
-    </div>
+    }
   </div>
 
   <!-- Analytics & Dashboard widgets -->
@@ -55,39 +31,12 @@
             <!-- Background circle -->
             <circle cx="50" cy="50" r="36" fill="transparent" stroke="var(--bg-primary)" stroke-width="8"></circle>
 
-            <!-- Overdue segment (red) — hidden when 0 -->
-            @if (statusDistribution.overdue.count > 0) {
+            <!-- Interactive segments -->
+            @for (seg of chartSegments; track seg.stroke) {
               <circle
-                cx="50" cy="50" r="36" fill="transparent" stroke="#ef4444" stroke-width="8"
-                [attr.stroke-dasharray]="statusDistribution.overdue.dashArray"
-                [attr.stroke-dashoffset]="statusDistribution.overdue.dashOffset" transform="rotate(-90 50 50)"
-                stroke-linecap="round"></circle>
-            }
-
-            <!-- Completed segment (green) — hidden when 0 -->
-            @if (statusDistribution.completed.count > 0) {
-              <circle
-                cx="50" cy="50" r="36" fill="transparent" stroke="#10b981" stroke-width="8"
-                [attr.stroke-dasharray]="statusDistribution.completed.dashArray"
-                [attr.stroke-dashoffset]="statusDistribution.completed.dashOffset" transform="rotate(-90 50 50)"
-                stroke-linecap="round"></circle>
-            }
-
-            <!-- In progress segment (amber) — hidden when 0 -->
-            @if (statusDistribution.progress.count > 0) {
-              <circle
-                cx="50" cy="50" r="36" fill="transparent" stroke="#f59e0b" stroke-width="8"
-                [attr.stroke-dasharray]="statusDistribution.progress.dashArray"
-                [attr.stroke-dashoffset]="statusDistribution.progress.dashOffset" transform="rotate(-90 50 50)"
-                stroke-linecap="round"></circle>
-            }
-
-            <!-- To do segment (blue) — hidden when 0 -->
-            @if (statusDistribution.todo.count > 0) {
-              <circle
-                cx="50" cy="50" r="36" fill="transparent" stroke="#3b82f6" stroke-width="8"
-                [attr.stroke-dasharray]="statusDistribution.todo.dashArray"
-                [attr.stroke-dashoffset]="statusDistribution.todo.dashOffset" transform="rotate(-90 50 50)"
+                cx="50" cy="50" r="36" fill="transparent" [attr.stroke]="seg.stroke" stroke-width="8"
+                [attr.stroke-dasharray]="seg.dashArray"
+                [attr.stroke-dashoffset]="seg.dashOffset" transform="rotate(-90 50 50)"
                 stroke-linecap="round"></circle>
             }
 
@@ -109,30 +58,13 @@
         </div>
 
         <div class="chart-legend">
-          <div class="legend-item">
-            <span class="legend-dot todo"></span>
-            <span class="legend-label">{{ 'DASHBOARD.STATS.TODO' | translate }}</span>
-            <span class="legend-value">{{ statusDistribution.todo.count }} ({{ statusDistribution.todo.percent
-              }}%)</span>
-          </div>
-          <div class="legend-item">
-            <span class="legend-dot progress"></span>
-            <span class="legend-label">{{ 'DASHBOARD.STATS.IN_PROGRESS' | translate }}</span>
-            <span class="legend-value">{{ statusDistribution.progress.count }} ({{ statusDistribution.progress.percent
-              }}%)</span>
-          </div>
-          <div class="legend-item">
-            <span class="legend-dot completed"></span>
-            <span class="legend-label">{{ 'DASHBOARD.STATS.DONE' | translate }}</span>
-            <span class="legend-value">{{ statusDistribution.completed.count }} ({{ statusDistribution.completed.percent
-              }}%)</span>
-          </div>
-          <div class="legend-item">
-            <span class="legend-dot overdue"></span>
-            <span class="legend-label">{{ 'DASHBOARD.STATS.OVERDUE' | translate }}</span>
-            <span class="legend-value">{{ statusDistribution.overdue.count }} ({{ statusDistribution.overdue.percent
-              }}%)</span>
-          </div>
+          @for (item of statusLegendItems; track item.class) {
+            <div class="legend-item">
+              <span class="legend-dot" [class]="item.class"></span>
+              <span class="legend-label">{{ item.label | translate }}</span>
+              <span class="legend-value">{{ item.count }} ({{ item.percent }}%)</span>
+            </div>
+          }
           <div class="legend-item total-item">
             <span class="legend-dot total"></span>
             <span class="legend-label">{{ 'DASHBOARD.STATS.TOTAL' | translate }}</span>
@@ -147,7 +79,7 @@
       <div class="upcoming-header">
         <h3>{{ 'DASHBOARD.UPCOMING_TITLE' | translate }}</h3>
         <p-button styleClass="view-all-btn" [text]="true" (click)="navigateToTasks()">
-          {{ 'DASHBOARD.VIEW_ALL' | translate }} <i class="ph-light ph-arrow-right"></i>
+          {{ 'DASHBOARD.VIEW_ALL' | translate }} <i class="pi pi-arrow-right"></i>
         </p-button>
       </div>
       <div class="upcoming-list">
@@ -166,17 +98,21 @@
                     <h4>{{ task.title }}</h4>
                     <p class="upcoming-due">{{ 'DASHBOARD.DUE' | translate:{ date: formatDate(task.dueDate) } }}</p>
                   </div>
-                  <div class="upcoming-badges" style="display: flex; gap: 8px; align-items: center;">
-                    @if (isOverdue(task)) {
-                      <p-tag [value]="'TASKS.OVERDUE' | translate" severity="danger" icon="pi pi-exclamation-triangle"></p-tag>
-                    }
-                    @if (!isOverdue(task) && isDueSoon(task)) {
-                      <p-tag [value]="'TASKS.DUE_SOON' | translate" severity="warn" icon="pi pi-clock"></p-tag>
-                    }
-                    @if (task.status === 'in-progress' && !isOverdue(task) && !isDueSoon(task)) {
-                      <p-tag [value]="'TASKS.IN_PROGRESS' | translate" severity="info"></p-tag>
-                    }
-                    <p-tag [value]="TASK_PRIORITY_MAP[task.priority] | translate" [severity]="task.priority === 'high' ? 'danger' : (task.priority === 'medium' ? 'warn' : 'info')"></p-tag>
+                  <div class="upcoming-badges">
+                    <div class="status-badge-col">
+                      @if (isOverdue(task)) {
+                        <p-tag class="overdue-tag" [value]="'TASKS.OVERDUE' | translate" severity="danger" icon="pi pi-exclamation-triangle"></p-tag>
+                      }
+                      @if (!isOverdue(task) && isDueSoon(task)) {
+                        <p-tag class="due-soon-tag" [value]="'TASKS.DUE_SOON' | translate" severity="warn" icon="pi pi-clock"></p-tag>
+                      }
+                      @if (task.status === 'in-progress' && !isOverdue(task) && !isDueSoon(task)) {
+                        <p-tag class="status-in-progress-tag" [value]="'TASKS.IN_PROGRESS' | translate" severity="info"></p-tag>
+                      }
+                    </div>
+                    <div class="priority-badge-col">
+                      <p-tag class="priority-tag" [value]="TASK_PRIORITY_MAP[task.priority] | translate" [severity]="task.priority === 'high' ? 'danger' : (task.priority === 'medium' ? 'warn' : 'info')"></p-tag>
+                    </div>
                   </div>
                 </div>
               }
@@ -197,8 +133,8 @@
     <div class="modal-overlay alert-modal-overlay" (click)="closeLoginAlert()">
       <div class="modal-content alert-modal-content" (click)="$event.stopPropagation()">
         <div class="modal-header alert-modal-header">
-          <h3 style="display: flex; align-items: center; gap: 8px;">
-            <i class="ph-light ph-bell-ringing alert-bell-icon"></i> {{ 'DASHBOARD.ALERT_TITLE' | translate }}
+          <h3>
+            <i class="pi pi-bell alert-bell-icon"></i> {{ 'DASHBOARD.ALERT_TITLE' | translate }}
           </h3>
         </div>
         <div class="modal-body alert-modal-body">
@@ -207,7 +143,7 @@
           <!-- Overdue Section -->
           @if (alertOverdueTasks.length > 0) {
             <div class="alert-section overdue-section">
-              <h4 class="section-title"><i class="ph-light ph-warning-octagon"></i> {{ 'DASHBOARD.OVERDUE_SECTION' | translate:{ count: alertOverdueTasks.length } }}</h4>
+              <h4 class="section-title"><i class="pi pi-exclamation-triangle"></i> {{ 'DASHBOARD.OVERDUE_SECTION' | translate:{ count: alertOverdueTasks.length } }}</h4>
               <ul class="alert-task-list">
                 @for (task of alertOverdueTasks; track task._id) {
                   <li class="alert-task-item overdue">
@@ -225,7 +161,7 @@
           <!-- Impending Deadlines Section -->
           @if (alertUpcomingTasks.length > 0) {
             <div class="alert-section impending-section">
-              <h4 class="section-title"><i class="ph-light ph-clock"></i> {{ 'DASHBOARD.IMPENDING_SECTION' | translate:{ count: alertUpcomingTasks.length } }}</h4>
+              <h4 class="section-title"><i class="pi pi-clock"></i> {{ 'DASHBOARD.IMPENDING_SECTION' | translate:{ count: alertUpcomingTasks.length } }}</h4>
               <ul class="alert-task-list">
                 @for (task of alertUpcomingTasks; track task._id) {
                   <li class="alert-task-item impending">

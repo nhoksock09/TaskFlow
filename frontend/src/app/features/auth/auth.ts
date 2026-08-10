@@ -17,20 +17,9 @@ import {
   strictEmailValidator
 } from '../../shared/validators/form.validators';
 
-export interface LoginFormModel {
-  email: string;
-  password: string;
-}
-
-export interface RegisterFormModel {
-  name: string;
-  email: string;
-  password: string;
-  dateOfBirth: Date | string | null;
-}
+import { LoginRequest, RegisterRequest } from '@core/models';
 
 // ── Component ─────────────────────────────────────────────────────────────────
-
 @Component({
   selector: 'app-auth',
   standalone: true,
@@ -45,10 +34,9 @@ export interface RegisterFormModel {
   templateUrl: './auth.html',
   styleUrl: './auth.scss'
 })
+
 export class Auth implements OnInit {
   isLogin = signal(true);
-  hideLoginPassword = signal(true);
-  hideRegisterPassword = signal(true);
 
   private authService = inject(AuthService);
   private router = inject(Router);
@@ -61,7 +49,7 @@ export class Auth implements OnInit {
 
   // ── Login form ─────────────────────────────────────────────────────────────
   loginForm = new FormGroup({});
-  loginModel: LoginFormModel = { email: '', password: '' };
+  loginModel: LoginRequest = { email: '', password: '' };
   loginFields: FormlyFieldConfig[] = [
     {
       key: 'email',
@@ -93,7 +81,7 @@ export class Auth implements OnInit {
 
   // ── Register form ──────────────────────────────────────────────────────────
   registerForm = new FormGroup({});
-  registerModel: RegisterFormModel = { name: '', email: '', password: '', dateOfBirth: '' };
+  registerModel: RegisterRequest = { name: '', email: '', password: '', dateOfBirth: '' };
   registerFields: FormlyFieldConfig[] = [];
 
   ngOnInit() {
@@ -109,8 +97,8 @@ export class Auth implements OnInit {
     }
 
     const today = new Date();
-    const maxDate = new Date(today.getFullYear() - 10, today.getMonth(), today.getDate());
-    const minDate = new Date(today.getFullYear() - 70, today.getMonth(), today.getDate());
+    const maxDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+    const minDate = new Date(today.getFullYear() - 60, today.getMonth(), today.getDate());
     this.maxDob = this.getFormattedDateOnly(maxDate);
     this.minDob = this.getFormattedDateOnly(minDate);
 
@@ -252,7 +240,7 @@ export class Auth implements OnInit {
           this.registerModel = { name: '', email: '', password: '', dateOfBirth: '' };
         },
         error: (err) => {
-          this.toastService.error(err.error.message || 'Registration failed');
+          this.toastService.error(err.error.message || 'AUTH.TOAST.REGISTRATION_FAILED');
         }
       });
   }

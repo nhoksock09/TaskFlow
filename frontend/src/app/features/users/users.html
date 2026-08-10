@@ -2,7 +2,7 @@
   <div class="users-card">
     <div class="users-header">
       <div class="header-title">
-        <i class="ph-light ph-users icon-purple"></i>
+        <i class="pi pi-users icon-purple"></i>
         <h2>{{ 'USERS.TITLE' | translate }}</h2>
       </div>
       <div class="header-actions">
@@ -23,10 +23,17 @@
             (click)="onSearch()"
             [title]="'COMMON.BTN.SEARCH' | translate"
           >
-            <i class="ph-light ph-magnifying-glass"></i>
+            <i class="pi pi-search"></i>
           </p-button>
         </div>
-        <p-button icon="pi pi-refresh" severity="secondary" [outlined]="true" [disabled]="isLoading" [loading]="isLoading" (click)="loadUsers()" [title]="'COMMON.BTN.REFRESH' | translate"></p-button>
+        <p-button
+          styleClass="refresh-btn"
+          icon="pi pi-refresh"
+          [disabled]="isLoading"
+          [loading]="isLoading"
+          (click)="loadUsers()"
+          [title]="'COMMON.BTN.REFRESH' | translate"
+        ></p-button>
       </div>
     </div>
     <p-table
@@ -47,17 +54,16 @@
               [ngClass]="col.class" 
               (click)="col.sortable ? toggleColumnSort(col.field) : null"
               [style.cursor]="col.sortable ? 'pointer' : 'default'"
-              style="user-select: none;"
             >
               {{ col.header | translate }}
               @if (col.sortable) {
                 <span class="sort-icon">
                   @if (sortField === col.field && sortDirection === 'asc') {
-                    <span>↑</span>
+                    <i class="pi pi-sort-amount-up"></i>
                   } @else if (sortField === col.field && sortDirection === 'desc') {
-                    <span>↓</span>
+                    <i class="pi pi-sort-amount-down"></i>
                   } @else {
-                    <span style="opacity: 0.35;">⇅</span>
+                    <i class="pi pi-sort"></i>
                   }
                 </span>
               }
@@ -85,6 +91,7 @@
                 }
                 @case ('role') {
                   <p-tag 
+                    class="role-tag"
                     [severity]="user.role === 'admin' ? 'danger' : 'info'" 
                     [value]="(USER_ROLE_MAP[user.role] || 'COMMON.ROLE_USER') | translate"
                   ></p-tag>
@@ -154,41 +161,40 @@
       </div>
     }
   </div>
+  
   <!-- Confirm Admin Promotion Dialog -->
-  <p-dialog
-    [visible]="showPromoteModal"
-    [header]="'USERS.PROMOTE_TITLE' | translate"
-    [modal]="true"
-    [style]="{ width: '450px' }"
-    (onHide)="closePromoteModal()"
-    appendTo="body"
-  >
-    <div class="modal-body" style="padding-top: 10px;">
-      <p class="modal-desc" [innerHTML]="'USERS.PROMOTE_MSG' | translate:{ name: userToPromote?.name, email: userToPromote?.email }">
-      </p>
+  @if (showPromoteModal) {
+    <div class="modal-overlay" (click)="closePromoteModal()">
+      <div class="modal-card" (click)="$event.stopPropagation()">
+        <div class="card-header">
+          <h2>{{ 'USERS.PROMOTE_TITLE' | translate }}</h2>
+        </div>
+        <div class="modal-body">
+          <p [innerHTML]="'USERS.PROMOTE_MSG' | translate:{ name: userToPromote?.name, email: userToPromote?.email }"></p>
+        </div>
+        <div class="modal-actions">
+          <p-button type="button" styleClass="btn-cancel" (click)="closePromoteModal()" [label]="'COMMON.BTN.CANCEL' | translate"></p-button>
+          <p-button type="button" styleClass="btn-confirm" (click)="confirmPromote()" [label]="'USERS.PROMOTE_CONFIRM' | translate"></p-button>
+        </div>
+      </div>
     </div>
-    <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px;">
-      <p-button styleClass="p-button-secondary" (click)="closePromoteModal()" [label]="'COMMON.BTN.CANCEL' | translate"></p-button>
-      <p-button styleClass="p-button-primary" (click)="confirmPromote()" [label]="'USERS.PROMOTE_CONFIRM' | translate"></p-button>
-    </div>
-  </p-dialog>
+  }
 
   <!-- Confirm Account Deletion Dialog -->
-  <p-dialog
-    [visible]="showDeleteModal"
-    [header]="'USERS.DELETE_TITLE' | translate"
-    [modal]="true"
-    [style]="{ width: '450px' }"
-    (onHide)="closeDeleteModal()"
-    appendTo="body"
-  >
-    <div class="modal-body" style="padding-top: 10px;">
-      <p class="modal-desc" [innerHTML]="'USERS.DELETE_MSG' | translate:{ name: userToDelete?.name, email: userToDelete?.email }">
-      </p>
+  @if (showDeleteModal) {
+    <div class="modal-overlay" (click)="closeDeleteModal()">
+      <div class="modal-card" (click)="$event.stopPropagation()">
+        <div class="card-header">
+          <h2>{{ 'USERS.DELETE_TITLE' | translate }}</h2>
+        </div>
+        <div class="modal-body">
+          <p [innerHTML]="'USERS.DELETE_MSG' | translate:{ name: userToDelete?.name, email: userToDelete?.email }"></p>
+        </div>
+        <div class="modal-actions">
+          <p-button type="button" styleClass="btn-cancel" (click)="closeDeleteModal()" [label]="'COMMON.BTN.CANCEL' | translate"></p-button>
+          <p-button type="button" styleClass="btn-confirm btn-danger" (click)="confirmDelete()" [label]="'USERS.DELETE_CONFIRM' | translate"></p-button>
+        </div>
+      </div>
     </div>
-    <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px;">
-      <p-button styleClass="p-button-secondary" (click)="closeDeleteModal()" [label]="'COMMON.BTN.CANCEL' | translate"></p-button>
-      <p-button styleClass="p-button-danger" (click)="confirmDelete()" [label]="'USERS.DELETE_CONFIRM' | translate"></p-button>
-    </div>
-  </p-dialog>
+  }
 </div>

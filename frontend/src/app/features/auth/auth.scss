@@ -1,10 +1,13 @@
+@use 'variables' as vars;
+@use 'mixins';
+
 /* ================= Auth Page Container ================= */
 .auth-page {
     width: 100%;
     min-height: 100vh;
     height: 100vh;
     display: flex;
-    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-sidebar) 50%, var(--bg-primary) 100%);
+    background: var(--bg-auth-gradient);
     overflow: hidden;
 }
 
@@ -64,11 +67,13 @@
     border-radius: 50%;
     background: var(--indigo-500);
     color: var(--white);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    @include mixins.flex-center;
     font-size: 14px;
     flex-shrink: 0;
+
+    i {
+        font-size: 12px;
+    }
 }
 
 .feature-item p {
@@ -80,9 +85,7 @@
 /* ================= Right Panel ================= */
 .right-panel {
     flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    @include mixins.flex-center;
     padding: 20px;
     background: transparent;
 }
@@ -93,10 +96,8 @@
     background: var(--bg-card);
     border-radius: 20px;
     padding: 20px 24px;
-    border: 1px solid var(--border-color);
-    box-shadow:
-        0 20px 25px -5px rgba(var(--black-rgb), 0.08),
-        0 4px 10px -2px rgba(var(--black-rgb), 0.04);
+    border: vars.$border-default;
+    box-shadow: var(--shadow-card);
 }
 
 .auth-card h2 {

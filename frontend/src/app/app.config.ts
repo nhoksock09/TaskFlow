@@ -9,8 +9,8 @@ import { routes } from './app.routes';
 import { FormlyModule, FORMLY_CONFIG } from '@ngx-formly/core';
 import { FormlyPrimeNGModule } from '@ngx-formly/primeng';
 import { FormlyFieldConfig } from '@ngx-formly/core';
-import { FormFieldWrapperComponent } from './shared/formly/form-field-wrapper.component';
-import { FormlyFieldDatePicker } from './shared/formly/datepicker.type';
+import { FormFieldWrapperComponent } from './shared/formly/form-field-wrapper/form-field-wrapper.component';
+import { FormlyFieldDatePicker } from './shared/formly/datepicker/datepicker.type';
 import { provideTranslateService, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateService } from '@ngx-translate/core';
@@ -28,6 +28,7 @@ export const appConfig: ApplicationConfig = {
         authInterceptor
       ])
     ),
+
     provideTranslateService({
       loader: {
         provide: TranslateLoader,
@@ -35,6 +36,7 @@ export const appConfig: ApplicationConfig = {
         deps: [HttpClient]
       }
     }),
+
     providePrimeNG({
       theme: {
         preset: Aura,
@@ -47,6 +49,7 @@ export const appConfig: ApplicationConfig = {
         }
       }
     }),
+
     importProvidersFrom(
       FormlyPrimeNGModule,
       FormlyModule.forRoot({
@@ -68,7 +71,7 @@ export const appConfig: ApplicationConfig = {
         return {
           validationMessages: [
             { name: 'required', message: () => translate.stream('VALIDATION.REQUIRED') },
-            { name: 'minlength', message: (err: any, field: FormlyFieldConfig) => {
+            { name: 'minlength', message: (_err: unknown, field: FormlyFieldConfig) => {
                 const minLength = field.props?.['minLength'] ?? field.validators?.['minlength']?.['minLength'] ?? 6;
                 return translate.stream('VALIDATION.MINLENGTH', { minLength });
               }
@@ -128,4 +131,3 @@ export const appConfig: ApplicationConfig = {
     MessageService
   ]
 };
-
