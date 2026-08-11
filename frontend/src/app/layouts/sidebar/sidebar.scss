@@ -2,18 +2,18 @@
 @use 'mixins';
 
 $rail-size: 44px;
-$label-gap: 12px; // khoảng cách từ icon sang nhãn chữ
+$label-gap: 12px;
 
 :host {
   position: relative;
   width: 260px;
-  flex-shrink: 0; /* Never let sidebar shrink */
+  flex-shrink: 0;
   background: var(--bg-sidebar);
   color: var(--text-primary);
   padding: 24px 24px 12px 24px;
   border-right: 1px solid var(--border-color);
   transition: width 0.3s vars.$ease-standard, background vars.$transition-slow, border-color vars.$transition-slow, padding vars.$transition-slow;
-  overflow: visible; /* Allow toggle button to float outside sidebar */
+  overflow: visible;
   height: 100%;
   display: block;
 
@@ -47,7 +47,6 @@ $label-gap: 12px; // khoảng cách từ icon sang nhãn chữ
       }
     }
 
-    /* Inline overrides for PrimeNG Drawer component to keep layout exactly as-is */
     .p-drawer-mask:has(.sidebar-drawer) {
       position: static;
       width: 100%;
@@ -94,7 +93,6 @@ $label-gap: 12px; // khoảng cách từ icon sang nhãn chữ
       justify-content: center;
     }
 
-    // Ẩn nhãn chữ nhưng vẫn giữ chỗ trong flow để transition chạy mượt
     .logo span,
     nav a span,
     .sidebar-footer .user-info {

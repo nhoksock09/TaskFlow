@@ -38,10 +38,6 @@
   flex-direction: column;
 }
 
-// Nhóm điều khiển bên phải header (chọn ngôn ngữ / sáng-tối / đăng xuất).
-// Trước đây div này KHÔNG có style nào: nó là block, nên p-select và 2 p-button
-// bị xếp chồng dọc, khối cao ~120px và tràn ra ngoài header cao 70px.
-// display:flex ép 3 phần tử về một hàng bất kể PrimeNG đặt display gì cho host.
 .header-right {
   display: flex;
   align-items: center;
@@ -63,8 +59,6 @@
 }
 
 :host ::ng-deep {
-  // .theme-toggle-btn and .logout-btn were two near-identical 40x40 round
-  // icon-button blocks — only the hover color differed.
   .theme-toggle-btn.p-button {
     @include mixins.circle-icon-button;
 
@@ -88,9 +82,6 @@
     border: vars.$border-default;
     border-radius: vars.$radius-lg;
     height: 40px;
-    // Rule toàn cục `p-select.p-component` đặt width:100% cho ô select trong
-    // form; ở header thì nó khiến dropdown ngôn ngữ giãn hết chỗ và đẩy 2 nút
-    // còn lại đi. Ghi đè lại thành co theo nội dung.
     width: auto;
     min-width: 120px;
     display: flex;

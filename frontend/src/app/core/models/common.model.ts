@@ -3,7 +3,6 @@ export interface SelectOption<T = string> {
   value: T;
 }
 
-
 export interface Column {
   field: string;
   header: string;

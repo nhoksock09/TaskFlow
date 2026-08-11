@@ -1,8 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-
 import { Observable } from 'rxjs';
-
 import { ApiService } from './api.service';
 import { User, LoginRequest, RegisterRequest, AuthResponse } from '@core/models';
 
@@ -12,17 +10,18 @@ import { User, LoginRequest, RegisterRequest, AuthResponse } from '@core/models'
 export class AuthService {
   private http = inject(HttpClient);
   private api = inject(ApiService);
+  private readonly authUrl = `${this.api.apiUrl}/auth`;
 
   private readonly TOKEN_KEY = 'token';
   private readonly USER_KEY = 'user';
   private readonly LOGIN_ALERT_KEY = 'hasShownLoginAlert';
 
   register(data: RegisterRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.api.apiUrl}/auth/register`, data);
+    return this.http.post<AuthResponse>(`${this.authUrl}/register`, data);
   }
 
   login(data: LoginRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.api.apiUrl}/auth/login`, data);
+    return this.http.post<AuthResponse>(`${this.authUrl}/login`, data);
   }
 
   saveToken(token: string) {
