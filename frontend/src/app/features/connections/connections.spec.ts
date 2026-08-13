@@ -145,6 +145,13 @@ describe('Connections', () => {
       expect(component.searchResults).toEqual([]);
       expect(component.searchTotal).toBe(0);
     });
+
+    it('should fall back to default values in onSearchPageChange if page or rows is missing', () => {
+      component.searchPageSize = 5;
+      component.onSearchPageChange({ page: undefined, rows: undefined });
+      expect(component.searchPage).toBe(1);
+      expect(component.searchPageSize).toBe(5);
+    });
   });
 
   describe('Pending Requests', () => {
@@ -153,6 +160,13 @@ describe('Connections', () => {
       expect(mockConnectionService.acceptRequest).toHaveBeenCalledWith('c1');
       expect(mockToastService.show).toHaveBeenCalledWith('CONNECTIONS.TOAST.ACCEPT_SUCCESS', 'success', { name: 'Carol' });
       expect(mockConnectionService.getIncomingRequests).toHaveBeenCalled();
+    });
+
+    it('should reload connections on acceptRequest if active tab is my-connections', () => {
+      component.activeTab = 'my-connections';
+      mockConnectionService.getConnections.calls.reset();
+      component.acceptRequest('c1', 'Carol');
+      expect(mockConnectionService.getConnections).toHaveBeenCalled();
     });
 
     it('should show error toast if acceptRequest fails', () => {
@@ -191,6 +205,20 @@ describe('Connections', () => {
       expect(mockToastService.error).toHaveBeenCalledWith('CONNECTIONS.TOAST.LOAD_FAILED');
       expect(component.isLoadingPending).toBe(false);
     });
+
+    it('should show error toast if loadPendingRequests fails on getOutgoingRequests', () => {
+      mockConnectionService.getOutgoingRequests.and.returnValue(throwError(() => new Error('API Error')));
+      component.loadPendingRequests();
+      expect(mockToastService.error).toHaveBeenCalledWith('CONNECTIONS.TOAST.LOAD_FAILED');
+    });
+
+    it('should handle falsy response data in loadPendingRequests', () => {
+      mockConnectionService.getIncomingRequests.and.returnValue(of({} as any));
+      mockConnectionService.getOutgoingRequests.and.returnValue(of({} as any));
+      component.loadPendingRequests();
+      expect(component.incomingRequests).toEqual([]);
+      expect(component.outgoingRequests).toEqual([]);
+    });
   });
 
   describe('My Connections', () => {
@@ -223,6 +251,13 @@ describe('Connections', () => {
       expect(component.connPage).toBe(2);
       expect(component.connPageSize).toBe(10);
       expect(mockConnectionService.getConnections).toHaveBeenCalledWith('', 2, 10);
+    });
+
+    it('should fall back to default values in onConnPageChange if page or rows is missing', () => {
+      component.connPageSize = 5;
+      component.onConnPageChange({ page: undefined, rows: undefined });
+      expect(component.connPage).toBe(1);
+      expect(component.connPageSize).toBe(5);
     });
 
     it('should update page size and reset to page 1', () => {
@@ -269,6 +304,21 @@ describe('Connections', () => {
       component.loadConnections();
       expect(mockToastService.error).toHaveBeenCalledWith('CONNECTIONS.TOAST.LOAD_FAILED');
       expect(component.isLoadingConnections).toBe(false);
+    });
+
+    it('should handle falsy response fields in loadConnections', () => {
+      mockConnectionService.getConnections.and.returnValue(of({} as any));
+      component.loadConnections();
+      expect(component.myConnections).toEqual([]);
+      expect(component.connTotal).toBe(0);
+    });
+  });
+
+  describe('Tab Navigation', () => {
+    it('should do nothing if tab is undefined', () => {
+      component.activeTab = 'search';
+      component.onTabChange(undefined);
+      expect(component.activeTab).toBe('search');
     });
   });
 
