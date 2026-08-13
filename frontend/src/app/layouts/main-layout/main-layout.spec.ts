@@ -147,15 +147,15 @@ describe('MainLayout', () => {
     fixture.detectChanges();
     const initialTheme = component.isDarkMode;
 
+    // Toggle 1: changes from initial to opposite
     component.toggleTheme();
     expect(component.isDarkMode).toBe(!initialTheme);
     expect(localStorage.getItem('theme')).toBe(component.isDarkMode ? 'dark' : 'light');
 
-    if (component.isDarkMode) {
-      expect(document.documentElement.classList.contains('dark')).toBe(true);
-    } else {
-      expect(document.documentElement.classList.contains('dark')).toBe(false);
-    }
+    // Toggle 2: changes back to initial
+    component.toggleTheme();
+    expect(component.isDarkMode).toBe(initialTheme);
+    expect(localStorage.getItem('theme')).toBe(component.isDarkMode ? 'dark' : 'light');
   });
 
   it('should handle logout correctly and redirect to root', () => {

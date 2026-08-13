@@ -995,6 +995,78 @@ describe('Tasks', () => {
       component.originalTaskSnapshot = null;
       expect(component.hasTaskChanged()).toBe(true);
     });
-  });
 
+    it('should fall back to raw status in onDrop notification if status is not in status map', () => {
+      const task = { _id: 't1', title: 'Test Task', status: TaskStatus.TODO } as Task;
+      const event = {
+        item: { data: task },
+        container: { id: 'custom-status' },
+        previousContainer: { id: 'todo' }
+      } as any;
+      
+      mockTaskService.updateTask.and.returnValue(of({ success: true, data: task }));
+      
+      component.onDrop(event);
+      expect(mockToastService.show).toHaveBeenCalledWith(
+        'TASKS.TOAST.MOVE_SUCCESS',
+        'success',
+        { status: 'custom-status' }
+      );
+    });
+
+    it('should fall back to TaskStatus.TODO in openAddModal if no defaultStatus is provided', () => {
+      component.openAddModal();
+      expect(component.taskModel.status).toBe(TaskStatus.TODO);
+    });
+
+    it('should check isDueThisWeek on Sunday', () => {
+      jasmine.clock().install();
+      jasmine.clock().mockDate(new Date(2026, 7, 16)); // August 16, 2026 (Sunday)
+      
+      const dueStr = new Date(2026, 7, 15).toISOString();
+      expect(component.isDueThisWeek(dueStr)).toBe(true);
+
+      jasmine.clock().uninstall();
+    });
+
+
+
+    it('should compare task changes correctly when description is falsy', () => {
+      component.originalTaskSnapshot = { title: 'T', description: undefined as any, priority: TaskPriority.LOW, status: TaskStatus.TODO, dueDate: '' };
+      component.taskModel = { title: 'T', description: '', priority: TaskPriority.LOW, status: TaskStatus.TODO, dueDate: '' };
+      expect(component.hasTaskChanged()).toBe(false);
+
+      component.originalTaskSnapshot = { title: 'T', description: '', priority: TaskPriority.LOW, status: TaskStatus.TODO, dueDate: '' };
+      component.taskModel = { title: 'T', description: undefined as any, priority: TaskPriority.LOW, status: TaskStatus.TODO, dueDate: '' };
+      expect(component.hasTaskChanged()).toBe(false);
+    });
+
+    it('should default to status todo in addTask if task status is falsy', () => {
+      component.taskForm.setErrors(null);
+      spyOnProperty(component.taskForm, 'valid', 'get').and.returnValue(true);
+      component.editingTaskId = null;
+      component.taskModel = { title: 'T', description: '', priority: TaskPriority.LOW, dueDate: '', status: undefined as any };
+      
+      mockTaskService.createTask.and.returnValue(of({ success: true, data: {} as any }));
+      component.addTask();
+      expect(mockTaskService.createTask).toHaveBeenCalledWith(jasmine.objectContaining({ status: 'todo' }));
+    });
+
+    it('should default description to empty string and editTaskId to null in editTask if falsy', () => {
+      const task = { title: 'T', priority: TaskPriority.LOW, dueDate: new Date().toISOString(), status: TaskStatus.TODO } as Task;
+      component.editTask(task);
+      expect(component.editingTaskId).toBeNull();
+      expect(component.taskModel.description).toBe('');
+    });
+
+    it('should sort completed tasks with one having dueDate and one having no dueDate', () => {
+      component.activeTimeframeFilter = 'all';
+      component.tasks = [
+        { _id: 't_comp_nodate', status: TaskStatus.COMPLETED, dueDate: '' } as Task,
+        { _id: 't_comp_date', status: TaskStatus.COMPLETED, dueDate: new Date().toISOString() } as Task
+      ];
+      const sorted = component.allFilteredTasks;
+      expect(sorted.map(t => t._id)).toEqual(['t_comp_date', 't_comp_nodate']);
+    });
+  });
 });

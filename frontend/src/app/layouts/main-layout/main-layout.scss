@@ -61,19 +61,49 @@
 :host ::ng-deep {
   .theme-toggle-btn.p-button {
     @include mixins.circle-icon-button;
+    transition: background-color vars.$transition-base, color vars.$transition-base, transform vars.$transition-fast, box-shadow vars.$transition-fast;
+
+    i {
+      transition: transform vars.$transition-base;
+    }
 
     &:hover {
       background: var(--bg-primary);
       color: var(--text-primary);
+      transform: scale(1.08);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+
+      i {
+        transform: rotate(30deg) scale(1.15);
+      }
+    }
+
+    &:active {
+      transform: scale(0.95);
     }
   }
 
   .logout-btn.p-button {
     @include mixins.circle-icon-button;
+    transition: background-color vars.$transition-base, color vars.$transition-base, transform vars.$transition-fast, box-shadow vars.$transition-fast;
+
+    i {
+      transition: transform vars.$transition-base;
+    }
 
     &:hover {
       background: rgba(var(--danger-rgb), 0.08);
       color: var(--danger);
+      transform: scale(1.08);
+      box-shadow: 0 4px 10px rgba(var(--danger-rgb), 0.1);
+
+      i {
+        transform: translateX(2px) scale(1.1);
+      }
+    }
+
+    &:active {
+      transform: scale(0.95);
     }
   }
 

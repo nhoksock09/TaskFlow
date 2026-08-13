@@ -39,7 +39,7 @@ export class MainLayout implements OnInit {
   user: User | null = null;
   currentDate: string = '';
   isDarkMode: boolean = false;
-  isSidebarCollapsed: boolean = typeof window !== 'undefined' ? window.innerWidth < 768 : false;
+  isSidebarCollapsed: boolean = window.innerWidth < 768;
 
   currentLang: string = 'en';
   langOptions: SelectOption[] = [

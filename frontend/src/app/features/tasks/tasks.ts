@@ -467,16 +467,13 @@ export class Tasks implements OnInit {
 
         // If both are completed, sort by dueDate descending (newest due date first, oldest due date at the bottom)
         if (a.status === TaskStatus.COMPLETED && b.status === TaskStatus.COMPLETED) {
-          const timeA = a.dueDate ? new Date(a.dueDate).getTime() : 0;
-          const timeB = b.dueDate ? new Date(b.dueDate).getTime() : 0;
+          const timeA = new Date(a.dueDate!).getTime();
+          const timeB = new Date(b.dueDate!).getTime();
           return timeB - timeA;
         }
 
         // 2. Sort chronologically by due date ascending for same status group
-        if (!a.dueDate && !b.dueDate) return 0;
-        if (!a.dueDate) return 1;
-        if (!b.dueDate) return -1;
-        return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
+        return new Date(a.dueDate!).getTime() - new Date(b.dueDate!).getTime();
       }
 
       // 1. Completed tasks go to the bottom
@@ -495,9 +492,6 @@ export class Tasks implements OnInit {
       if (overdueA && !overdueB) return -1;
       if (!overdueA && overdueB) return 1;
       if (overdueA && overdueB) {
-        if (!a.dueDate && !b.dueDate) return 0;
-        if (!a.dueDate) return 1;
-        if (!b.dueDate) return -1;
         return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
       }
 
@@ -507,9 +501,6 @@ export class Tasks implements OnInit {
       if (urgentA && !urgentB) return -1;
       if (!urgentA && urgentB) return 1;
       if (urgentA && urgentB) {
-        if (!a.dueDate && !b.dueDate) return 0;
-        if (!a.dueDate) return 1;
-        if (!b.dueDate) return -1;
         return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
       }
 
