@@ -100,6 +100,11 @@ p-tag {
       background-color: rgba(var(--blue-500-rgb), 0.15);
       color: var(--todo-color);
     }
+
+    &.p-tag-success {
+      background-color: rgba(var(--completed-color-rgb), 0.15);
+      color: var(--completed-color);
+    }
   }
 
   // Specific labels & icons should inherit colors/styles from parent tags

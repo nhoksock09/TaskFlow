@@ -55,12 +55,20 @@
     "EMAIL_USERNAME_NO_LETTER": "Tên người dùng trong email phải chứa ít nhất một chữ cái.",
     "INVALID_DOB_FORMAT": "Định dạng ngày sinh không hợp lệ.",
     "DOB_FUTURE": "Ngày sinh không được ở trong tương lai.",
-    "TOKEN_INVALIDATED": "Phiên đăng nhập đã hết hạn hoặc không còn hiệu lực. Vui lòng đăng nhập lại."
+    "TOKEN_INVALIDATED": "Phiên đăng nhập đã hết hạn hoặc không còn hiệu lực. Vui lòng đăng nhập lại.",
+    "SELF_CONNECTION_REQUEST": "Bạn không thể gửi lời mời kết nối cho chính mình.",
+    "CONNECTION_ALREADY_EXISTS": "Đã tồn tại kết nối giữa hai người dùng này.",
+    "CONNECTION_NOT_FOUND": "Không tìm thấy lời mời kết nối.",
+    "NOT_RECIPIENT_ACCEPT": "Chỉ người nhận mới có thể chấp nhận lời mời này.",
+    "NOT_RECIPIENT_REJECT": "Chỉ người nhận mới có thể từ chối lời mời này.",
+    "REQUEST_NOT_PENDING": "Lời mời này không còn ở trạng thái chờ xử lý.",
+    "NOT_CONNECTION_PARTICIPANT": "Bạn không thuộc kết nối này."
   },
   "SIDEBAR": {
     "DASHBOARD": "Bảng điều khiển",
     "TASKS": "Công việc",
     "SETTINGS": "Cài đặt",
+    "CONNECTIONS": "Kết nối",
     "USERS": "Người dùng",
     "EXPAND": "Mở rộng menu",
     "COLLAPSE": "Thu gọn menu"
@@ -182,6 +190,45 @@
       "DELETE_SUCCESS": "Đã xóa tài khoản {{ name }} thành công.",
       "DELETE_FAILED": "Xóa tài khoản thất bại.",
       "ACCESS_DENIED": "Từ chối truy cập: Yêu cầu quyền Admin."
+    }
+  },
+  "CONNECTIONS": {
+    "TITLE": "Kết nối",
+    "TABS": {
+      "SEARCH": "Tìm kiếm & Kết nối",
+      "PENDING": "Lời mời đang chờ",
+      "MY_CONNECTIONS": "Kết nối của tôi"
+    },
+    "SEARCH_PLACEHOLDER": "Tìm theo tên hoặc email...",
+    "NO_RESULTS": "Không tìm thấy người dùng.",
+    "NO_PENDING_INCOMING": "Không có lời mời nào gửi đến bạn.",
+    "NO_PENDING_OUTGOING": "Không có lời mời nào đã gửi.",
+    "NO_CONNECTIONS": "Bạn chưa có kết nối nào.",
+    "INCOMING_TITLE": "Lời mời đến",
+    "OUTGOING_TITLE": "Lời mời đã gửi",
+    "SHOWING_INFO": "Hiển thị <strong>{{ count }}</strong> trên tổng số <strong>{{ total }}</strong>",
+    "CONNECT_BTN": "Kết nối",
+    "REQUEST_SENT_LABEL": "Đã gửi lời mời",
+    "CONNECTED_LABEL": "Đã kết nối",
+    "ACCEPT_BTN": "Chấp nhận",
+    "REJECT_BTN": "Từ chối",
+    "CANCEL_BTN": "Hủy lời mời",
+    "REMOVE_BTN": "Xóa kết nối",
+    "REMOVE_TITLE": "Xóa kết nối",
+    "REMOVE_MSG": "Bạn có chắc chắn muốn xóa <strong>{{ name }}</strong> ({{ email }}) khỏi danh sách kết nối không?",
+    "REMOVE_CONFIRM": "Xóa",
+    "TOAST": {
+      "LOAD_FAILED": "Tải dữ liệu kết nối thất bại.",
+      "REQUEST_SENT": "Đã gửi lời mời kết nối tới {{ name }}.",
+      "REQUEST_FAILED": "Gửi lời mời kết nối thất bại.",
+      "ACCEPT_SUCCESS": "Bạn đã kết nối với {{ name }}.",
+      "ACCEPT_FAILED": "Chấp nhận lời mời kết nối thất bại.",
+      "REJECT_SUCCESS": "Đã từ chối lời mời kết nối từ {{ name }}.",
+      "REJECT_FAILED": "Từ chối lời mời kết nối thất bại.",
+      "CANCEL_SUCCESS": "Đã hủy lời mời kết nối tới {{ name }}.",
+      "CANCEL_FAILED": "Hủy lời mời kết nối thất bại.",
+      "REMOVE_SUCCESS": "Đã xóa {{ name }} khỏi danh sách kết nối.",
+      "REMOVE_FAILED": "Xóa kết nối thất bại."
     }
   },
   "SETTINGS": {

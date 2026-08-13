@@ -1,0 +1,317 @@
+@use 'variables' as vars;
+@use 'mixins';
+
+.connections-container {
+  padding: 0;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  box-sizing: border-box;
+  max-height: calc(100vh - 130px);
+  overflow: hidden;
+}
+
+.connections-card {
+  width: 100%;
+  max-width: 1000px;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-card);
+  border-radius: vars.$radius-4xl;
+  padding: 20px 24px;
+  box-shadow: 0 10px 30px rgba(var(--black-rgb), 0.04), 0 1px 3px rgba(var(--black-rgb), 0.02);
+  border: vars.$border-default;
+  box-sizing: border-box;
+  max-height: 100%;
+  overflow-y: auto;
+  @include mixins.hide-scrollbar;
+}
+
+.connections-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+  flex-shrink: 0;
+
+  .header-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    .icon-purple {
+      font-size: 18px;
+      color: var(--primary-color);
+    }
+
+    h2 {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0;
+    }
+  }
+}
+
+.tabs-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-bottom: 4px;
+  margin-bottom: 14px;
+  border-bottom: vars.$border-default;
+  position: sticky;
+  top: 0;
+  background: var(--bg-card);
+  z-index: 2;
+}
+
+.tabs-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+:host ::ng-deep {
+  .p-tabs,
+  .p-tablist,
+  .p-tablist-content,
+  .p-tablist-viewport,
+  .p-tablist-tab-list,
+  .p-tabpanels,
+  .p-tabpanel {
+    background: transparent;
+  }
+
+  .p-tablist {
+    border: none;
+  }
+
+  .p-tablist-tab-list {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    border: none;
+  }
+
+  /* We drive the active indicator with a per-tab border instead of PrimeNG's
+     animated bar, since its position is measured against theme paddings we override. */
+  .p-tablist-active-bar {
+    display: none;
+  }
+
+  .p-tab {
+    padding: 10px 6px;
+    margin-right: 18px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    border-radius: 0;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: color vars.$transition-base, border-color vars.$transition-base;
+
+    &:hover:not(.p-tab-active) {
+      color: var(--text-primary);
+    }
+
+    &.p-tab-active {
+      color: var(--primary-color);
+      border-bottom-color: var(--primary-color);
+    }
+  }
+
+  .tab-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    margin-left: 6px;
+    border-radius: vars.$radius-4xl;
+    background: var(--danger);
+    color: var(--white);
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  /* Search bar button override */
+  .search-icon-btn.p-button {
+    @include mixins.search-icon-btn;
+  }
+
+  .refresh-btn.p-button {
+    width: 42px;
+    height: 42px;
+    border-radius: vars.$radius-2xl;
+    border: vars.$border-default;
+    background: var(--bg-primary);
+    color: var(--text-secondary);
+    @include mixins.flex-center;
+    cursor: pointer;
+    transition: all vars.$transition-base;
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
+    flex-shrink: 0;
+
+    i {
+      font-size: 16px;
+    }
+
+    &:hover:not(.p-disabled) {
+      background: rgba(var(--primary-rgb), 0.08);
+      color: var(--indigo-600);
+      border-color: var(--indigo-500);
+    }
+
+    &.p-disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  .btn-connect.p-button {
+    background: var(--primary-color);
+    color: var(--white);
+    border: none;
+    border-radius: vars.$radius-lg;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 600;
+
+    &:hover {
+      background: var(--primary-hover);
+    }
+  }
+}
+
+.pending-section {
+  margin-bottom: 16px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  h3 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 8px;
+  }
+}
+
+.list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.list-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 14px;
+  border-radius: vars.$radius-2xl;
+  border: vars.$border-default;
+  background: var(--bg-card);
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+  box-sizing: border-box;
+
+  .avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: vars.$radius-circle;
+    color: var(--white);
+    @include mixins.flex-center;
+    font-weight: 700;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  .user-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .user-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .user-email {
+    font-size: 13px;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.row-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.connected-since {
+  font-size: 12px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px;
+  color: var(--text-muted);
+  font-size: 15px;
+}
+
+.list-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: vars.$border-default;
+  flex-shrink: 0;
+  gap: 8px;
+
+  .account-total-info {
+    font-size: 13px;
+    white-space: nowrap;
+    color: var(--text-secondary);
+
+    strong {
+      color: var(--text-primary);
+    }
+  }
+
+  .paginator-right-group {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+}

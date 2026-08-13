@@ -27,6 +27,10 @@
           <i class="pi pi-cog nav-icon"></i>
           <span>{{ 'SIDEBAR.SETTINGS' | translate }}</span>
         </a>
+        <a routerLink="/connections" routerLinkActive="active">
+          <i class="pi pi-user-plus nav-icon"></i>
+          <span>{{ 'SIDEBAR.CONNECTIONS' | translate }}</span>
+        </a>
         @if (isAdmin) {
           <a routerLink="/users" routerLinkActive="active">
             <i class="pi pi-user-edit nav-icon"></i>

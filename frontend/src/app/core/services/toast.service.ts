@@ -13,7 +13,15 @@ const API_ERRORS_MAP: { [key: string]: string } = {
   "Email username must contain at least one letter.": "API_ERROR.EMAIL_USERNAME_NO_LETTER",
   "Invalid date of birth format.": "API_ERROR.INVALID_DOB_FORMAT",
   "Date of birth cannot be in the future.": "API_ERROR.DOB_FUTURE",
-  "Token is no longer valid. Please log in again.": "API_ERROR.TOKEN_INVALIDATED"
+  "Token is no longer valid. Please log in again.": "API_ERROR.TOKEN_INVALIDATED",
+  "You cannot send a connection request to yourself.": "API_ERROR.SELF_CONNECTION_REQUEST",
+  "A connection already exists between these users.": "API_ERROR.CONNECTION_ALREADY_EXISTS",
+  "Connection request not found.": "API_ERROR.CONNECTION_NOT_FOUND",
+  "Connection not found.": "API_ERROR.CONNECTION_NOT_FOUND",
+  "Only the recipient can accept this request.": "API_ERROR.NOT_RECIPIENT_ACCEPT",
+  "Only the recipient can reject this request.": "API_ERROR.NOT_RECIPIENT_REJECT",
+  "This request is no longer pending.": "API_ERROR.REQUEST_NOT_PENDING",
+  "You are not part of this connection.": "API_ERROR.NOT_CONNECTION_PARTICIPANT"
 };
 
 @Injectable({

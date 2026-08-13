@@ -83,9 +83,27 @@ describe('Sidebar', () => {
     component = fixture.componentInstance;
     component.user = { name: 'Admin User', email: 'admin@example.com', role: 'admin', dateOfBirth: '1990-01-01' };
     fixture.detectChanges();
-    
+
     const usersLink = fixture.nativeElement.querySelector('a[routerLink="/users"]');
     expect(usersLink).toBeTruthy();
+  });
+
+  it('should render the connections link for both admin and non-admin users', () => {
+    fixture.destroy();
+    fixture = TestBed.createComponent(Sidebar);
+    component = fixture.componentInstance;
+    component.user = { name: 'Regular User', email: 'user@example.com', role: 'user', dateOfBirth: '1990-01-01' };
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('a[routerLink="/connections"]')).toBeTruthy();
+
+    fixture.destroy();
+    fixture = TestBed.createComponent(Sidebar);
+    component = fixture.componentInstance;
+    component.user = { name: 'Admin User', email: 'admin@example.com', role: 'admin', dateOfBirth: '1990-01-01' };
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('a[routerLink="/connections"]')).toBeTruthy();
   });
 
   it('should emit toggleRequest output event on toggle button click in template', () => {

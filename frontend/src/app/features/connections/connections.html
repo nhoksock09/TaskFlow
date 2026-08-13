@@ -1,0 +1,343 @@
+<div class="connections-container">
+  <div class="connections-card">
+    <div class="connections-header">
+      <div class="header-title">
+        <i class="pi pi-user-plus icon-purple"></i>
+        <h2>{{ 'CONNECTIONS.TITLE' | translate }}</h2>
+      </div>
+    </div>
+
+    <p-tabs [value]="activeTab" (valueChange)="onTabChange($event)" styleClass="connections-tabs">
+      <div class="tabs-header">
+        <p-tablist>
+          <p-tab value="search">{{ 'CONNECTIONS.TABS.SEARCH' | translate }}</p-tab>
+          <p-tab value="pending">
+            {{ 'CONNECTIONS.TABS.PENDING' | translate }}
+            @if (incomingRequests.length > 0) {
+              <span class="tab-badge">{{ incomingRequests.length }}</span>
+            }
+          </p-tab>
+          <p-tab value="my-connections">{{ 'CONNECTIONS.TABS.MY_CONNECTIONS' | translate }}</p-tab>
+        </p-tablist>
+
+        <div class="tabs-header-actions">
+          @if (activeTab === 'search') {
+            <div class="search-bar">
+              <input
+                type="text"
+                pInputText
+                [(ngModel)]="searchQuery"
+                (input)="searchQuery.trim() === '' ? onSearch() : null"
+                (keyup.enter)="onSearch()"
+                [placeholder]="'CONNECTIONS.SEARCH_PLACEHOLDER' | translate"
+                class="search-input"
+              />
+              <p-button
+                styleClass="search-icon-btn"
+                [text]="true"
+                type="button"
+                (click)="onSearch()"
+                [title]="'COMMON.BTN.SEARCH' | translate"
+              >
+                <i class="pi pi-search"></i>
+              </p-button>
+            </div>
+            <p-button
+              styleClass="refresh-btn"
+              icon="pi pi-refresh"
+              [disabled]="isLoadingSearch"
+              [loading]="isLoadingSearch"
+              (click)="loadSearchResults()"
+              [title]="'COMMON.BTN.REFRESH' | translate"
+            ></p-button>
+          } @else if (activeTab === 'my-connections') {
+            <div class="search-bar">
+              <input
+                type="text"
+                pInputText
+                [(ngModel)]="connSearchQuery"
+                (input)="connSearchQuery.trim() === '' ? onConnSearch() : null"
+                (keyup.enter)="onConnSearch()"
+                [placeholder]="'CONNECTIONS.SEARCH_PLACEHOLDER' | translate"
+                class="search-input"
+              />
+              <p-button
+                styleClass="search-icon-btn"
+                [text]="true"
+                type="button"
+                (click)="onConnSearch()"
+                [title]="'COMMON.BTN.SEARCH' | translate"
+              >
+                <i class="pi pi-search"></i>
+              </p-button>
+            </div>
+            <p-button
+              styleClass="refresh-btn"
+              icon="pi pi-refresh"
+              [disabled]="isLoadingConnections"
+              [loading]="isLoadingConnections"
+              (click)="loadConnections()"
+              [title]="'COMMON.BTN.REFRESH' | translate"
+            ></p-button>
+          }
+        </div>
+      </div>
+
+      <p-tabpanels>
+        <!-- SEARCH & CONNECT -->
+        <p-tabpanel value="search">
+          <div class="list-container">
+            @if (!isLoadingSearch && searchResults.length === 0) {
+              <div class="empty-state">{{ 'CONNECTIONS.NO_RESULTS' | translate }}</div>
+            }
+            @for (user of searchResults; track user._id) {
+              <div class="list-row">
+                <div class="user-info">
+                  <div class="avatar" [style.background-color]="getAvatarBg(user.name)">
+                    {{ getInitial(user.name) }}
+                  </div>
+                  <div class="user-text">
+                    <span class="user-name">{{ user.name }}</span>
+                    <span class="user-email">{{ user.email }}</span>
+                  </div>
+                </div>
+                <div class="row-actions">
+                  @switch (user.connectionStatus) {
+                    @case ('none') {
+                      <p-button
+                        styleClass="btn-connect"
+                        [label]="'CONNECTIONS.CONNECT_BTN' | translate"
+                        icon="pi pi-user-plus"
+                        (click)="sendConnectionRequest(user)"
+                      ></p-button>
+                    }
+                    @case ('pending-outgoing') {
+                      <p-tag class="priority-tag" severity="warn" [value]="'CONNECTIONS.REQUEST_SENT_LABEL' | translate"></p-tag>
+                      <p-button
+                        [text]="true"
+                        [rounded]="true"
+                        icon="pi pi-times"
+                        severity="secondary"
+                        (click)="cancelOutgoingRequest(user.connectionId!, user.name)"
+                        [title]="'CONNECTIONS.CANCEL_BTN' | translate"
+                      ></p-button>
+                    }
+                    @case ('pending-incoming') {
+                      <p-button
+                        [text]="true"
+                        [rounded]="true"
+                        icon="pi pi-check"
+                        severity="success"
+                        (click)="acceptRequest(user.connectionId!, user.name)"
+                        [title]="'CONNECTIONS.ACCEPT_BTN' | translate"
+                      ></p-button>
+                      <p-button
+                        [text]="true"
+                        [rounded]="true"
+                        icon="pi pi-times"
+                        severity="danger"
+                        (click)="rejectRequest(user.connectionId!, user.name)"
+                        [title]="'CONNECTIONS.REJECT_BTN' | translate"
+                      ></p-button>
+                    }
+                    @case ('accepted') {
+                      <p-tag class="priority-tag" severity="success" [value]="'CONNECTIONS.CONNECTED_LABEL' | translate"></p-tag>
+                    }
+                  }
+                </div>
+              </div>
+            }
+          </div>
+
+          @if (searchTotal > 0) {
+            <div class="list-footer">
+              <span
+                class="account-total-info"
+                [innerHTML]="'CONNECTIONS.SHOWING_INFO' | translate: { count: searchResults.length, total: searchTotal }"
+              ></span>
+              <div class="paginator-right-group">
+                <p-paginator
+                  [first]="(searchPage - 1) * searchPageSize"
+                  [rows]="searchPageSize"
+                  [totalRecords]="searchTotal"
+                  (onPageChange)="onSearchPageChange($event)"
+                ></p-paginator>
+                <p-select
+                  [(ngModel)]="searchPageSize"
+                  [options]="[5, 10, 20]"
+                  (onChange)="onSearchPageSizeChange(searchPageSize)"
+                  styleClass="rows-select-compact"
+                  appendTo="body"
+                ></p-select>
+              </div>
+            </div>
+          }
+        </p-tabpanel>
+
+        <!-- PENDING REQUESTS -->
+        <p-tabpanel value="pending">
+          <div class="pending-section">
+            <h3>{{ 'CONNECTIONS.INCOMING_TITLE' | translate }}</h3>
+            <div class="list-container">
+              @if (!isLoadingPending && incomingRequests.length === 0) {
+                <div class="empty-state">{{ 'CONNECTIONS.NO_PENDING_INCOMING' | translate }}</div>
+              }
+              @for (item of incomingRequests; track item._id) {
+                <div class="list-row">
+                  <div class="user-info">
+                    <div class="avatar" [style.background-color]="getAvatarBg(item.requester?.name || '')">
+                      {{ getInitial(item.requester?.name || '') }}
+                    </div>
+                    <div class="user-text">
+                      <span class="user-name">{{ item.requester?.name }}</span>
+                      <span class="user-email">{{ item.requester?.email }}</span>
+                    </div>
+                  </div>
+                  <div class="row-actions">
+                    <p-button
+                      styleClass="btn-connect"
+                      [label]="'CONNECTIONS.ACCEPT_BTN' | translate"
+                      icon="pi pi-check"
+                      (click)="acceptRequest(item._id, item.requester?.name)"
+                    ></p-button>
+                    <p-button
+                      [text]="true"
+                      [rounded]="true"
+                      icon="pi pi-times"
+                      severity="danger"
+                      (click)="rejectRequest(item._id, item.requester?.name)"
+                      [title]="'CONNECTIONS.REJECT_BTN' | translate"
+                    ></p-button>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+
+          <div class="pending-section">
+            <h3>{{ 'CONNECTIONS.OUTGOING_TITLE' | translate }}</h3>
+            <div class="list-container">
+              @if (!isLoadingPending && outgoingRequests.length === 0) {
+                <div class="empty-state">{{ 'CONNECTIONS.NO_PENDING_OUTGOING' | translate }}</div>
+              }
+              @for (item of outgoingRequests; track item._id) {
+                <div class="list-row">
+                  <div class="user-info">
+                    <div class="avatar" [style.background-color]="getAvatarBg(item.recipient?.name || '')">
+                      {{ getInitial(item.recipient?.name || '') }}
+                    </div>
+                    <div class="user-text">
+                      <span class="user-name">{{ item.recipient?.name }}</span>
+                      <span class="user-email">{{ item.recipient?.email }}</span>
+                    </div>
+                  </div>
+                  <div class="row-actions">
+                    <p-tag class="priority-tag" severity="warn" [value]="'CONNECTIONS.REQUEST_SENT_LABEL' | translate"></p-tag>
+                    <p-button
+                      [text]="true"
+                      [rounded]="true"
+                      icon="pi pi-times"
+                      severity="secondary"
+                      (click)="cancelOutgoingRequest(item._id, item.recipient?.name)"
+                      [title]="'CONNECTIONS.CANCEL_BTN' | translate"
+                    ></p-button>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        </p-tabpanel>
+
+        <!-- MY CONNECTIONS -->
+        <p-tabpanel value="my-connections">
+          <div class="list-container">
+            @if (!isLoadingConnections && myConnections.length === 0) {
+              <div class="empty-state">{{ 'CONNECTIONS.NO_CONNECTIONS' | translate }}</div>
+            }
+            @for (item of myConnections; track item.connectionId) {
+              <div class="list-row">
+                <div class="user-info">
+                  <div class="avatar" [style.background-color]="getAvatarBg(item.user.name)">
+                    {{ getInitial(item.user.name) }}
+                  </div>
+                  <div class="user-text">
+                    <span class="user-name">{{ item.user.name }}</span>
+                    <span class="user-email">{{ item.user.email }}</span>
+                  </div>
+                </div>
+                <div class="row-actions">
+                  <span class="connected-since">{{ formatDate(item.connectedSince) }}</span>
+                  <p-button
+                    [text]="true"
+                    [rounded]="true"
+                    icon="pi pi-user-minus"
+                    severity="danger"
+                    (click)="openRemoveModal(item)"
+                    [title]="'CONNECTIONS.REMOVE_BTN' | translate"
+                  ></p-button>
+                </div>
+              </div>
+            }
+          </div>
+
+          @if (connTotal > 0) {
+            <div class="list-footer">
+              <span
+                class="account-total-info"
+                [innerHTML]="'CONNECTIONS.SHOWING_INFO' | translate: { count: myConnections.length, total: connTotal }"
+              ></span>
+              <div class="paginator-right-group">
+                <p-paginator
+                  [first]="(connPage - 1) * connPageSize"
+                  [rows]="connPageSize"
+                  [totalRecords]="connTotal"
+                  (onPageChange)="onConnPageChange($event)"
+                ></p-paginator>
+                <p-select
+                  [(ngModel)]="connPageSize"
+                  [options]="[5, 10, 20]"
+                  (onChange)="onConnPageSizeChange(connPageSize)"
+                  styleClass="rows-select-compact"
+                  appendTo="body"
+                ></p-select>
+              </div>
+            </div>
+          }
+        </p-tabpanel>
+      </p-tabpanels>
+    </p-tabs>
+  </div>
+
+  <!-- Confirm Remove Connection Dialog -->
+  @if (showRemoveModal) {
+    <div class="modal-overlay" (click)="closeRemoveModal()">
+      <div class="modal-card" (click)="$event.stopPropagation()">
+        <div class="card-header">
+          <h2>{{ 'CONNECTIONS.REMOVE_TITLE' | translate }}</h2>
+        </div>
+        <div class="modal-body">
+          <p
+            [innerHTML]="
+              'CONNECTIONS.REMOVE_MSG'
+                | translate: { name: removeCandidate?.user?.name, email: removeCandidate?.user?.email }
+            "
+          ></p>
+        </div>
+        <div class="modal-actions">
+          <p-button
+            type="button"
+            styleClass="btn-cancel"
+            (click)="closeRemoveModal()"
+            [label]="'COMMON.BTN.CANCEL' | translate"
+          ></p-button>
+          <p-button
+            type="button"
+            styleClass="btn-confirm btn-danger"
+            (click)="confirmRemoveConnection()"
+            [label]="'CONNECTIONS.REMOVE_CONFIRM' | translate"
+          ></p-button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

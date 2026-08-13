@@ -55,12 +55,20 @@
     "EMAIL_USERNAME_NO_LETTER": "Email username must contain at least one letter.",
     "INVALID_DOB_FORMAT": "Invalid date of birth format.",
     "DOB_FUTURE": "Date of birth cannot be in the future.",
-    "TOKEN_INVALIDATED": "Token is no longer valid. Please log in again."
+    "TOKEN_INVALIDATED": "Token is no longer valid. Please log in again.",
+    "SELF_CONNECTION_REQUEST": "You cannot send a connection request to yourself.",
+    "CONNECTION_ALREADY_EXISTS": "A connection already exists between these users.",
+    "CONNECTION_NOT_FOUND": "Connection request not found.",
+    "NOT_RECIPIENT_ACCEPT": "Only the recipient can accept this request.",
+    "NOT_RECIPIENT_REJECT": "Only the recipient can reject this request.",
+    "REQUEST_NOT_PENDING": "This request is no longer pending.",
+    "NOT_CONNECTION_PARTICIPANT": "You are not part of this connection."
   },
   "SIDEBAR": {
     "DASHBOARD": "Dashboard",
     "TASKS": "Tasks",
     "SETTINGS": "Settings",
+    "CONNECTIONS": "Connections",
     "USERS": "Users",
     "EXPAND": "Expand sidebar",
     "COLLAPSE": "Collapse sidebar"
@@ -182,6 +190,45 @@
       "DELETE_SUCCESS": "Deleted account {{ name }} successfully.",
       "DELETE_FAILED": "Failed to delete user.",
       "ACCESS_DENIED": "Access Denied: Admin privileges required."
+    }
+  },
+  "CONNECTIONS": {
+    "TITLE": "Connections",
+    "TABS": {
+      "SEARCH": "Search & Connect",
+      "PENDING": "Pending Requests",
+      "MY_CONNECTIONS": "My Connections"
+    },
+    "SEARCH_PLACEHOLDER": "Search by name or email...",
+    "NO_RESULTS": "No users found.",
+    "NO_PENDING_INCOMING": "No incoming requests.",
+    "NO_PENDING_OUTGOING": "No sent requests.",
+    "NO_CONNECTIONS": "You have no connections yet.",
+    "INCOMING_TITLE": "Incoming Requests",
+    "OUTGOING_TITLE": "Sent Requests",
+    "SHOWING_INFO": "Showing <strong>{{ count }}</strong> of <strong>{{ total }}</strong> accounts",
+    "CONNECT_BTN": "Connect",
+    "REQUEST_SENT_LABEL": "Request Sent",
+    "CONNECTED_LABEL": "Connected",
+    "ACCEPT_BTN": "Accept",
+    "REJECT_BTN": "Reject",
+    "CANCEL_BTN": "Cancel Request",
+    "REMOVE_BTN": "Remove Connection",
+    "REMOVE_TITLE": "Remove Connection",
+    "REMOVE_MSG": "Are you sure you want to remove <strong>{{ name }}</strong> ({{ email }}) from your connections?",
+    "REMOVE_CONFIRM": "Remove",
+    "TOAST": {
+      "LOAD_FAILED": "Failed to load connections data.",
+      "REQUEST_SENT": "Connection request sent to {{ name }}.",
+      "REQUEST_FAILED": "Failed to send connection request.",
+      "ACCEPT_SUCCESS": "You are now connected with {{ name }}.",
+      "ACCEPT_FAILED": "Failed to accept connection request.",
+      "REJECT_SUCCESS": "Rejected connection request from {{ name }}.",
+      "REJECT_FAILED": "Failed to reject connection request.",
+      "CANCEL_SUCCESS": "Cancelled connection request to {{ name }}.",
+      "CANCEL_FAILED": "Failed to cancel connection request.",
+      "REMOVE_SUCCESS": "Removed {{ name }} from your connections.",
+      "REMOVE_FAILED": "Failed to remove connection."
     }
   },
   "SETTINGS": {

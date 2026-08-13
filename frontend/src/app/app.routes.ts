@@ -3,6 +3,7 @@ import { Auth } from './features/auth/auth';
 import { Dashboard } from './features/dashboard/dashboard';
 import { Tasks } from './features/tasks/tasks';
 import { Settings } from './features/settings/settings';
+import { Connections } from './features/connections/connections';
 import { Users } from './features/users/users';
 import { AccessDenied } from './features/access-denied/access-denied';
 import { MainLayout } from './layouts/main-layout/main-layout';
@@ -30,6 +31,10 @@ export const routes: Routes = [
       {
         path: 'settings',
         component: Settings
+      },
+      {
+        path: 'connections',
+        component: Connections
       },
       {
         path: 'users',
