@@ -318,7 +318,6 @@ export class Dashboard implements OnInit {
     const endOfTomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 23, 59, 59, 999);
 
     const getGroupType = (dueDateString: string): { name: string; order: number; class: string } | null => {
-      if (!dueDateString) return null;
       const due = new Date(dueDateString);
       if (due.getTime() < startOfToday.getTime()) {
         return { name: 'Overdue', order: 0, class: 'overdue-group' };

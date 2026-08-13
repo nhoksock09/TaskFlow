@@ -492,5 +492,59 @@ describe('Dashboard', () => {
       const upcoming = component.upcomingTasks;
       expect(upcoming[0]._id).toBe('date');
     });
+
+    it('should show login alert when there are only upcoming tasks and no overdue tasks', () => {
+      const tomorrowSoon = new Date(Date.now() + 2 * 3600000).toISOString(); // due in 2 hours
+      const alertTasks = [
+        { _id: 't-upcoming', status: TaskStatus.TODO, dueDate: tomorrowSoon } as Task
+      ];
+      component.checkLoginAlerts(alertTasks);
+      expect(component.showLoginAlert).toBe(true);
+      expect(component.alertOverdueTasks.length).toBe(0);
+      expect(component.alertUpcomingTasks.length).toBe(1);
+    });
+
+    it('should ignore tasks with missing dueDate in groupedUpcomingTasks', () => {
+      component.tasks = [
+        { _id: 'no-date', status: TaskStatus.TODO } as Task
+      ];
+      const groups = component.groupedUpcomingTasks;
+      expect(groups.length).toBe(0);
+    });
+
+    it('should fall back to 0 weight for undefined priorities in sorting', () => {
+      const taskA = { _id: 'a', status: TaskStatus.TODO, dueDate: new Date().toISOString() } as Task; // undefined priority
+      const taskB = { _id: 'b', status: TaskStatus.TODO, dueDate: new Date().toISOString(), priority: 'custom' as any } as Task;
+      component.tasks = [taskA, taskB];
+      const groups = component.groupedUpcomingTasks;
+      expect(groups.length).toBeDefined();
+
+      const upcoming = component.upcomingTasks;
+      expect(upcoming.length).toBe(2);
+    });
+
+    it('should sort task with date before task without date in upcomingTasks', () => {
+      const taskWithDate = { _id: 'with-date', status: TaskStatus.TODO, priority: TaskPriority.LOW, dueDate: new Date().toISOString() } as Task;
+      const taskWithoutDate = { _id: 'without-date', status: TaskStatus.TODO, priority: TaskPriority.LOW } as Task;
+      
+      component.tasks = [taskWithDate, taskWithoutDate];
+      const upcoming = component.upcomingTasks;
+      expect(upcoming[0]._id).toBe('with-date');
+    });
+
+    it('should check isDueSoon for completed tasks or tasks without dueDate', () => {
+      expect(component.isDueSoon({ status: TaskStatus.COMPLETED, dueDate: tomorrowStr } as any)).toBe(false);
+      expect(component.isDueSoon({ status: TaskStatus.TODO, dueDate: '' } as any)).toBe(false);
+    });
+
+    it('should check isDueThisWeek on Sunday', () => {
+      jasmine.clock().install();
+      jasmine.clock().mockDate(new Date(2026, 7, 16)); // August 16, 2026 (Sunday)
+      
+      const dueStr = new Date(2026, 7, 15).toISOString();
+      expect(component.isDueThisWeek(dueStr)).toBe(true);
+
+      jasmine.clock().uninstall();
+    });
   });
 });
