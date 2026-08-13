@@ -73,66 +73,10 @@ html.dark {
     font-weight: 500;
   }
 
-  .input-wrapper {
-    background: var(--bg-input);
-    border: vars.$border-default;
-
-    &:focus-within {
-      border-color: var(--indigo-500);
-      box-shadow: 0 0 0 3px rgba(var(--indigo-500-rgb), 0.25);
-    }
-
-    input {
-      color: var(--text-primary);
-
-      &::placeholder {
-        color: var(--slate-600);
-      }
-    }
-
-    i:first-child {
-      color: var(--slate-500);
-    }
-  }
-
-  .eye-btn {
-    color: var(--slate-500);
-    outline: none;
-
-    &:hover {
-      color: var(--text-muted);
-      background-color: transparent;
-    }
-  }
-
-  input[type="date"],
-  input[type="datetime-local"] {
-    @include mixins.date-input-layout;
-  }
-
   input[type="date"]::-webkit-calendar-picker-indicator,
   input[type="datetime-local"]::-webkit-calendar-picker-indicator {
-    position: static;
-    transform: none;
-    width: 20px;
-    height: 20px;
-    filter: brightness(0) invert(0.6);
-    cursor: pointer;
-    opacity: 0.7;
-    margin: 0;
-    padding: 0;
+    filter: brightness(0) invert(0.8);
   }
-
-  .input-wrapper i.fa-calendar {
-    color: var(--slate-500);
-  }
-}
-
-html.dark-theme input[type="date"]::-webkit-calendar-picker-indicator,
-html.dark input[type="date"]::-webkit-calendar-picker-indicator,
-html.dark-theme input[type="datetime-local"]::-webkit-calendar-picker-indicator,
-html.dark input[type="datetime-local"]::-webkit-calendar-picker-indicator {
-  filter: brightness(0) invert(0.8);
 }
 
 /* Dark mode — task board column border override */
@@ -140,17 +84,5 @@ html.dark-theme,
 html.dark {
   .tasks-column {
     border-color: var(--slate-600);
-  }
-}
-
-html.dark-theme,
-html.dark {
-
-  input:-webkit-autofill,
-  input:-webkit-autofill:hover,
-  input:-webkit-autofill:focus,
-  input:-webkit-autofill:active {
-    -webkit-box-shadow: 0 0 0 30px var(--bg-primary) inset;
-    /* Keep: Browser autofill override in dark mode */
   }
 }

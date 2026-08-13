@@ -1,28 +1,13 @@
-@if (props['mask']) {
-  <p-datepicker
-    [formControl]="formControl"
-    [formlyAttributes]="field"
-    [showTime]="props['showTime']"
-    [hourFormat]="props['hourFormat'] || '24'"
-    [dateFormat]="props['dateFormat'] || 'dd/mm/yy'"
-    [placeholder]="props.placeholder || 'dd/mm/yyyy'"
-    [minDate]="props['minDate']"
-    [maxDate]="props['maxDate']"
-    [appendTo]="props['appendTo'] || 'body'"
-    styleClass="w-full"
-    [pInputMask]="props['mask']"
-  ></p-datepicker>
-} @else {
-  <p-datepicker
-    [formControl]="formControl"
-    [formlyAttributes]="field"
-    [showTime]="props['showTime']"
-    [hourFormat]="props['hourFormat'] || '24'"
-    [dateFormat]="props['dateFormat'] || 'dd/mm/yy'"
-    [placeholder]="props.placeholder || ''"
-    [minDate]="props['minDate']"
-    [maxDate]="props['maxDate']"
-    [appendTo]="props['appendTo'] || 'body'"
-    styleClass="w-full"
-  ></p-datepicker>
-}
+<p-datepicker
+  [formControl]="formControl"
+  [formlyAttributes]="field"
+  [showTime]="props['showTime']"
+  [hourFormat]="props['hourFormat'] || '24'"
+  [dateFormat]="props['dateFormat'] || 'dd/mm/yy'"
+  [placeholder]="props.placeholder || (props['mask'] ? 'dd/mm/yyyy' : '')"
+  [minDate]="props['minDate']"
+  [maxDate]="props['maxDate']"
+  [appendTo]="props['appendTo'] || 'body'"
+  styleClass="w-full"
+  [pInputMask]="props['mask']"
+></p-datepicker>

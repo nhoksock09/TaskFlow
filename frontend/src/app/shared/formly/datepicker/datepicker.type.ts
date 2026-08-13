@@ -9,7 +9,6 @@ import { InputMaskDirective } from 'primeng/inputmask';
   selector: 'formly-field-datepicker',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, DatePicker, InputMaskDirective, FormlyModule],
-  templateUrl: './datepicker.type.html',
-  styleUrl: './datepicker.type.scss'
+  templateUrl: './datepicker.type.html'
 })
 export class FormlyFieldDatePicker extends FieldType<FieldTypeConfig> {}

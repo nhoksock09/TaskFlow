@@ -1,8 +1,8 @@
-<p-drawer 
-  [visible]="true" 
-  [modal]="false" 
-  [showCloseIcon]="false" 
-  [dismissible]="false" 
+<p-drawer
+  [visible]="true"
+  [modal]="false"
+  [showCloseIcon]="false"
+  [dismissible]="false"
   appendTo="self"
   styleClass="sidebar-drawer"
 >
@@ -48,8 +48,16 @@
         </div>
       </div>
     }
-    <p-button styleClass="sidebar-toggle-btn" (click)="toggleRequest.emit()" [title]="(isCollapsed ? 'SIDEBAR.EXPAND' : 'SIDEBAR.COLLAPSE') | translate">
-      <i class="pi" [class.pi-chevron-right]="isCollapsed" [class.pi-chevron-left]="!isCollapsed"></i>
+    <p-button
+      styleClass="sidebar-toggle-btn"
+      (click)="toggleRequest.emit()"
+      [title]="(isCollapsed ? 'SIDEBAR.EXPAND' : 'SIDEBAR.COLLAPSE') | translate"
+    >
+      <i
+        class="pi"
+        [class.pi-chevron-right]="isCollapsed"
+        [class.pi-chevron-left]="!isCollapsed"
+      ></i>
     </p-button>
   </div>
 </p-drawer>

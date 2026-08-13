@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { AccessDenied } from './access-denied';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideRouter } from '@angular/router';
-import { vi } from 'vitest';
 
 describe('AccessDenied', () => {
   let component: AccessDenied;
@@ -30,7 +30,7 @@ describe('AccessDenied', () => {
   });
 
   it('should navigate to /dashboard when goToDashboard is called', () => {
-    const navigateSpy = vi.spyOn(router, 'navigate');
+    const navigateSpy = spyOn(router, 'navigate');
     component.goToDashboard();
     expect(navigateSpy).toHaveBeenCalledWith(['/dashboard']);
   });

@@ -77,18 +77,18 @@ export class Users implements OnInit {
     )
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-      next: (res) => {
-        this.users = res.data || [];
-        this.totalUsers = res.total || 0;
-        this.totalPages = res.totalPages || 1;
-        this.isLoading = false;
-        this.cdr.detectChanges();
-      },
-      error: () => {
-        this.toastService.error('USERS.TOAST.LOAD_FAILED');
-        this.isLoading = false;
-      }
-    });
+        next: (res) => {
+          this.users = res.data || [];
+          this.totalUsers = res.total || 0;
+          this.totalPages = res.totalPages || 1;
+          this.isLoading = false;
+          this.cdr.detectChanges();
+        },
+        error: () => {
+          this.toastService.error('USERS.TOAST.LOAD_FAILED');
+          this.isLoading = false;
+        }
+      });
   }
 
   toggleColumnSort(field: string) {
@@ -150,13 +150,13 @@ export class Users implements OnInit {
     this.userService.updateUserRole(userId, 'admin')
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-      next: () => {
-        this.toastService.show('USERS.TOAST.PROMOTE_SUCCESS', 'success', { name: this.userToPromote?.name });
-        this.closePromoteModal();
-        this.loadUsers();
-      },
-      error: () => this.toastService.error('USERS.TOAST.PROMOTE_FAILED')
-    });
+        next: () => {
+          this.toastService.show('USERS.TOAST.PROMOTE_SUCCESS', 'success', { name: this.userToPromote?.name });
+          this.closePromoteModal();
+          this.loadUsers();
+        },
+        error: () => this.toastService.error('USERS.TOAST.PROMOTE_FAILED')
+      });
   }
 
   openDeleteModal(user: User) {
@@ -179,13 +179,13 @@ export class Users implements OnInit {
     this.userService.deleteUser(userId)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-      next: () => {
-        this.toastService.show('USERS.TOAST.DELETE_SUCCESS', 'success', { name: this.userToDelete?.name });
-        this.closeDeleteModal();
-        this.loadUsers();
-      },
-      error: () => this.toastService.error('USERS.TOAST.DELETE_FAILED')
-    });
+        next: () => {
+          this.toastService.show('USERS.TOAST.DELETE_SUCCESS', 'success', { name: this.userToDelete?.name });
+          this.closeDeleteModal();
+          this.loadUsers();
+        },
+        error: () => this.toastService.error('USERS.TOAST.DELETE_FAILED')
+      });
   }
 
   getInitial(name: string): string {

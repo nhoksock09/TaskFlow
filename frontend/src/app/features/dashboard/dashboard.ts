@@ -7,8 +7,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Select } from 'primeng/select';
 import { Tag } from 'primeng/tag';
 import { ButtonModule } from 'primeng/button';
-import { User, Task, TaskStatus, TaskPriority } from '@core/models';
-import { UserService } from '../../core/services/user.service';
+import { Task, TaskStatus, TaskPriority } from '@core/models';
 import { TaskService } from '../../core/services/task.service';
 import { ToastService } from '../../core/services/toast.service';
 import { AuthService } from '../../core/services/auth.service';
@@ -36,7 +35,6 @@ export const ONE_DAY_MS = 24 * 60 * 60 * 1000;
 })
 export class Dashboard implements OnInit {
   // 1. Dependency Injections
-  private userService = inject(UserService);
   private router = inject(Router);
   private taskService = inject(TaskService);
   private toastService = inject(ToastService);
@@ -49,7 +47,6 @@ export class Dashboard implements OnInit {
   readonly TASK_STATUS_MAP = TASK_STATUS_MAP;
   readonly TASK_PRIORITY_MAP = TASK_PRIORITY_MAP;
 
-  user: User | null = null;
   tasks: Task[] = [];
   timeFilter: 'today' | 'last-month' | 'month' | 'next-month' = 'today';
   timeFilterOptions: { label: string; value: string }[] = [];
@@ -64,22 +61,10 @@ export class Dashboard implements OnInit {
       this.translateFilters();
     });
 
-    this.loadUserData();
     this.loadTasks();
   }
 
   // 4. Data Fetching / Private Operations Methods
-  loadUserData() {
-    this.userService.getProfile()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (user) => {
-          this.user = user;
-        },
-        error: () => this.toastService.error('SETTINGS.TOAST.LOAD_FAILED')
-      });
-  }
-
   loadTasks() {
     this.taskService.getTasks()
       .pipe(takeUntilDestroyed(this.destroyRef))

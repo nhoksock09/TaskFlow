@@ -11,7 +11,7 @@ $label-gap: 12px;
   background: var(--bg-sidebar);
   color: var(--text-primary);
   padding: 24px 24px 12px 24px;
-  border-right: 1px solid var(--border-color);
+  border-right: vars.$border-default;
   transition: width 0.3s vars.$ease-standard, background vars.$transition-slow, border-color vars.$transition-slow, padding vars.$transition-slow;
   overflow: visible;
   height: 100%;
@@ -83,6 +83,134 @@ $label-gap: 12px;
     }
   }
 
+  .sidebar-wrapper {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: visible;
+  }
+
+  .sidebar-top {
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    transition: all vars.$transition-slow;
+
+    .logo-box {
+      width: $rail-size;
+      height: $rail-size;
+      border-radius: vars.$radius-2xl;
+      background: var(--logo-gradient);
+      @include mixins.flex-center;
+      color: var(--white);
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    span {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-primary);
+      white-space: nowrap;
+      transition: all vars.$transition-slow;
+      margin-left: $label-gap;
+    }
+  }
+
+  nav {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    a {
+      color: var(--text-sidebar-nav);
+      text-decoration: none;
+      padding: 12px 16px;
+      border-radius: vars.$radius-2xl;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      transition: all vars.$transition-base;
+
+      .nav-icon {
+        font-size: 18px;
+        width: 20px;
+        text-align: center;
+        color: inherit;
+        transition: color vars.$transition-base;
+        flex-shrink: 0;
+      }
+
+      span {
+        white-space: nowrap;
+        transition: opacity vars.$transition-base, width vars.$transition-base;
+        margin-left: $label-gap;
+      }
+
+      &:hover {
+        background: var(--bg-primary);
+        color: var(--text-sidebar-nav-hover);
+      }
+
+      &.active {
+        background: var(--logo-gradient);
+        color: var(--white);
+      }
+    }
+  }
+
+  .sidebar-footer {
+    margin-top: auto;
+    padding-top: 16px;
+    border-top: vars.$border-default;
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      transition: all vars.$transition-slow;
+    }
+
+    .user-avatar {
+      width: $rail-size;
+      height: $rail-size;
+      border-radius: vars.$radius-circle;
+      background: var(--logo-gradient);
+      color: var(--white);
+      font-weight: 700;
+      font-size: 16px;
+      @include mixins.flex-center;
+      flex-shrink: 0;
+    }
+
+    .user-info {
+      display: flex;
+      flex-direction: column;
+      white-space: nowrap;
+      transition: all vars.$transition-slow;
+      margin-left: $label-gap;
+    }
+
+    .user-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .user-email {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+  }
+
   &.collapsed {
     width: 80px;
     padding: 24px 18px 12px 18px;
@@ -104,133 +232,5 @@ $label-gap: 12px;
       height: $rail-size;
       padding: 0;
     }
-  }
-}
-
-.sidebar-wrapper {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  overflow: visible;
-}
-
-.sidebar-top {
-  display: flex;
-  flex-direction: column;
-  gap: 36px;
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  transition: all vars.$transition-slow;
-
-  .logo-box {
-    width: $rail-size;
-    height: $rail-size;
-    border-radius: vars.$radius-2xl;
-    background: var(--logo-gradient);
-    @include mixins.flex-center;
-    color: var(--white);
-    font-size: 18px;
-    flex-shrink: 0;
-  }
-
-  span {
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--text-primary);
-    white-space: nowrap;
-    transition: all vars.$transition-slow;
-    margin-left: $label-gap;
-  }
-}
-
-nav {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-
-  a {
-    color: var(--text-sidebar-nav);
-    text-decoration: none;
-    padding: 12px 16px;
-    border-radius: vars.$radius-2xl;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    transition: all vars.$transition-base;
-
-    .nav-icon {
-      font-size: 18px;
-      width: 20px;
-      text-align: center;
-      color: inherit;
-      transition: color vars.$transition-base;
-      flex-shrink: 0;
-    }
-
-    span {
-      white-space: nowrap;
-      transition: opacity vars.$transition-base, width vars.$transition-base;
-      margin-left: $label-gap;
-    }
-
-    &:hover {
-      background: var(--bg-primary);
-      color: var(--text-sidebar-nav-hover);
-    }
-
-    &.active {
-      background: var(--logo-gradient);
-      color: var(--white);
-    }
-  }
-}
-
-.sidebar-footer {
-  margin-top: auto;
-  padding-top: 16px;
-  border-top: 1px solid var(--border-color);
-
-  .user-profile {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    transition: all vars.$transition-slow;
-  }
-
-  .user-avatar {
-    width: $rail-size;
-    height: $rail-size;
-    border-radius: vars.$radius-circle;
-    background: var(--logo-gradient);
-    color: var(--white);
-    font-weight: 700;
-    font-size: 16px;
-    @include mixins.flex-center;
-    flex-shrink: 0;
-  }
-
-  .user-info {
-    display: flex;
-    flex-direction: column;
-    white-space: nowrap;
-    transition: all vars.$transition-slow;
-    margin-left: $label-gap;
-  }
-
-  .user-name {
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--text-primary);
-  }
-
-  .user-email {
-    font-size: 12px;
-    color: var(--text-secondary);
   }
 }

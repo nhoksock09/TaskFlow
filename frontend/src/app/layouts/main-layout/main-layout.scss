@@ -97,6 +97,7 @@
     }
 
     .p-select-label {
+      /* Reset top/bottom/left padding of PrimeNG default styling to allow vertical flex centering */
       padding: 0 8px 0 0;
       display: flex;
       align-items: center;

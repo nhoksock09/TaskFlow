@@ -8,9 +8,9 @@
       }
     </label>
   }
-  
+
   <!-- Field Container -->
-  <div 
+  <div
     [class.input-wrapper]="isWrapped()"
     [class.has-left-icon]="isWrapped() && getLeftIcon()"
     [class.input-error]="showError"
@@ -19,10 +19,10 @@
     @if (isWrapped() && getLeftIcon()) {
       <i [class]="getLeftIcon()"></i>
     }
-    
+
     <!-- Field Control -->
     <ng-container #fieldComponent></ng-container>
-    
+
     <!-- Right Password Eye Toggle -->
     @if (isWrapped() && isPassword()) {
       <p-button
@@ -34,7 +34,7 @@
         <i [class]="hidePassword ? 'ph-light ph-eye-slash' : 'ph-light ph-eye'"></i>
       </p-button>
     }
-    
+
     <!-- Right Datepicker Calendar Icon -->
     @if (isWrapped() && isDatepicker()) {
       <i class="pi pi-calendar datepicker-icon"></i>
@@ -43,9 +43,7 @@
 
   <!-- Password Requirements Checklist -->
   @if (props['showRequirements']) {
-    <app-password-requirements 
-      [value]="formControl.value || ''"
-    ></app-password-requirements>
+    <app-password-requirements [value]="formControl.value || ''"></app-password-requirements>
   }
 
   <!-- Error Message -->

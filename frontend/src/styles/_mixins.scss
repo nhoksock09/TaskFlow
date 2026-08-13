@@ -165,7 +165,7 @@
   }
 }
 
-@mixin focus-ring($color-rgb: var(--primary-rgb), $opacity: 0.15, $spread: 3px) {
+@mixin focus-ring($color-rgb: var(--focus-ring-color-rgb), $opacity: 0.15, $spread: 3px) {
   box-shadow: 0 0 0 $spread rgba($color-rgb, $opacity);
 }
 

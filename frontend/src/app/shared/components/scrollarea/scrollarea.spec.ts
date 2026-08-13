@@ -19,10 +19,26 @@ describe('ScrollArea Components', () => {
     expect(scrollAreaComponent).toBeTruthy();
   });
 
-  it('should allow setting style input on ScrollArea', () => {
+  it('should have null as default value for style input on ScrollArea', () => {
+    expect(scrollAreaComponent.style).toBeNull();
+  });
+
+  it('should allow setting style input as an object on ScrollArea', () => {
     scrollAreaComponent.style = { height: '200px' };
     scrollAreaFixture.detectChanges();
     expect(scrollAreaComponent.style).toEqual({ height: '200px' });
+  });
+
+  it('should allow setting style input as a string on ScrollArea', () => {
+    scrollAreaComponent.style = 'overflow: hidden;';
+    scrollAreaFixture.detectChanges();
+    expect(scrollAreaComponent.style).toBe('overflow: hidden;');
+  });
+
+  it('should allow resetting style input to null on ScrollArea', () => {
+    scrollAreaComponent.style = { height: '100px' };
+    scrollAreaComponent.style = null;
+    expect(scrollAreaComponent.style).toBeNull();
   });
 
   it('should create ScrollAreaContent component', () => {
@@ -35,9 +51,16 @@ describe('ScrollArea Components', () => {
     expect(fixture.componentInstance).toBeTruthy();
   });
 
-  it('should create ScrollAreaScrollbar component', () => {
+  it('should create ScrollAreaScrollbar with default vertical orientation', () => {
     const fixture = TestBed.createComponent(ScrollAreaScrollbar);
     expect(fixture.componentInstance).toBeTruthy();
     expect(fixture.componentInstance.orientation).toBe('vertical');
+  });
+
+  it('should allow changing ScrollAreaScrollbar orientation to horizontal', () => {
+    const fixture = TestBed.createComponent(ScrollAreaScrollbar);
+    fixture.componentInstance.orientation = 'horizontal';
+    fixture.detectChanges();
+    expect(fixture.componentInstance.orientation).toBe('horizontal');
   });
 });

@@ -1,32 +1,41 @@
 <div class="layout">
+  <app-sidebar
+    [user]="user"
+    [isCollapsed]="isSidebarCollapsed"
+    class="sidebar"
+    [class.collapsed]="isSidebarCollapsed"
+    (toggleRequest)="toggleSidebar()"
+  ></app-sidebar>
 
-  <app-sidebar [user]="user" [isCollapsed]="isSidebarCollapsed" class="sidebar" [class.collapsed]="isSidebarCollapsed" (toggleRequest)="toggleSidebar()"></app-sidebar>
-
-  <div 
-    class="sidebar-backdrop" 
-    [class.active]="!isSidebarCollapsed" 
-    (click)="closeSidebarOnMobile()">
-  </div>
+  <div
+    class="sidebar-backdrop"
+    [class.active]="!isSidebarCollapsed"
+    (click)="closeSidebarOnMobile()"
+  ></div>
 
   <div class="content">
     <header class="header">
       <div class="header-left">
-        <p-button class="mobile-menu-btn-host" styleClass="mobile-menu-btn" (click)="toggleSidebar()">
+        <p-button
+          class="mobile-menu-btn-host"
+          styleClass="mobile-menu-btn"
+          (click)="toggleSidebar()"
+        >
           <i class="pi pi-bars"></i>
         </p-button>
         <div>
-          <h2 class="greeting">{{ 'HEADER.HELLO' | translate:{ name: user?.name } }}</h2>
+          <h2 class="greeting">{{ 'HEADER.HELLO' | translate: { name: user?.name } }}</h2>
           <p class="date">{{ currentDate }}</p>
         </div>
       </div>
       <div class="header-right">
-        <p-select 
-          [(ngModel)]="currentLang" 
-          [options]="langOptions" 
-          optionLabel="label" 
+        <p-select
+          [(ngModel)]="currentLang"
+          [options]="langOptions"
+          optionLabel="label"
           optionValue="value"
-          (onChange)="onLangChange($event.value)" 
-          styleClass="lang-select" 
+          (onChange)="onLangChange($event.value)"
+          styleClass="lang-select"
           appendTo="body"
         ></p-select>
 

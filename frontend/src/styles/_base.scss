@@ -35,8 +35,9 @@ ul {
   list-style: none;
 }
 
-
-/* Task board page manages its own scrolling — lock the shell's main area */
-html body:has(.tasks-container-page) main {
-  overflow: hidden;
+@layer custom {
+  /* Task board page manages its own scrolling — lock the shell's main area */
+  html body:has(.tasks-container-page) main {
+    overflow: hidden;
+  }
 }

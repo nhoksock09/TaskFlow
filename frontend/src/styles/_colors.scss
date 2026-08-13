@@ -17,6 +17,7 @@
   --indigo-50: #eef2ff;
   --primary-rgb: 79, 70, 229;
   --indigo-500-rgb: 99, 102, 241;
+  --focus-ring-color-rgb: var(--primary-rgb);
   --cyan-500: #06b6d4;
   --logo-gradient: linear-gradient(135deg, var(--indigo-600), var(--cyan-500));
   --modal-overlay-rgb: 15, 23, 42;
@@ -105,6 +106,7 @@ html.dark {
   --bg-auth-gradient: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-sidebar) 50%, var(--bg-primary) 100%);
   --bg-stat-total: rgba(99, 102, 241, 0.15);
   --text-stat-total: #a5b4fc;
+  --focus-ring-color-rgb: var(--indigo-500-rgb);
   --bg-stat-todo: rgba(59, 130, 246, 0.15);
   --text-stat-todo: #93c5fd;
   --bg-stat-progress: rgba(245, 158, 11, 0.15);

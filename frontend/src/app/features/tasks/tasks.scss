@@ -41,56 +41,6 @@
   }
 }
 
-.form-group {
-  margin-bottom: 20px;
-}
-
-.form-actions {
-  display: flex;
-  gap: 10px;
-}
-
-.btn-primary {
-  padding: 0 20px;
-  height: 48px;
-  background: var(--indigo-600);
-  color: var(--white);
-  border: none;
-  border-radius: 12px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s;
-  display: flex;
-  align-items: center;
-  white-space: nowrap;
-  min-width: fit-content;
-
-  &:hover {
-    background: var(--indigo-700);
-  }
-}
-
-.submit-btn-modal {
-  width: auto;
-}
-
-.btn-secondary {
-  padding: 10px 18px;
-  background: var(--bg-card);
-  color: var(--text-secondary);
-  border: vars.$border-default;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s;
-
-  &:hover {
-    background: var(--bg-primary);
-  }
-}
-
 .task-list-panel-full {
   display: flex;
   flex-direction: column;
@@ -143,9 +93,6 @@
 }
 
 .search-box {
-  // Note: this component's focus ring uses --indigo-600/--primary-rgb while
-  // users.scss's otherwise-identical search box uses --primary-color/
-  // --primary-color-rgb — passed as mixin args to keep both behaviors intact.
   @include mixins.search-box(
     $focus-border-color: var(--indigo-600),
     $focus-shadow-color-rgb: var(--primary-rgb)
@@ -165,8 +112,6 @@
   display: flex;
   gap: 8px;
 }
-
-/* Custom dropdown styles removed - migrated to PrimeNG Select */
 
 .filter-btn {
   padding: 8px 16px;
@@ -234,7 +179,9 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 12px 16px;
+      padding: 0 16px;
+      height: 48px;
+      box-sizing: border-box;
       background: var(--bg-card);
       border-bottom: vars.$border-default;
 
@@ -332,7 +279,6 @@
       position: relative;
       transition: transform 0.2s, box-shadow 0.2s;
       margin-bottom: 12px;
-      /* Keep: Formly dynamic field margin spacing override */
 
       &:active {
         cursor: grabbing;
@@ -509,8 +455,6 @@
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
 
-/* Custom Modal styles removed - migrated to PrimeNG Dialog */
-
 .task-preview {
   background: var(--bg-primary);
   border-radius: 10px;
@@ -545,8 +489,6 @@
   }
 }
 
-/* Custom Modal footer removed */
-
 .btn-danger {
   padding: 10px 20px;
   background: var(--danger);
@@ -563,19 +505,11 @@
   }
 }
 
-// .required is styled globally in styles/_forms.scss with the same values —
-// the local copy was pure duplication and has been removed.
-
 .error-message {
   color: var(--danger);
   font-size: 12px;
   margin-top: 4px;
   display: block;
-}
-
-.tasks-board .task-item.task-overdue {
-  border-left-color: var(--danger);
-  background: rgba(var(--danger-rgb), 0.02);
 }
 
 .urgent-indicator {
@@ -585,7 +519,7 @@
 
 .pulsing-urgent {
   color: var(--danger);
-  animation: urgentPulse 1s infinite alternate ease-in-out; // keyframe defined once in styles/_animations.scss
+  animation: urgentPulse 1s infinite alternate ease-in-out;
 }
 
 /* Filter Dropdowns Horizontally Aligned */
@@ -605,16 +539,16 @@
 /* Custom Dialog/Modal Form Controls Width, Spacing and Error Layout Override */
 html body .modal-card {
   formly-form {
-    display: flex; /* Keep: Library-level structural layout override */
-    flex-direction: column; /* Keep: Library-level structural layout override */
-    gap: 0; /* let formly-field margin control vertical spacing */
-    width: 100%; /* Keep: Library-level structural layout override */
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    width: 100%;
   }
 
   formly-field {
-    display: block; /* Keep: Library-level structural layout override */
-    width: 100%; /* Keep: Library-level structural layout override */
-    margin-bottom: 24px; /* vertical spacing between fields, matched to Change Password form */
+    display: block;
+    width: 100%;
+    margin-bottom: 24px;
 
     &:last-child {
       margin-bottom: 0;
@@ -626,8 +560,8 @@ html body .modal-card {
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    gap: 8px; /* comfortable spacing between label and input control */
-    margin-bottom: 0; /* reset margin-bottom so formly-field controls spacing */
+    gap: 8px;
+    margin-bottom: 0;
 
     .input-wrapper {
       width: 100%;
@@ -637,9 +571,9 @@ html body .modal-card {
 
       input,
       .p-inputtext {
-        width: 100%; /* Keep: PrimeNG component width override */
-        flex: 1; /* Keep: PrimeNG component width override */
-        box-sizing: border-box; /* Keep: PrimeNG component width override */
+        width: 100%;
+        flex: 1;
+        box-sizing: border-box;
       }
     }
 
@@ -648,7 +582,7 @@ html body .modal-card {
       width: 100%;
       text-align: left;
       margin-top: 4px;
-      margin-bottom: 8px; /* space out error message from the next field */
+      margin-bottom: 8px;
 
       .error-msg {
         display: block;

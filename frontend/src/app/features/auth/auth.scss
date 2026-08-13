@@ -9,9 +9,15 @@
     display: flex;
     background: var(--bg-auth-gradient);
     overflow: hidden;
+
+    @media (max-height: 700px) {
+        height: auto;
+        min-height: 100vh;
+        overflow: auto;
+    }
 }
 
-/* ================= Left Panel (Hero) ================= */
+/* ================= Left Panel ================= */
 .left-panel {
     flex: 1;
     padding: 40px 60px;
@@ -22,64 +28,67 @@
     color: var(--text-primary);
     position: relative;
     overflow: hidden;
-}
 
-.logo {
-    font-size: 26px;
-    font-weight: 700;
-    margin-bottom: 24px;
-    color: var(--text-primary);
-}
-
-.left-panel h1 {
-    font-size: 38px;
-    font-weight: 800;
-    line-height: 1.25;
-    margin-bottom: 16px;
-    color: var(--text-primary);
-}
-
-.left-panel p {
-    font-size: 16px;
-    line-height: 1.6;
-    max-width: 480px;
-    color: var(--text-muted);
-}
-
-/* ================= Feature List ================= */
-.feature-list {
-    margin-top: 30px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-}
-
-.feature-item {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-}
-
-/* Indigo badge with white checkmark */
-.feature-item span {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    background: var(--indigo-500);
-    color: var(--white);
-    @include mixins.flex-center;
-    font-size: 14px;
-    flex-shrink: 0;
-
-    i {
-        font-size: 12px;
+    .logo {
+        font-size: 26px;
+        font-weight: 700;
+        margin-bottom: 24px;
+        color: var(--text-primary);
     }
-}
 
-.feature-item p {
-    margin: 0;
-    font-size: 15px;
-    color: var(--text-muted);
+    h1 {
+        font-size: 38px;
+        font-weight: 800;
+        line-height: 1.25;
+        margin-bottom: 16px;
+        color: var(--text-primary);
+    }
+
+    p {
+        font-size: 16px;
+        line-height: 1.6;
+        max-width: 480px;
+        color: var(--text-muted);
+    }
+
+    /* ================= Feature List ================= */
+    .feature-list {
+        margin-top: 30px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .feature-item {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+
+        span {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--indigo-500);
+            color: var(--white);
+            @include mixins.flex-center;
+            font-size: 14px;
+            flex-shrink: 0;
+
+            i {
+                font-size: 12px;
+            }
+        }
+
+        p {
+            margin: 0;
+            font-size: 15px;
+            color: var(--text-muted);
+        }
+    }
+
+    @media (max-width: 1023px) {
+        display: none;
+    }
 }
 
 /* ================= Right Panel ================= */
@@ -88,6 +97,11 @@
     @include mixins.flex-center;
     padding: 20px;
     background: transparent;
+
+    @media (max-width: 1023px) {
+        width: 100%;
+        padding: 20px 16px;
+    }
 }
 
 /* ================= Auth Card ================= */
@@ -98,52 +112,26 @@
     padding: 20px 24px;
     border: vars.$border-default;
     box-shadow: var(--shadow-card);
-}
 
-.auth-card h2 {
-    font-size: 26px;
-    margin-bottom: 4px;
-    color: var(--text-primary);
-    font-weight: 700;
-}
-
-.auth-card p {
-    color: var(--text-muted);
-    font-size: 14px;
-}
-
-/* ================= Responsive Layout ================= */
-@media(max-height: 700px) {
-    .auth-page {
-        height: auto;
-        min-height: 100vh;
-        overflow: auto;
-    }
-}
-
-@media(max-width: 1023px) {
-    .left-panel {
-        display: none;
+    h2 {
+        font-size: 26px;
+        margin-bottom: 4px;
+        color: var(--text-primary);
+        font-weight: 700;
     }
 
-    .right-panel {
-        width: 100%;
-        padding: 20px 16px;
+    p {
+        color: var(--text-muted);
+        font-size: 14px;
     }
-}
 
-/* Tablet Layout */
-@media(max-width: 1023px) and (min-width: 600px) {
-    .auth-card {
+    @media (max-width: 1023px) and (min-width: 600px) {
         width: 90%;
         max-width: 450px;
         padding: 20px 20px;
     }
-}
 
-/* Mobile Layout */
-@media(max-width: 599px) {
-    .auth-card {
+    @media (max-width: 599px) {
         width: 100%;
         max-width: 100%;
         padding: 20px 16px;
@@ -158,67 +146,64 @@
     background: var(--bg-primary);
     border-radius: 10px;
     padding: 4px;
-    gap: 6px; /* Spacing between the Login/Register buttons */
+    gap: 6px;
+
+    p-button {
+        flex: 1;
+        display: flex;
+    }
 }
 
-/* Style the custom p-button elements (direct children of auth-tabs) to flex equally */
-.auth-tabs p-button {
-    flex: 1;
-    display: flex;
-}
-
+/* ================= PrimeNG Overrides ================= */
 :host ::ng-deep {
-  .auth-tabs .p-button {
-    width: 100%;
-    border: none;
-    background: transparent;
-    padding: 8px 12px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--text-muted);
-    box-shadow: none;
-    justify-content: center;
-    display: flex;
-    transition: .3s;
-    
-    .p-button-label {
-      font-weight: 600;
-    }
-    
-    &.active {
-      background: var(--bg-card);
-      color: var(--indigo-600);
-      box-shadow: 0 2px 8px rgba(var(--black-rgb), 0.1);
-    }
-  }
+    /* Share layout attributes for auth buttons */
+    %auth-btn-base {
+        width: 100%;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        box-shadow: none;
 
-  .submit-btn.p-button {
-    width: 100%;
-    height: 44px;
-    border: none;
-    border-radius: 10px;
-    background: var(--indigo-600);
-    color: var(--white);
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    margin-top: 16px;
-    justify-content: center;
-    display: flex;
-    box-shadow: none;
-    transition: background .25s, transform .2s, box-shadow .2s;
-    
-    .p-button-label {
-      font-weight: 600;
-      font-size: 15px;
+        .p-button-label {
+            font-weight: 600;
+        }
     }
 
-    &:hover {
-      background: var(--indigo-700);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(var(--primary-rgb), 0.35);
+    .auth-tabs .p-button {
+        @extend %auth-btn-base;
+        background: transparent;
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-size: 14px;
+        color: var(--text-muted);
+        transition: .3s;
+
+        &.active {
+            background: var(--bg-card);
+            color: var(--indigo-600);
+            box-shadow: 0 2px 8px rgba(var(--black-rgb), 0.1);
+        }
     }
-  }
+
+    .submit-btn.p-button {
+        @extend %auth-btn-base;
+        height: 44px;
+        border-radius: 10px;
+        background: var(--indigo-600);
+        color: var(--white);
+        font-size: 15px;
+        margin-top: 16px;
+        transition: background .25s, transform .2s, box-shadow .2s;
+
+        .p-button-label {
+            font-size: 15px;
+        }
+
+        &:hover {
+            background: var(--indigo-700);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(var(--primary-rgb), 0.35);
+        }
+    }
 }

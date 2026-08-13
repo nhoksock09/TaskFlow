@@ -1,7 +1,6 @@
 import { Component, inject, OnInit, DestroyRef, ChangeDetectorRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { User, Task, TaskStatus, TaskPriority, TaskFilterStatus, SelectOption, TaskFormModel } from '@core/models';
-import { UserService } from '../../core/services/user.service';
+import { Task, TaskStatus, TaskPriority, TaskFilterStatus, SelectOption, TaskFormModel } from '@core/models';
 import { TaskService } from '../../core/services/task.service';
 import { FormGroup, ReactiveFormsModule, FormsModule, AbstractControl } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -58,7 +57,6 @@ export type TaskUrgencyFilter = TaskFilterStatus;
   styleUrl: './tasks.scss'
 })
 export class Tasks implements OnInit {
-  private userService = inject(UserService);
   private taskService = inject(TaskService);
   private toastService = inject(ToastService);
   private destroyRef = inject(DestroyRef);
@@ -69,7 +67,6 @@ export class Tasks implements OnInit {
   readonly TASK_PRIORITY_MAP = TASK_PRIORITY_MAP;
   readonly TaskStatus = TaskStatus;
 
-  user: User | null = null;
   priorityOptions: SelectOption<TaskPriority>[] = [
     { label: 'TASKS.FILTERS.HIGH', value: TaskPriority.HIGH },
     { label: 'TASKS.FILTERS.MEDIUM', value: TaskPriority.MEDIUM },
@@ -401,19 +398,7 @@ export class Tasks implements OnInit {
       this.translateFilters();
     });
 
-    this.loadUserProfile();
     this.loadTasks();
-  }
-
-  loadUserProfile() {
-    this.userService.getProfile()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (user) => {
-          this.user = user;
-        },
-        error: () => this.toastService.error('SETTINGS.TOAST.LOAD_FAILED')
-      });
   }
 
   loadTasks() {
@@ -656,31 +641,6 @@ export class Tasks implements OnInit {
     this.showDeleteModal = false;
   }
 
-  completeTask(task: Task) {
-    let nextStatus: TaskStatus;
-    if (task.status === TaskStatus.TODO) {
-      nextStatus = TaskStatus.IN_PROGRESS;
-    } else if (task.status === TaskStatus.IN_PROGRESS) {
-      nextStatus = TaskStatus.COMPLETED;
-    } else {
-      nextStatus = TaskStatus.IN_PROGRESS;
-    }
-    this.taskService.updateTask(task._id!, { status: nextStatus })
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (response) => {
-          if (response.success) {
-            let msgKey = 'TASKS.TOAST.IN_PROGRESS';
-            if (nextStatus === TaskStatus.COMPLETED) msgKey = 'TASKS.TOAST.COMPLETED';
-            if (nextStatus === TaskStatus.IN_PROGRESS && task.status === TaskStatus.COMPLETED) msgKey = 'TASKS.TOAST.RESTARTED';
-            this.toastService.success(msgKey);
-            this.loadTasks();
-          }
-        },
-        error: () => this.toastService.error('TASKS.TOAST.MOVE_FAILED')
-      });
-  }
-
   resetForm() {
     this.editingTaskId = null;
     this.taskModel = { title: '', description: '', priority: TaskPriority.MEDIUM, dueDate: '', status: TaskStatus.TODO };
@@ -693,11 +653,17 @@ export class Tasks implements OnInit {
     if (!dateString) return '';
     const date = new Date(dateString);
     if (isNaN(date.getTime())) return '';
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
+    
     const hours = String(date.getHours()).padStart(2, '0');
     const minutes = String(date.getMinutes()).padStart(2, '0');
-    return `${hours}:${minutes} ${day}/${month}/${year}`;
+    
+    const locale = this.translateService.currentLang() === 'vi' ? 'vi-VN' : 'en-US';
+    const formattedDate = date.toLocaleDateString(locale, {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
+    
+    return `${hours}:${minutes} ${formattedDate}`;
   }
 }

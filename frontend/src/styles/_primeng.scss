@@ -1,21 +1,6 @@
 @use 'variables' as vars;
 @use 'mixins';
 
-/* PrimeNG Paginator Custom Overrides */
-.p-paginator .p-paginator-page.p-paginator-page-selected,
-.p-paginator .p-paginator-page.p-highlight,
-.p-paginator-page-selected,
-.p-paginator-page.p-highlight,
-.p-paginator-page.p-paginator-page-selected {
-  background-color: var(--paginator-highlight-bg);
-  color: var(--paginator-highlight-text);
-  border-radius: vars.$radius-circle;
-}
-
-.p-paginator .p-paginator-page:not(.p-paginator-page-selected):not(.p-highlight):hover {
-  background-color: rgba(var(--primary-rgb), 0.08);
-}
-
 /* Global Select Override — targeting .p-select.p-component naturally wins specificity */
 p-select.p-component,
 .p-select.p-component {
@@ -28,11 +13,6 @@ p-select.p-component,
   align-items: center;
   transition: vars.$transition-input;
   box-shadow: none;
-
-  html.dark-theme &,
-  html.dark & {
-    background: var(--bg-input);
-  }
 
   .p-select-label {
     padding: 0 14px;
@@ -104,15 +84,17 @@ p-select.p-component,
     @include mixins.paginator-item-base;
     margin: 0 2px;
 
-    &:hover:not(.p-highlight) {
-      background: rgba(var(--white-rgb), 0.05);
+    &:hover:not(.p-highlight):not(.p-paginator-page-selected) {
+      background: rgba(var(--primary-rgb), 0.08);
       color: var(--text-primary);
     }
 
-    &.p-highlight {
+    &.p-highlight,
+    &.p-paginator-page-selected {
       background: rgba(var(--completed-color-rgb), 0.16);
       color: var(--emerald-400);
       border: 1.5px solid rgba(var(--completed-color-rgb), 0.35);
+      border-radius: vars.$radius-circle;
       font-weight: 700;
     }
   }
@@ -154,6 +136,7 @@ p-select.p-component,
   }
 
   .p-select-label {
+    /* Reset all sides to 0 to override PrimeNG defaults and let flexbox center vertically, keeping only left padding */
     padding: 0 0 0 16px;
     height: 100%;
     display: flex;
@@ -176,9 +159,10 @@ p-select.p-component,
 }
 
 /* =========================================
-   Global PrimeNG Select Options Panel Override
+   Global PrimeNG Select & Toast Overrides
    ========================================= */
 html body {
+  /* Global PrimeNG Select Options Panel Override */
   .p-select-overlay {
     background: var(--bg-card);
     border: vars.$border-default;
@@ -217,12 +201,8 @@ html body {
       font-weight: 600;
     }
   }
-}
 
-html body {
-  /* =========================================
-     Global PrimeNG Toast Notification Custom Styling
-     ========================================= */
+  /* Global PrimeNG Toast Notification Custom Styling */
   .p-toast {
     top: 20px;
     right: 20px;

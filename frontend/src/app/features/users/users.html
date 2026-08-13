@@ -15,7 +15,7 @@
             (keyup.enter)="onSearch()"
             [placeholder]="'USERS.SEARCH_PLACEHOLDER' | translate"
             class="search-input"
-          >
+          />
           <p-button
             styleClass="search-icon-btn"
             [text]="true"
@@ -50,8 +50,8 @@
       <ng-template pTemplate="header" let-columns>
         <tr>
           @for (col of columns; track col.field) {
-            <th 
-              [ngClass]="col.class" 
+            <th
+              [ngClass]="col.class"
               (click)="col.sortable ? toggleColumnSort(col.field) : null"
               [style.cursor]="col.sortable ? 'pointer' : 'default'"
             >
@@ -90,10 +90,10 @@
                   {{ user.email }}
                 }
                 @case ('role') {
-                  <p-tag 
+                  <p-tag
                     class="role-tag"
-                    [severity]="user.role === 'admin' ? 'danger' : 'info'" 
-                    [value]="(USER_ROLE_MAP[user.role] || 'COMMON.ROLE_USER') | translate"
+                    [severity]="user.role === 'admin' ? 'danger' : 'info'"
+                    [value]="USER_ROLE_MAP[user.role] || 'COMMON.ROLE_USER' | translate"
                   ></p-tag>
                 }
                 @case ('dateOfBirth') {
@@ -104,23 +104,33 @@
                 }
                 @case ('actions') {
                   <div class="actions-wrapper">
-                    <p-button 
-                      [text]="true" 
-                      [rounded]="true" 
-                      icon="pi pi-shield" 
-                      severity="secondary" 
-                      [disabled]="user.role === 'admin'" 
-                      (click)="openPromoteModal(user)" 
-                      [title]="(user.role === 'admin' ? 'USERS.DEMOTE_TOOLTIP_ERROR' : 'USERS.PROMOTE_TOOLTIP') | translate"
+                    <p-button
+                      [text]="true"
+                      [rounded]="true"
+                      icon="pi pi-shield"
+                      severity="secondary"
+                      [disabled]="user.role === 'admin'"
+                      (click)="openPromoteModal(user)"
+                      [title]="
+                        (user.role === 'admin'
+                          ? 'USERS.DEMOTE_TOOLTIP_ERROR'
+                          : 'USERS.PROMOTE_TOOLTIP'
+                        ) | translate
+                      "
                     ></p-button>
-                    <p-button 
-                      [text]="true" 
-                      [rounded]="true" 
-                      icon="pi pi-trash" 
-                      severity="danger" 
-                      [disabled]="user.role === 'admin'" 
-                      (click)="openDeleteModal(user)" 
-                      [title]="(user.role === 'admin' ? 'USERS.DELETE_TOOLTIP_ERROR' : 'USERS.DELETE_TOOLTIP') | translate"
+                    <p-button
+                      [text]="true"
+                      [rounded]="true"
+                      icon="pi pi-trash"
+                      severity="danger"
+                      [disabled]="user.role === 'admin'"
+                      (click)="openDeleteModal(user)"
+                      [title]="
+                        (user.role === 'admin'
+                          ? 'USERS.DELETE_TOOLTIP_ERROR'
+                          : 'USERS.DELETE_TOOLTIP'
+                        ) | translate
+                      "
                     ></p-button>
                   </div>
                 }
@@ -141,7 +151,10 @@
 
     @if (totalUsers > 0) {
       <div class="users-footer">
-        <span class="account-total-info" [innerHTML]="'USERS.SHOWING_INFO' | translate:{ count: users.length, total: totalUsers }">
+        <span
+          class="account-total-info"
+          [innerHTML]="'USERS.SHOWING_INFO' | translate: { count: users.length, total: totalUsers }"
+        >
         </span>
         <div class="paginator-right-group">
           <p-paginator
@@ -161,7 +174,7 @@
       </div>
     }
   </div>
-  
+
   <!-- Confirm Admin Promotion Dialog -->
   @if (showPromoteModal) {
     <div class="modal-overlay" (click)="closePromoteModal()">
@@ -170,11 +183,26 @@
           <h2>{{ 'USERS.PROMOTE_TITLE' | translate }}</h2>
         </div>
         <div class="modal-body">
-          <p [innerHTML]="'USERS.PROMOTE_MSG' | translate:{ name: userToPromote?.name, email: userToPromote?.email }"></p>
+          <p
+            [innerHTML]="
+              'USERS.PROMOTE_MSG'
+                | translate: { name: userToPromote?.name, email: userToPromote?.email }
+            "
+          ></p>
         </div>
         <div class="modal-actions">
-          <p-button type="button" styleClass="btn-cancel" (click)="closePromoteModal()" [label]="'COMMON.BTN.CANCEL' | translate"></p-button>
-          <p-button type="button" styleClass="btn-confirm" (click)="confirmPromote()" [label]="'USERS.PROMOTE_CONFIRM' | translate"></p-button>
+          <p-button
+            type="button"
+            styleClass="btn-cancel"
+            (click)="closePromoteModal()"
+            [label]="'COMMON.BTN.CANCEL' | translate"
+          ></p-button>
+          <p-button
+            type="button"
+            styleClass="btn-confirm"
+            (click)="confirmPromote()"
+            [label]="'USERS.PROMOTE_CONFIRM' | translate"
+          ></p-button>
         </div>
       </div>
     </div>
@@ -188,11 +216,26 @@
           <h2>{{ 'USERS.DELETE_TITLE' | translate }}</h2>
         </div>
         <div class="modal-body">
-          <p [innerHTML]="'USERS.DELETE_MSG' | translate:{ name: userToDelete?.name, email: userToDelete?.email }"></p>
+          <p
+            [innerHTML]="
+              'USERS.DELETE_MSG'
+                | translate: { name: userToDelete?.name, email: userToDelete?.email }
+            "
+          ></p>
         </div>
         <div class="modal-actions">
-          <p-button type="button" styleClass="btn-cancel" (click)="closeDeleteModal()" [label]="'COMMON.BTN.CANCEL' | translate"></p-button>
-          <p-button type="button" styleClass="btn-confirm btn-danger" (click)="confirmDelete()" [label]="'USERS.DELETE_CONFIRM' | translate"></p-button>
+          <p-button
+            type="button"
+            styleClass="btn-cancel"
+            (click)="closeDeleteModal()"
+            [label]="'COMMON.BTN.CANCEL' | translate"
+          ></p-button>
+          <p-button
+            type="button"
+            styleClass="btn-confirm btn-danger"
+            (click)="confirmDelete()"
+            [label]="'USERS.DELETE_CONFIRM' | translate"
+          ></p-button>
         </div>
       </div>
     </div>

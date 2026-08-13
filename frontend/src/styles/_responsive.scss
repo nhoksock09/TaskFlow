@@ -194,23 +194,9 @@
               max-width: 100%;
               width: 100%;
             }
-
-            .user-table-container {
-              overflow-x: auto;
-              max-width: 100%;
-            }
           }
         }
       }
-    }
-  }
-}
-
-/* ── Hide Mobile Backdrop on Desktop ───────────────────────────────── */
-@media (min-width: 768px) {
-  html body {
-    .sidebar-backdrop {
-      display: none;
     }
   }
 }
