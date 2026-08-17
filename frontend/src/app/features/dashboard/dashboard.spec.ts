@@ -4,9 +4,9 @@ import { TaskService } from '../../core/services/task.service';
 import { ToastService } from '../../core/services/toast.service';
 import { AuthService } from '../../core/services/auth.service';
 import { Router } from '@angular/router';
-import { of, throwError } from 'rxjs';
+import { of, throwError, Subject } from 'rxjs';
 import { Task, TaskStatus, TaskPriority } from '@core/models';
-import { TranslateService, provideTranslateService } from '@ngx-translate/core';
+import { TranslateService, provideTranslateService, LangChangeEvent } from '@ngx-translate/core';
 import { provideRouter } from '@angular/router';
 
 describe('Dashboard', () => {
@@ -108,17 +108,21 @@ describe('Dashboard', () => {
       'DASHBOARD.FILTERS.LAST_MONTH': 'Tháng trước',
       'DASHBOARD.FILTERS.NEXT_MONTH': 'Tháng sau'
     }));
+
+    fixture.detectChanges();
   });
 
-  it('should create and load tasks on init', () => {
-    fixture.detectChanges();
-    expect(component).toBeTruthy();
+  afterEach(() => {
+    fixture.destroy();
+    TestBed.resetTestingModule();
+  });
+
+  it('should load tasks on init', () => {
     expect(mockTaskService.getTasks).toHaveBeenCalled();
     expect(component.tasks).toEqual(mockTasks);
   });
 
   it('should update translations on language change event', () => {
-    fixture.detectChanges();
     (translateService.get as jasmine.Spy).and.returnValue(of({
       'DASHBOARD.FILTERS.TODAY': 'Today',
       'DASHBOARD.FILTERS.THIS_MONTH': 'This Month',
@@ -126,27 +130,31 @@ describe('Dashboard', () => {
       'DASHBOARD.FILTERS.NEXT_MONTH': 'Next Month'
     }));
 
-    (translateService.onLangChange as any).next({ lang: 'en', translations: {} });
+    (translateService.onLangChange as Subject<LangChangeEvent>).next({ lang: 'en', translations: {} });
     expect(component.timeFilterOptions[0].label).toBe('Today');
   });
 
   describe('loadTasks', () => {
     it('should show toast error if task loading fails', () => {
       mockTaskService.getTasks.and.returnValue(throwError(() => new Error('API Error')));
-      fixture.detectChanges();
+      component.loadTasks();
       expect(mockToastService.error).toHaveBeenCalledWith('TASKS.TOAST.LOAD_FAILED');
     });
   });
 
   describe('checkLoginAlerts', () => {
     it('should not show alert if hasShownLoginAlert returns true', () => {
+      component.showLoginAlert = false;
       mockAuthService.hasShownLoginAlert.and.returnValue(true);
-      fixture.detectChanges();
+      component.checkLoginAlerts(mockTasks);
       expect(component.showLoginAlert).toBe(false);
     });
 
     it('should show login alert and filter overdue/upcoming tasks correctly', () => {
-      fixture.detectChanges();
+      component.showLoginAlert = false;
+      component.alertOverdueTasks = [];
+      component.alertUpcomingTasks = [];
+      component.checkLoginAlerts(mockTasks);
       expect(component.showLoginAlert).toBe(true);
       expect(component.alertOverdueTasks.length).toBe(1);
       expect(component.alertOverdueTasks[0]._id).toBe('task4');
@@ -157,10 +165,6 @@ describe('Dashboard', () => {
   });
 
   describe('Stats and Getters', () => {
-    beforeEach(() => {
-      fixture.detectChanges();
-    });
-
     it('should calculate correct summary stats', () => {
       expect(component.totalTasks).toBe(4);
       expect(component.todoTasks).toBe(1);
@@ -190,7 +194,7 @@ describe('Dashboard', () => {
       component.timeFilter = 'next-month';
       expect(component.filteredChartTasks.length).toBe(0);
 
-      component.timeFilter = 'invalid' as any;
+      component.timeFilter = 'invalid' as unknown as 'today';
       expect(component.filteredChartTasks.length).toBe(4);
     });
 
@@ -244,10 +248,6 @@ describe('Dashboard', () => {
   });
 
   describe('UI Event Handlers', () => {
-    beforeEach(() => {
-      fixture.detectChanges();
-    });
-
     it('should close login alert modal', () => {
       component.showLoginAlert = true;
       component.closeLoginAlert();
@@ -262,7 +262,6 @@ describe('Dashboard', () => {
 
   describe('Helper Functions', () => {
     it('should identify urgent, overdue, and due soon tasks', () => {
-      fixture.detectChanges();
       const taskTodoToday = mockTasks[0];
       const taskInProgressTomorrow = mockTasks[1];
       const taskCompleted = mockTasks[2];
@@ -282,11 +281,9 @@ describe('Dashboard', () => {
     });
 
     it('should identify tasks due this week', () => {
-      fixture.detectChanges();
-      const now = new Date();
-      const currentDay = now.getDay();
-      const startOfWeek = new Date(now);
-      const diff = now.getDate() - currentDay + (currentDay === 0 ? -6 : 1);
+      const startOfWeek = new Date();
+      const currentDay = startOfWeek.getDay();
+      const diff = startOfWeek.getDate() - currentDay + (currentDay === 0 ? -6 : 1);
       startOfWeek.setDate(diff);
 
       const midWeekDate = new Date(startOfWeek);
@@ -319,8 +316,8 @@ describe('Dashboard', () => {
       };
 
       expect(component.isUrgent(urgentTask)).toBe(true);
-      expect(component.isUrgent({ status: TaskStatus.COMPLETED, dueDate: todayStr } as any)).toBe(false);
-      expect(component.isUrgent({ status: TaskStatus.TODO, dueDate: '' } as any)).toBe(false);
+      expect(component.isUrgent({ status: TaskStatus.COMPLETED, dueDate: todayStr } as Task)).toBe(false);
+      expect(component.isUrgent({ status: TaskStatus.TODO, dueDate: '' } as Task)).toBe(false);
     });
 
     it('should sort groupedUpcomingTasks by priority first, then due date chronological second', () => {
@@ -361,7 +358,6 @@ describe('Dashboard', () => {
     });
 
     it('should format date to HH:mm DD/MM/YYYY format', () => {
-      fixture.detectChanges();
       const testDate = new Date(2026, 7, 11, 10, 15, 0);
       const formatted = component.formatDate(testDate.toString());
 
@@ -369,21 +365,21 @@ describe('Dashboard', () => {
       expect(formatted).toContain('11/08/2026');
 
       expect(component.formatDate('')).toBe('');
-      expect(component.formatDate('invalid')).toBe('');
+expect(component.formatDate('invalid')).toBe('');
     });
   });
 
   describe('Edge Cases, Branch Coverage, and Boundaries', () => {
-    beforeEach(() => {
-      fixture.detectChanges();
-    });
-
-    it('should handle loadTasks when response.success is false or data is not an array', () => {
-      mockTaskService.getTasks.and.returnValue(of({ success: false, data: null as any }));
+    it('should handle loadTasks when response.success is false', () => {
+      component.tasks = [...mockTasks];
+      mockTaskService.getTasks.and.returnValue(of({ success: false, data: null as unknown as Task[] }));
       component.loadTasks();
       expect(component.tasks).toEqual(mockTasks);
+    });
 
-      mockTaskService.getTasks.and.returnValue(of({ success: true, data: 'not-an-array' as any }));
+    it('should handle loadTasks when response data is not an array', () => {
+      component.tasks = [...mockTasks];
+      mockTaskService.getTasks.and.returnValue(of({ success: true, data: 'not-an-array' as unknown as Task[] }));
       component.loadTasks();
       expect(component.tasks).toEqual(mockTasks);
     });
@@ -419,10 +415,9 @@ describe('Dashboard', () => {
     });
 
     it('should check isDueThisWeek boundary conditions', () => {
-      const now = new Date();
-      const currentDay = now.getDay();
-      const startOfWeek = new Date(now);
-      const diff = now.getDate() - currentDay + (currentDay === 0 ? -6 : 1);
+      const startOfWeek = new Date();
+      const currentDay = startOfWeek.getDay();
+      const diff = startOfWeek.getDate() - currentDay + (currentDay === 0 ? -6 : 1);
       startOfWeek.setDate(diff);
 
       const beforeWeek = new Date(startOfWeek);
@@ -512,13 +507,18 @@ describe('Dashboard', () => {
       expect(groups.length).toBe(0);
     });
 
-    it('should fall back to 0 weight for undefined priorities in sorting', () => {
+    it('should fall back to 0 weight for undefined priorities in groupedUpcomingTasks sorting', () => {
       const taskA = { _id: 'a', status: TaskStatus.TODO, dueDate: new Date().toISOString() } as Task; // undefined priority
-      const taskB = { _id: 'b', status: TaskStatus.TODO, dueDate: new Date().toISOString(), priority: 'custom' as any } as Task;
+      const taskB = { _id: 'b', status: TaskStatus.TODO, dueDate: new Date().toISOString(), priority: 'custom' as TaskPriority } as Task;
       component.tasks = [taskA, taskB];
       const groups = component.groupedUpcomingTasks;
       expect(groups.length).toBeDefined();
+    });
 
+    it('should fall back to 0 weight for undefined priorities in upcomingTasks sorting', () => {
+      const taskA = { _id: 'a', status: TaskStatus.TODO, dueDate: new Date().toISOString() } as Task; // undefined priority
+      const taskB = { _id: 'b', status: TaskStatus.TODO, dueDate: new Date().toISOString(), priority: 'custom' as TaskPriority } as Task;
+      component.tasks = [taskA, taskB];
       const upcoming = component.upcomingTasks;
       expect(upcoming.length).toBe(2);
     });
@@ -533,8 +533,8 @@ describe('Dashboard', () => {
     });
 
     it('should check isDueSoon for completed tasks or tasks without dueDate', () => {
-      expect(component.isDueSoon({ status: TaskStatus.COMPLETED, dueDate: tomorrowStr } as any)).toBe(false);
-      expect(component.isDueSoon({ status: TaskStatus.TODO, dueDate: '' } as any)).toBe(false);
+      expect(component.isDueSoon({ status: TaskStatus.COMPLETED, dueDate: tomorrowStr } as Task)).toBe(false);
+      expect(component.isDueSoon({ status: TaskStatus.TODO, dueDate: '' } as Task)).toBe(false);
     });
 
     it('should check isDueThisWeek on Sunday', () => {

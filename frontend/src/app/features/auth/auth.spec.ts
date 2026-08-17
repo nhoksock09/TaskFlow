@@ -1,13 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Auth } from './auth';
 import { FormlyModule } from '@ngx-formly/core';
+import { FormControl } from '@angular/forms';
 import { FormFieldWrapperComponent } from '../../shared/formly/form-field-wrapper/form-field-wrapper.component';
 import { FormlyFieldDatePicker } from '../../shared/formly/datepicker/datepicker.type';
 import { AuthService } from '../../core/services/auth.service';
 import { ToastService } from '../../core/services/toast.service';
 import { Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
-import { provideTranslateService } from '@ngx-translate/core';
+import { TranslateService, provideTranslateService } from '@ngx-translate/core';
 import { provideRouter } from '@angular/router';
 
 describe('Auth', () => {
@@ -62,65 +63,66 @@ describe('Auth', () => {
   });
 
   afterEach(() => {
+    fixture.destroy();
+    TestBed.resetTestingModule();
     document.documentElement.classList.remove('dark', 'dark-theme');
     localStorage.clear();
   });
 
-  it('should create and check if user is not logged in', () => {
-    fixture.detectChanges();
-    expect(component).toBeTruthy();
-    expect(mockAuthService.isLoggedIn).toHaveBeenCalled();
-    expect(mockRouter.navigate).not.toHaveBeenCalled();
-  });
-
-  it('should redirect to dashboard on init if already logged in', () => {
-    mockAuthService.isLoggedIn.and.returnValue(true);
-    fixture.detectChanges();
-    expect(mockRouter.navigate).toHaveBeenCalledWith(['/dashboard']);
-  });
-
-  it('should load theme config on init', () => {
-    localStorage.setItem('theme', 'dark');
-    fixture.detectChanges();
-    expect(document.documentElement.classList.contains('dark')).toBe(true);
-    expect(document.documentElement.classList.contains('dark-theme')).toBe(true);
-
-    localStorage.setItem('theme', 'light');
-    component.ngOnInit();
-    expect(document.documentElement.classList.contains('dark')).toBe(false);
-    expect(document.documentElement.classList.contains('dark-theme')).toBe(false);
-  });
-
-  it('should configure min and max DOB on init', () => {
-    fixture.detectChanges();
-    const today = new Date();
-    const minYear = today.getFullYear() - 60;
-    const maxYear = today.getFullYear() - 18;
-
-    expect(component.minDob).toContain(String(minYear));
-    expect(component.maxDob).toContain(String(maxYear));
-  });
-
-  describe('switchMode', () => {
-    it('should set isLogin signal and reset both login and register forms', () => {
+  describe('Initialization Pre-conditions', () => {
+    it('should redirect to dashboard on init if already logged in', () => {
+      mockAuthService.isLoggedIn.and.returnValue(true);
       fixture.detectChanges();
-      const loginResetSpy = spyOn(component.loginForm, 'reset');
-      const registerResetSpy = spyOn(component.registerForm, 'reset');
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/dashboard']);
+    });
 
-      component.switchMode(false);
-      expect(component.isLogin()).toBe(false);
-      expect(loginResetSpy).toHaveBeenCalled();
-      expect(registerResetSpy).toHaveBeenCalled();
-      expect(component.loginModel).toEqual({ email: '', password: '' });
-      expect(component.registerModel).toEqual({ name: '', email: '', password: '', dateOfBirth: '' });
+    it('should load theme config on init', () => {
+      localStorage.setItem('theme', 'dark');
+      fixture.detectChanges();
+      expect(document.documentElement.classList.contains('dark')).toBe(true);
+      expect(document.documentElement.classList.contains('dark-theme')).toBe(true);
+
+      localStorage.setItem('theme', 'light');
+      component.ngOnInit();
+      expect(document.documentElement.classList.contains('dark')).toBe(false);
+      expect(document.documentElement.classList.contains('dark-theme')).toBe(false);
     });
   });
 
-  describe('login', () => {
+  describe('Component Functionality', () => {
     beforeEach(() => {
       fixture.detectChanges();
     });
 
+    it('should check if user is not logged in', () => {
+      expect(mockAuthService.isLoggedIn).toHaveBeenCalled();
+      expect(mockRouter.navigate).not.toHaveBeenCalled();
+    });
+
+    it('should configure min and max DOB on init', () => {
+      const today = new Date();
+      const minYear = today.getFullYear() - 60;
+      const maxYear = today.getFullYear() - 18;
+
+      expect(component.minDob).toContain(String(minYear));
+      expect(component.maxDob).toContain(String(maxYear));
+    });
+
+    describe('switchMode', () => {
+      it('should set isLogin signal and reset both login and register forms', () => {
+        const loginResetSpy = spyOn(component.loginForm, 'reset');
+        const registerResetSpy = spyOn(component.registerForm, 'reset');
+
+        component.switchMode(false);
+        expect(component.isLogin()).toBe(false);
+        expect(loginResetSpy).toHaveBeenCalled();
+        expect(registerResetSpy).toHaveBeenCalled();
+        expect(component.loginModel).toEqual({ email: '', password: '' });
+        expect(component.registerModel).toEqual({ name: '', email: '', password: '', dateOfBirth: '' });
+      });
+    });
+
+    describe('login', () => {
     it('should mark all fields as touched if login form is invalid', () => {
       const touchSpy = spyOn(component.loginForm, 'markAllAsTouched');
       component.loginForm.setErrors({ invalid: true });
@@ -165,7 +167,6 @@ describe('Auth', () => {
   describe('register', () => {
     beforeEach(() => {
       component.switchMode(false);
-      fixture.detectChanges();
     });
 
     it('should mark all fields as touched if register form is invalid', () => {
@@ -248,13 +249,15 @@ describe('Auth', () => {
         password: 'Password123!',
         dateOfBirth: '1990-01-01'
       });
-    });
   });
+});
+});
 
-  describe('Form validators and translate streams', () => {
-    it('should translate field validation messages', () => {
+describe('Form validators and translate streams', () => {
+  it('should translate field validation messages', () => {
       fixture.detectChanges();
-      const streamSpy = spyOn((component as any)['translateService'], 'stream').and.callThrough();
+      const translateService = TestBed.inject(TranslateService);
+      const streamSpy = spyOn(translateService, 'stream').and.callThrough();
 
       const emailLoginField = component.loginFields.find(f => f.key === 'email');
       emailLoginField?.validators?.['strictEmail']?.message();
@@ -264,7 +267,6 @@ describe('Auth', () => {
       expect(streamSpy).toHaveBeenCalledWith('VALIDATION.EMAIL_TYPO');
 
       component.switchMode(false);
-      fixture.detectChanges();
 
       const nameField = component.registerFields.find(f => f.key === 'name');
       nameField?.validators?.['fullName']?.message();
@@ -283,9 +285,9 @@ describe('Auth', () => {
 
       const pwExpr = passwordField?.validators?.['passwordRequirements']?.expression;
       expect(pwExpr).toBeDefined();
-      expect(pwExpr!({ value: 'Pass12345!' } as any)).toBe(true);
-      expect(pwExpr!({ value: '123' } as any)).toBe(false);
-      expect(pwExpr!({ value: '' } as any)).toBe(false);
+      expect(pwExpr!(new FormControl('Pass12345!'))).toBe(true);
+      expect(pwExpr!(new FormControl('123'))).toBe(false);
+      expect(pwExpr!(new FormControl(''))).toBe(false);
 
       const dobField = component.registerFields.find(f => f.key === 'dateOfBirth');
       dobField?.validators?.['dobAge']?.message();

@@ -17,10 +17,9 @@ describe('PasswordRequirementsComponent', () => {
     fixture = TestBed.createComponent(PasswordRequirementsComponent);
     component = fixture.componentInstance;
   });
-
-  it('should create', () => {
-    fixture.detectChanges();
-    expect(component).toBeTruthy();
+  afterEach(() => {
+    fixture.destroy();
+    TestBed.resetTestingModule();
   });
 
   it('should have exactly 4 requirements with correct IDs', () => {

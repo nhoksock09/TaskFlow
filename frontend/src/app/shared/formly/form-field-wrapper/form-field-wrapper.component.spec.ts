@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormFieldWrapperComponent } from './form-field-wrapper.component';
-import { FormlyModule } from '@ngx-formly/core';
+import { FormlyModule, FormlyFormOptions } from '@ngx-formly/core';
 import { ReactiveFormsModule, FormControl } from '@angular/forms';
 import { provideTranslateService } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
@@ -31,7 +31,7 @@ describe('FormFieldWrapperComponent', () => {
       formControl: new FormControl(''),
       options: {
         showError: () => false
-      } as any,
+      } as FormlyFormOptions,
       props: {
         label: 'Name'
       }
@@ -40,8 +40,9 @@ describe('FormFieldWrapperComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  afterEach(() => {
+    fixture.destroy();
+    TestBed.resetTestingModule();
   });
 
   it('should detect if a field is wrapped', () => {
@@ -149,7 +150,7 @@ describe('FormFieldWrapperComponent', () => {
       key: 'password',
       type: 'input',
       formControl: new FormControl(''),
-      options: { showError: () => false } as any,
+      options: { showError: () => false } as FormlyFormOptions,
       props: { type: 'password' }
     };
     fixture.detectChanges();
@@ -188,7 +189,7 @@ describe('FormFieldWrapperComponent', () => {
       options: {
         showError: () => true,
         fieldChanges: new Subject()
-      } as any,
+      } as unknown as FormlyFormOptions,
       props: {
         label: 'Name'
       }
@@ -209,7 +210,7 @@ describe('FormFieldWrapperComponent', () => {
       formControl: new FormControl(''),
       options: {
         showError: () => false
-      } as any,
+      } as FormlyFormOptions,
       props: {
         label: 'Password',
         showRequirements: true

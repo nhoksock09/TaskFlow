@@ -57,26 +57,34 @@ export class MainLayout implements OnInit {
     }
   }
 
+  loadUserProfile() {
+    this.user = this.authService.getUser();
+    this.userService.getProfile()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (user) => {
+          this.user = user;
+          this.authService.saveUser(user);
+        },
+        error: () => this.toastService.error('SETTINGS.TOAST.LOAD_FAILED')
+      });
+  }
+
   ngOnInit() {
     this.isDarkMode = localStorage.getItem('theme') === 'dark';
     this.applyTheme();
-    this.user = this.authService.getUser();
-    this.userService.getProfile().subscribe({
-      next: (user) => {
-        this.user = user;
-        this.authService.saveUser(user);
-      },
-      error: () => this.toastService.error('SETTINGS.TOAST.LOAD_FAILED')
-    });
+    this.loadUserProfile();
 
     this.currentLang = this.translateService.currentLang() || localStorage.getItem('lang') || 'en';
     this.updateDate();
 
     // Subscribe to lang changes to keep date format in sync
-    this.translateService.onLangChange.subscribe((event) => {
-      this.currentLang = event.lang;
-      this.updateDate();
-    });
+    this.translateService.onLangChange
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((event) => {
+        this.currentLang = event.lang;
+        this.updateDate();
+      });
 
     // Auto-close sidebar on router navigation on mobile screens
     this.router.events

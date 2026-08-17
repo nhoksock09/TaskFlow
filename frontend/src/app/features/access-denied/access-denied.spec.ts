@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { AccessDenied } from './access-denied';
 import { provideTranslateService } from '@ngx-translate/core';
@@ -25,8 +24,9 @@ describe('AccessDenied', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  afterEach(() => {
+    fixture.destroy();
+    TestBed.resetTestingModule();
   });
 
   it('should navigate to /dashboard when goToDashboard is called', () => {

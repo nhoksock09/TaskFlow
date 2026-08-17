@@ -10,7 +10,7 @@ import { ToastService } from '../../core/services/toast.service';
 import { Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { User } from '@core/models';
-import { provideTranslateService } from '@ngx-translate/core';
+import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 import { provideRouter } from '@angular/router';
 
 describe('Settings', () => {
@@ -70,8 +70,12 @@ describe('Settings', () => {
     await fixture.whenStable();
   });
 
-  it('should create and load profile on init', () => {
-    expect(component).toBeTruthy();
+  afterEach(() => {
+    fixture.destroy();
+    TestBed.resetTestingModule();
+  });
+
+  it('should load profile on init', () => {
     expect(mockUserService.getProfile).toHaveBeenCalled();
     expect(component.user).toEqual(mockUser);
     expect(component.profileModel.name).toBe('John Doe');
@@ -220,7 +224,8 @@ describe('Settings', () => {
       expect(expression!(validControl)).toBe(true);
       expect(expression!(invalidControl)).toBe(false);
 
-      const streamSpy = spyOn((component as any)['translateService'], 'stream').and.callThrough();
+      const translateService = TestBed.inject(TranslateService);
+      const streamSpy = spyOn(translateService, 'stream').and.callThrough();
       message!();
       expect(streamSpy).toHaveBeenCalledWith('VALIDATION.INVALID_FULL_NAME');
     });
@@ -239,7 +244,8 @@ describe('Settings', () => {
       expect(expression!(validControl)).toBe(true);
       expect(expression!(invalidControl)).toBe(false);
 
-      const streamSpy = spyOn((component as any)['translateService'], 'stream').and.callThrough();
+      const translateService = TestBed.inject(TranslateService);
+      const streamSpy = spyOn(translateService, 'stream').and.callThrough();
       message!();
       expect(streamSpy).toHaveBeenCalledWith('VALIDATION.OUT_OF_AGE_RANGE_60');
     });
@@ -258,7 +264,8 @@ describe('Settings', () => {
       expect(expression!(validControl)).toBe(true);
       expect(expression!(invalidControl)).toBe(false);
 
-      const streamSpy = spyOn((component as any)['translateService'], 'stream').and.callThrough();
+      const translateService = TestBed.inject(TranslateService);
+      const streamSpy = spyOn(translateService, 'stream').and.callThrough();
       message!();
       expect(streamSpy).toHaveBeenCalledWith('VALIDATION.PASSWORD_REQUIREMENTS');
     });
@@ -268,7 +275,7 @@ describe('Settings', () => {
     it('should handle when user is null', () => {
       component.user = null;
       component.profileModel = { name: 'John Smith', dateOfBirth: new Date('1990-01-01') };
-      mockUserService.updateProfile.and.returnValue(of({ message: 'Success', user: null as any }));
+      mockUserService.updateProfile.and.returnValue(of({ message: 'Success', user: null as unknown as User }));
       component.onSaveProfile();
       expect(mockUserService.updateProfile).toHaveBeenCalled();
     });
@@ -276,7 +283,7 @@ describe('Settings', () => {
     it('should handle when user is defined but res.user is null', () => {
       component.user = { ...mockUser };
       component.profileModel = { name: 'John Smith', dateOfBirth: new Date('1990-01-01') };
-      mockUserService.updateProfile.and.returnValue(of({ message: 'Success', user: null as any }));
+      mockUserService.updateProfile.and.returnValue(of({ message: 'Success', user: null as unknown as User }));
       component.onSaveProfile();
       expect(mockUserService.updateProfile).toHaveBeenCalled();
     });

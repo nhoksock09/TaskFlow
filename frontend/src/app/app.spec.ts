@@ -2,8 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { App } from './app';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideTranslateService } from '@ngx-translate/core';
-import { TranslateService } from '@ngx-translate/core';
+import { provideTranslateService, TranslateService, LangChangeEvent } from '@ngx-translate/core';
 import { MessageService } from 'primeng/api';
 import { provideRouter } from '@angular/router';
 import { ComponentFixture } from '@angular/core/testing';
@@ -40,14 +39,17 @@ describe('App', () => {
     localStorage.clear();
   });
 
-  it('should create the app', async () => {
-    await setupComponent();
-    expect(app).toBeTruthy();
+  afterEach(() => {
+    if (fixture) {
+      fixture.destroy();
+    }
+    TestBed.resetTestingModule();
   });
 
-  it('should expose the title signal with value "frontend"', async () => {
+  it('should initialize successfully and expose the title signal with value "frontend"', async () => {
     await setupComponent();
-    expect((app as any).title()).toBe('frontend');
+    expect(app).toBeTruthy();
+    expect(app['title']()).toBe('frontend');
   });
 
   it('should add dark-theme classes when localStorage theme is "dark"', async () => {
@@ -69,7 +71,7 @@ describe('App', () => {
     localStorage.setItem('lang', 'vi');
     await setupComponent();
     const useSpy = spyOn(translateService, 'use').and.callThrough();
-    (app as any).ngOnInit();
+    app.ngOnInit();
     expect(useSpy).toHaveBeenCalledWith('vi');
   });
 
@@ -77,7 +79,7 @@ describe('App', () => {
     localStorage.removeItem('lang');
     await setupComponent();
     const useSpy = spyOn(translateService, 'use').and.callThrough();
-    (app as any).ngOnInit();
+    app.ngOnInit();
     expect(useSpy).toHaveBeenCalledWith('en');
   });
 
@@ -86,13 +88,13 @@ describe('App', () => {
     spyOn(TranslateService.prototype, 'get').and.returnValue(of({ accept: 'OK' }));
 
     await setupComponent();
-    (app as any).ngOnInit();
+    app.ngOnInit();
 
     expect(setTranslationSpy).toHaveBeenCalledWith({ accept: 'OK' });
   });
 
   it('should call setTranslation whenever onLangChange fires', async () => {
-    const langChangeSubject = new Subject<any>();
+    const langChangeSubject = new Subject<LangChangeEvent>();
     const setTranslationSpy = spyOn(PrimeNG.prototype, 'setTranslation');
 
     spyOn(TranslateService.prototype, 'get').and.returnValue(of({ accept: 'OK' }));
@@ -102,9 +104,9 @@ describe('App', () => {
     });
 
     await setupComponent();
-    (app as any).ngOnInit();
+    app.ngOnInit();
 
-    langChangeSubject.next({ lang: 'vi' });
+    langChangeSubject.next({ lang: 'vi', translations: {} });
 
     expect(setTranslationSpy).toHaveBeenCalledWith({ accept: 'OK' });
   });

@@ -57,9 +57,11 @@ export class Dashboard implements OnInit {
   // 3. Lifecycle Hooks
   ngOnInit() {
     this.translateFilters();
-    this.translateService.onLangChange.subscribe(() => {
-      this.translateFilters();
-    });
+    this.translateService.onLangChange
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.translateFilters();
+      });
 
     this.loadTasks();
   }

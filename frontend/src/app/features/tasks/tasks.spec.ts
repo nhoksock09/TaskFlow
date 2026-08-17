@@ -7,10 +7,12 @@ import { ToastService } from '../../core/services/toast.service';
 import { FormlyModule } from '@ngx-formly/core';
 import { FormFieldWrapperComponent } from '../../shared/formly/form-field-wrapper/form-field-wrapper.component';
 import { FormlyFieldDatePicker } from '../../shared/formly/datepicker/datepicker.type';
-import { of, throwError } from 'rxjs';
-import { Task, TaskStatus, TaskPriority, TaskFilterStatus } from '@core/models';
+import { of, throwError, Subject } from 'rxjs';
+import { Task, TaskStatus, TaskPriority, TaskFilterStatus, TaskFormModel } from '@core/models';
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import { TaskTimeframe } from './tasks';
 
-import { TranslateService, provideTranslateService } from '@ngx-translate/core';
+import { TranslateService, provideTranslateService, LangChangeEvent } from '@ngx-translate/core';
 import { provideRouter } from '@angular/router';
 
 describe('Tasks', () => {
@@ -132,18 +134,22 @@ describe('Tasks', () => {
       'TASKS.FILTERS.NEXT_MONTH': 'Next Month'
     }));
 
-    spyOn(translateService, 'instant').and.callFake((key: any) => key);
+    spyOn(translateService, 'instant').and.callFake((key: string) => key);
+
+    fixture.detectChanges();
   });
 
-  it('should create and load tasks on init', () => {
-    fixture.detectChanges();
-    expect(component).toBeTruthy();
+  afterEach(() => {
+    fixture.destroy();
+    TestBed.resetTestingModule();
+  });
+
+  it('should load tasks on init', () => {
     expect(mockTaskService.getTasks).toHaveBeenCalled();
     expect(component.tasks.length).toBe(mockTasks.length);
   });
 
   it('should update translations on language change event', () => {
-    fixture.detectChanges();
     (translateService.get as jasmine.Spy).and.returnValue(of({
       'TASKS.FILTERS.ALL_PRIORITIES': 'Tất cả độ ưu tiên',
       'TASKS.FILTERS.HIGH': 'Cao',
@@ -159,21 +165,20 @@ describe('Tasks', () => {
       'TASKS.FILTERS.NEXT_MONTH': 'Tháng sau'
     }));
 
-    (translateService.onLangChange as any).next({ lang: 'vi', translations: {} });
+    (translateService.onLangChange as Subject<LangChangeEvent>).next({ lang: 'vi', translations: {} });
     expect(component.priorityFilterOptions[0].label).toBe('Tất cả độ ưu tiên');
   });
 
   describe('loadTasks', () => {
     it('should show toast error if loading fails', () => {
       mockTaskService.getTasks.and.returnValue(throwError(() => new Error('API Error')));
-      fixture.detectChanges();
+      component.loadTasks();
       expect(mockToastService.error).toHaveBeenCalledWith('TASKS.TOAST.LOAD_FAILED');
     });
   });
 
   describe('onSearch', () => {
     it('should query with trimmed search text', () => {
-      fixture.detectChanges();
       component.searchQuery = '  Task 1  ';
       component.onSearch();
       expect(component.appliedSearchQuery).toBe('Task 1');
@@ -181,17 +186,13 @@ describe('Tasks', () => {
   });
 
   describe('onDrop', () => {
-    beforeEach(() => {
-      fixture.detectChanges();
-    });
-
     it('should not update task if dropped in the same container', () => {
       const sameContainer = { id: 'todo' };
       const mockDropEvent = {
         previousContainer: sameContainer,
         container: sameContainer,
         item: { data: mockTasks[0] }
-      } as any;
+      } as unknown as CdkDragDrop<Task[]>;
 
       component.onDrop(mockDropEvent);
       expect(mockTaskService.updateTask).not.toHaveBeenCalled();
@@ -202,7 +203,7 @@ describe('Tasks', () => {
         previousContainer: { id: 'todo' },
         container: { id: 'in-progress' },
         item: { data: mockTasks[0] }
-      } as any;
+      } as unknown as CdkDragDrop<Task[]>;
 
       component.onDrop(mockDropEvent);
 
@@ -221,7 +222,7 @@ describe('Tasks', () => {
         previousContainer: { id: 'todo' },
         container: { id: 'in-progress' },
         item: { data: mockTasks[0] }
-      } as any;
+      } as unknown as CdkDragDrop<Task[]>;
 
       component.onDrop(mockDropEvent);
 
@@ -230,10 +231,6 @@ describe('Tasks', () => {
   });
 
   describe('openAddModal and Edit Modal', () => {
-    beforeEach(() => {
-      fixture.detectChanges();
-    });
-
     it('should open add modal with default status', () => {
       component.openAddModal(TaskStatus.IN_PROGRESS);
       expect(component.showAddEditModal).toBe(true);
@@ -260,10 +257,6 @@ describe('Tasks', () => {
   });
 
   describe('addTask (Submit Form)', () => {
-    beforeEach(() => {
-      fixture.detectChanges();
-    });
-
     it('should mark all fields as touched if form is invalid', () => {
       const touchSpy = spyOn(component.taskForm, 'markAllAsTouched').and.callThrough();
       component.taskForm.setErrors({ invalid: true });
@@ -348,10 +341,6 @@ describe('Tasks', () => {
   });
 
   describe('Delete Task Modal', () => {
-    beforeEach(() => {
-      fixture.detectChanges();
-    });
-
     it('should open delete modal', () => {
       component.deleteTask('task1');
       expect(component.taskToDelete).toEqual(mockTasks[0]);
@@ -376,10 +365,6 @@ describe('Tasks', () => {
   });
 
   describe('Filters and Sorting logic', () => {
-    beforeEach(() => {
-      fixture.detectChanges();
-    });
-
     it('should filter by priority', () => {
       component.activeFilter = TaskPriority.HIGH;
       const filtered = component.allFilteredTasks;
@@ -480,11 +465,11 @@ describe('Tasks', () => {
 
       // Past date (editing, but date changed)
       component.editingTaskId = 'task1';
-      component.originalTaskSnapshot = { dueDate: new Date(Date.now() - 20 * 60000).toISOString() } as any;
+      component.originalTaskSnapshot = { dueDate: new Date(Date.now() - 20 * 60000).toISOString() } as unknown as TaskFormModel;
       expect(pastDateVal!({ value: pastDateObj.toISOString() } as AbstractControl)).toBe(false);
 
       // Past date (editing, date unchanged within 60s)
-      component.originalTaskSnapshot = { dueDate: pastDateObj.toISOString() } as any;
+      component.originalTaskSnapshot = { dueDate: pastDateObj.toISOString() } as unknown as TaskFormModel;
       expect(pastDateVal!({ value: pastDateObj.toISOString() } as AbstractControl)).toBe(true);
 
       // Message
@@ -825,12 +810,12 @@ describe('Tasks', () => {
     });
 
     it('should handle falsy response.success in onDrop', () => {
-      mockTaskService.updateTask.and.returnValue(of({ success: false, data: [] as any }));
+      mockTaskService.updateTask.and.returnValue(of({ success: false, data: [] as unknown as Task }));
       const mockDropEvent = {
         previousContainer: { id: 'todo' },
         container: { id: 'in-progress' },
         item: { data: mockTasks[0] }
-      } as any;
+      } as unknown as CdkDragDrop<Task[]>;
 
       component.onDrop(mockDropEvent);
       expect(mockToastService.show).not.toHaveBeenCalled();
@@ -900,7 +885,7 @@ describe('Tasks', () => {
     });
 
     it('should cover fallback return true in timeframe filter and sorting missing dates', () => {
-      component.activeTimeframeFilter = 'invalid' as any;
+      component.activeTimeframeFilter = 'invalid' as TaskTimeframe;
 
       const createDynamicTask = (id: string) => {
         let accessCount = 0;
@@ -911,7 +896,7 @@ describe('Tasks', () => {
             accessCount++;
             return accessCount <= 1 ? 'placeholder' : '';
           }
-        } as any;
+        } as unknown as Task;
       };
 
       const t1 = createDynamicTask('t_dyn1');
@@ -923,23 +908,25 @@ describe('Tasks', () => {
       expect(sorted.length).toBe(3);
     });
 
-    it('should sort completed vs todo tasks in both directions when timeframe is selected', () => {
+    it('should sort todo tasks before completed tasks when completed task is first in array and timeframe is selected', () => {
       component.activeTimeframeFilter = 'today';
-      const now = new Date();
-      const todayStr = now.toISOString();
-
+      const todayStr = new Date().toISOString();
       component.tasks = [
         { _id: 't_comp', status: TaskStatus.COMPLETED, dueDate: todayStr } as Task,
         { _id: 't_todo', status: TaskStatus.TODO, dueDate: todayStr } as Task
       ];
-      let sorted = component.allFilteredTasks;
+      const sorted = component.allFilteredTasks;
       expect(sorted.map(t => t._id)).toEqual(['t_todo', 't_comp']);
+    });
 
+    it('should sort todo tasks before completed tasks when todo task is first in array and timeframe is selected', () => {
+      component.activeTimeframeFilter = 'today';
+      const todayStr = new Date().toISOString();
       component.tasks = [
         { _id: 't_todo', status: TaskStatus.TODO, dueDate: todayStr } as Task,
         { _id: 't_comp', status: TaskStatus.COMPLETED, dueDate: todayStr } as Task
       ];
-      sorted = component.allFilteredTasks;
+      const sorted = component.allFilteredTasks;
       expect(sorted.map(t => t._id)).toEqual(['t_todo', 't_comp']);
     });
 
@@ -971,23 +958,25 @@ describe('Tasks', () => {
       (component.isUrgent as jasmine.Spy).and.callThrough();
     });
 
-    it('should sort standard tasks with and without due dates in both directions', () => {
+    it('should sort tasks with date before tasks without date when task without date is first in array', () => {
       component.activeTimeframeFilter = 'all';
-      const now = new Date();
-      const todayStr = now.toISOString();
-
+      const todayStr = new Date().toISOString();
       component.tasks = [
         { _id: 't_nodate', status: TaskStatus.TODO, dueDate: '' } as Task,
         { _id: 't_date', status: TaskStatus.TODO, dueDate: todayStr } as Task
       ];
-      let sorted = component.allFilteredTasks;
+      const sorted = component.allFilteredTasks;
       expect(sorted.map(t => t._id)).toEqual(['t_date', 't_nodate']);
+    });
 
+    it('should sort tasks with date before tasks without date when task with date is first in array', () => {
+      component.activeTimeframeFilter = 'all';
+      const todayStr = new Date().toISOString();
       component.tasks = [
         { _id: 't_date', status: TaskStatus.TODO, dueDate: todayStr } as Task,
         { _id: 't_nodate', status: TaskStatus.TODO, dueDate: '' } as Task
       ];
-      sorted = component.allFilteredTasks;
+      const sorted = component.allFilteredTasks;
       expect(sorted.map(t => t._id)).toEqual(['t_date', 't_nodate']);
     });
 
@@ -1002,7 +991,7 @@ describe('Tasks', () => {
         item: { data: task },
         container: { id: 'custom-status' },
         previousContainer: { id: 'todo' }
-      } as any;
+      } as unknown as CdkDragDrop<Task[]>;
       
       mockTaskService.updateTask.and.returnValue(of({ success: true, data: task }));
       
@@ -1029,15 +1018,15 @@ describe('Tasks', () => {
       jasmine.clock().uninstall();
     });
 
-
-
-    it('should compare task changes correctly when description is falsy', () => {
-      component.originalTaskSnapshot = { title: 'T', description: undefined as any, priority: TaskPriority.LOW, status: TaskStatus.TODO, dueDate: '' };
+    it('should return false in hasTaskChanged if original description is undefined and current is empty', () => {
+      component.originalTaskSnapshot = { title: 'T', description: undefined as unknown as string, priority: TaskPriority.LOW, status: TaskStatus.TODO, dueDate: '' };
       component.taskModel = { title: 'T', description: '', priority: TaskPriority.LOW, status: TaskStatus.TODO, dueDate: '' };
       expect(component.hasTaskChanged()).toBe(false);
+    });
 
+    it('should return false in hasTaskChanged if original description is empty and current is undefined', () => {
       component.originalTaskSnapshot = { title: 'T', description: '', priority: TaskPriority.LOW, status: TaskStatus.TODO, dueDate: '' };
-      component.taskModel = { title: 'T', description: undefined as any, priority: TaskPriority.LOW, status: TaskStatus.TODO, dueDate: '' };
+      component.taskModel = { title: 'T', description: undefined as unknown as string, priority: TaskPriority.LOW, status: TaskStatus.TODO, dueDate: '' };
       expect(component.hasTaskChanged()).toBe(false);
     });
 
@@ -1045,9 +1034,9 @@ describe('Tasks', () => {
       component.taskForm.setErrors(null);
       spyOnProperty(component.taskForm, 'valid', 'get').and.returnValue(true);
       component.editingTaskId = null;
-      component.taskModel = { title: 'T', description: '', priority: TaskPriority.LOW, dueDate: '', status: undefined as any };
+      component.taskModel = { title: 'T', description: '', priority: TaskPriority.LOW, dueDate: '', status: undefined as unknown as TaskStatus };
       
-      mockTaskService.createTask.and.returnValue(of({ success: true, data: {} as any }));
+      mockTaskService.createTask.and.returnValue(of({ success: true, data: {} as Task }));
       component.addTask();
       expect(mockTaskService.createTask).toHaveBeenCalledWith(jasmine.objectContaining({ status: 'todo' }));
     });

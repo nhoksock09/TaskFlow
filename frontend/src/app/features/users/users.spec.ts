@@ -51,8 +51,12 @@ describe('Users', () => {
     fixture.detectChanges();
   });
 
-  it('should create and load initial users', () => {
-    expect(component).toBeTruthy();
+  afterEach(() => {
+    fixture.destroy();
+    TestBed.resetTestingModule();
+  });
+
+  it('should load initial users', () => {
     expect(mockUserService.getUsers).toHaveBeenCalledWith('', 1, 5, undefined, undefined);
     expect(component.users.length).toBe(2);
     expect(component.totalUsers).toBe(2);
@@ -223,8 +227,8 @@ describe('Users', () => {
     it('should get avatar background color', () => {
       const color1 = component.getAvatarBg('Alice');
       const color2 = component.getAvatarBg('Bob');
-      expect(color1).toBeDefined();
-      expect(color2).toBeDefined();
+      expect(color1).toMatch(/^#[0-9A-F]{6}$/i);
+      expect(color2).toMatch(/^#[0-9A-F]{6}$/i);
     });
 
     it('should format date correctly', () => {
@@ -251,14 +255,14 @@ describe('Users', () => {
 
     it('should do nothing in confirmPromote if userToPromote has no ID', () => {
       mockUserService.updateUserRole.calls.reset();
-      component.userToPromote = { name: 'No ID' } as any;
+      component.userToPromote = { name: 'No ID' } as unknown as User;
       component.confirmPromote();
       expect(mockUserService.updateUserRole).not.toHaveBeenCalled();
     });
 
     it('should do nothing in confirmDelete if userToDelete has no ID', () => {
       mockUserService.deleteUser.calls.reset();
-      component.userToDelete = { name: 'No ID' } as any;
+      component.userToDelete = { name: 'No ID' } as unknown as User;
       component.confirmDelete();
       expect(mockUserService.deleteUser).not.toHaveBeenCalled();
     });
@@ -270,17 +274,17 @@ describe('Users', () => {
     });
 
     it('should handle userId fallback from id property when _id is falsy', () => {
-      component.userToPromote = { id: 'promote-id' } as any;
+      component.userToPromote = { id: 'promote-id' } as unknown as User;
       component.confirmPromote();
       expect(mockUserService.updateUserRole).toHaveBeenCalledWith('promote-id', 'admin');
 
-      component.userToDelete = { id: 'delete-id' } as any;
+      component.userToDelete = { id: 'delete-id' } as unknown as User;
       component.confirmDelete();
       expect(mockUserService.deleteUser).toHaveBeenCalledWith('delete-id');
     });
 
     it('should handle loadUsers when response data fields are falsy', () => {
-      mockUserService.getUsers.and.returnValue(of({} as any));
+      mockUserService.getUsers.and.returnValue(of({} as UserResponse));
       component.loadUsers();
       expect(component.users).toEqual([]);
       expect(component.totalUsers).toBe(0);

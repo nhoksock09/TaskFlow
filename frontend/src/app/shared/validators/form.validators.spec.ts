@@ -12,7 +12,7 @@ describe('Form Validators', () => {
       const control = { value: '' } as AbstractControl;
       expect(fullNameValidator(control)).toBeNull();
       
-      const controlNull = { value: null } as any;
+      const controlNull = { value: null } as unknown as AbstractControl;
       expect(fullNameValidator(controlNull)).toBeNull();
     });
 

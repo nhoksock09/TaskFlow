@@ -1,16 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 import { MainLayout } from './main-layout';
-import { ComponentFixtureAutoDetect } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideTranslateService, TranslateService } from '@ngx-translate/core';
-import { provideRouter, Router, NavigationEnd } from '@angular/router';
+import { provideTranslateService, TranslateService, LangChangeEvent } from '@ngx-translate/core';
+import { provideRouter, Router } from '@angular/router';
 import { UserService } from '../../core/services/user.service';
 import { AuthService } from '../../core/services/auth.service';
 import { ToastService } from '../../core/services/toast.service';
 import { MessageService } from 'primeng/api';
-import { of, throwError } from 'rxjs';
+import { of, throwError, Subject } from 'rxjs';
 import { User } from '@core/models';
 
 describe('MainLayout', () => {
@@ -59,16 +57,17 @@ describe('MainLayout', () => {
     spyOn(authService, 'getUser').and.returnValue(mockUser);
     spyOn(authService, 'saveUser');
     spyOn(toastService, 'error');
+    fixture.detectChanges();
   });
 
   afterEach(() => {
+    fixture.destroy();
+    TestBed.resetTestingModule();
     document.documentElement.classList.remove('dark', 'dark-theme');
     localStorage.clear();
   });
 
-  it('should create and load profile on init', () => {
-    fixture.detectChanges();
-    expect(component).toBeTruthy();
+  it('should load profile on init', () => {
     expect(authService.getUser).toHaveBeenCalled();
     expect(userService.getProfile).toHaveBeenCalled();
     expect(component.user).toEqual(mockUser);
@@ -77,7 +76,7 @@ describe('MainLayout', () => {
 
   it('should load theme dark on init if theme is dark in localStorage', () => {
     localStorage.setItem('theme', 'dark');
-    fixture.detectChanges();
+    component.ngOnInit();
 
     expect(component.isDarkMode).toBe(true);
     expect(document.documentElement.classList.contains('dark')).toBe(true);
@@ -86,7 +85,7 @@ describe('MainLayout', () => {
 
   it('should load theme light on init if theme is light in localStorage', () => {
     localStorage.setItem('theme', 'light');
-    fixture.detectChanges();
+    component.ngOnInit();
 
     expect(component.isDarkMode).toBe(false);
     expect(document.documentElement.classList.contains('dark')).toBe(false);
@@ -95,20 +94,18 @@ describe('MainLayout', () => {
 
   it('should show error toast if loading profile fails on init', () => {
     (userService.getProfile as jasmine.Spy).and.returnValue(throwError(() => new Error('API Error')));
-    fixture.detectChanges();
+    component.ngOnInit();
 
     expect(toastService.error).toHaveBeenCalledWith('SETTINGS.TOAST.LOAD_FAILED');
   });
 
   it('should toggle sidebar collapsed state', () => {
-    fixture.detectChanges();
     const initialState = component.isSidebarCollapsed;
     component.toggleSidebar();
     expect(component.isSidebarCollapsed).toBe(!initialState);
   });
 
   it('should collapse sidebar on mobile resize screen (< 768)', () => {
-    fixture.detectChanges();
     Object.defineProperty(window, 'innerWidth', { get: () => 500, configurable: true });
     component.isSidebarCollapsed = false;
 
@@ -117,7 +114,6 @@ describe('MainLayout', () => {
   });
 
   it('should not collapse sidebar on desktop resize screen (>= 768)', () => {
-    fixture.detectChanges();
     Object.defineProperty(window, 'innerWidth', { get: () => 1024, configurable: true });
     component.isSidebarCollapsed = false;
 
@@ -126,7 +122,6 @@ describe('MainLayout', () => {
   });
 
   it('should handle lang change and update local storage and translate service', () => {
-    fixture.detectChanges();
     const useSpy = spyOn(translateService, 'use').and.returnValue(of({}));
 
     component.onLangChange('vi');
@@ -136,15 +131,12 @@ describe('MainLayout', () => {
   });
 
   it('should format date correctly on language change global event', () => {
-    fixture.detectChanges();
-
-    (translateService.onLangChange as any).next({ lang: 'vi', translations: {} });
+    (translateService.onLangChange as Subject<LangChangeEvent>).next({ lang: 'vi', translations: {} });
     expect(component.currentLang).toBe('vi');
     expect(component.currentDate).toBeTruthy();
   });
 
   it('should toggle theme mode', () => {
-    fixture.detectChanges();
     const initialTheme = component.isDarkMode;
 
     // Toggle 1: changes from initial to opposite
@@ -159,7 +151,6 @@ describe('MainLayout', () => {
   });
 
   it('should handle logout correctly and redirect to root', () => {
-    fixture.detectChanges();
     const logoutSpy = spyOn(authService, 'logout');
     const navigateSpy = spyOn(router, 'navigate').and.resolveTo(true);
 
@@ -170,14 +161,9 @@ describe('MainLayout', () => {
 
   it('should auto-close sidebar on router navigation on mobile screens', async () => {
     Object.defineProperty(window, 'innerWidth', { get: () => 500, configurable: true });
-    fixture.detectChanges();
-
     component.isSidebarCollapsed = false;
 
     await router.navigate(['/']);
-    fixture.detectChanges();
-
     expect(component.isSidebarCollapsed).toBe(true);
   });
-
 });

@@ -87,8 +87,12 @@ describe('Connections', () => {
     fixture.detectChanges();
   });
 
-  it('should create and load initial search results and pending requests', () => {
-    expect(component).toBeTruthy();
+  afterEach(() => {
+    fixture.destroy();
+    TestBed.resetTestingModule();
+  });
+
+  it('should load initial search results and pending requests on init', () => {
     expect(mockConnectionService.searchUsers).toHaveBeenCalledWith('', 1, 5);
     expect(mockConnectionService.getIncomingRequests).toHaveBeenCalled();
     expect(mockConnectionService.getOutgoingRequests).toHaveBeenCalled();
@@ -140,7 +144,7 @@ describe('Connections', () => {
     });
 
     it('should handle falsy response fields in loadSearchResults', () => {
-      mockConnectionService.searchUsers.and.returnValue(of({} as any));
+      mockConnectionService.searchUsers.and.returnValue(of({} as ConnectionSearchResponse));
       component.loadSearchResults();
       expect(component.searchResults).toEqual([]);
       expect(component.searchTotal).toBe(0);
@@ -213,8 +217,8 @@ describe('Connections', () => {
     });
 
     it('should handle falsy response data in loadPendingRequests', () => {
-      mockConnectionService.getIncomingRequests.and.returnValue(of({} as any));
-      mockConnectionService.getOutgoingRequests.and.returnValue(of({} as any));
+      mockConnectionService.getIncomingRequests.and.returnValue(of({} as ConnectionRequestListResponse));
+      mockConnectionService.getOutgoingRequests.and.returnValue(of({} as ConnectionRequestListResponse));
       component.loadPendingRequests();
       expect(component.incomingRequests).toEqual([]);
       expect(component.outgoingRequests).toEqual([]);
@@ -307,7 +311,7 @@ describe('Connections', () => {
     });
 
     it('should handle falsy response fields in loadConnections', () => {
-      mockConnectionService.getConnections.and.returnValue(of({} as any));
+      mockConnectionService.getConnections.and.returnValue(of({} as MyConnectionsResponse));
       component.loadConnections();
       expect(component.myConnections).toEqual([]);
       expect(component.connTotal).toBe(0);
@@ -332,10 +336,11 @@ describe('Connections', () => {
     });
 
     it('should get avatar background color', () => {
+      const colors = ['#3b82f6', '#10b981', '#6366f1', '#ec4899', '#f59e0b', '#8b5cf6'];
       const color1 = component.getAvatarBg('Alice');
       const color2 = component.getAvatarBg('Bob');
-      expect(color1).toBeDefined();
-      expect(color2).toBeDefined();
+      expect(colors).toContain(color1);
+      expect(colors).toContain(color2);
     });
 
     it('should format date correctly', () => {

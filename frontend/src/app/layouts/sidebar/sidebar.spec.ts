@@ -27,11 +27,11 @@ describe('Sidebar', () => {
     component = fixture.componentInstance;
     authService = TestBed.inject(AuthService);
     spyOn(authService, 'getUser').and.returnValue(null);
-    fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  afterEach(() => {
+    fixture.destroy();
+    TestBed.resetTestingModule();
   });
 
   it('should determine isAdmin status correctly from input user', () => {
@@ -78,9 +78,6 @@ describe('Sidebar', () => {
   });
 
   it('should render admin link in template when isAdmin is true', () => {
-    fixture.destroy();
-    fixture = TestBed.createComponent(Sidebar);
-    component = fixture.componentInstance;
     component.user = { name: 'Admin User', email: 'admin@example.com', role: 'admin', dateOfBirth: '1990-01-01' };
     fixture.detectChanges();
 
@@ -88,30 +85,20 @@ describe('Sidebar', () => {
     expect(usersLink).toBeTruthy();
   });
 
-  it('should render the connections link for both admin and non-admin users', () => {
-    fixture.destroy();
-    fixture = TestBed.createComponent(Sidebar);
-    component = fixture.componentInstance;
+  it('should render the connections link for regular user', () => {
     component.user = { name: 'Regular User', email: 'user@example.com', role: 'user', dateOfBirth: '1990-01-01' };
     fixture.detectChanges();
-
     expect(fixture.nativeElement.querySelector('a[routerLink="/connections"]')).toBeTruthy();
+  });
 
-    fixture.destroy();
-    fixture = TestBed.createComponent(Sidebar);
-    component = fixture.componentInstance;
+  it('should render the connections link for admin user', () => {
     component.user = { name: 'Admin User', email: 'admin@example.com', role: 'admin', dateOfBirth: '1990-01-01' };
     fixture.detectChanges();
-
     expect(fixture.nativeElement.querySelector('a[routerLink="/connections"]')).toBeTruthy();
   });
 
   it('should emit toggleRequest output event on toggle button click in template', () => {
-    fixture.destroy();
-    fixture = TestBed.createComponent(Sidebar);
-    component = fixture.componentInstance;
     fixture.detectChanges();
-
     let emitted = false;
     component.toggleRequest.subscribe(() => { emitted = true; });
     
