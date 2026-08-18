@@ -20,6 +20,14 @@ export class Sidebar {
   @Input() isCollapsed = true;
   @Output() toggleRequest = new EventEmitter<void>();
 
+  menuItems = [
+    { route: '/dashboard', label: 'SIDEBAR.DASHBOARD', icon: 'pi pi-th-large' },
+    { route: '/tasks', label: 'SIDEBAR.TASKS', icon: 'pi pi-check-square' },
+    { route: '/settings', label: 'SIDEBAR.SETTINGS', icon: 'pi pi-cog' },
+    { route: '/connections', label: 'SIDEBAR.CONNECTIONS', icon: 'pi pi-user-plus' },
+    { route: '/users', label: 'SIDEBAR.USERS', icon: 'pi pi-user-edit', adminOnly: true }
+  ];
+
   get isAdmin(): boolean {
     const localUser = this.authService.getUser();
     return this.user?.role === 'admin' || localUser?.role === 'admin';

@@ -15,27 +15,13 @@
         <span>TaskFlow</span>
       </div>
       <nav>
-        <a routerLink="/dashboard" routerLinkActive="active">
-          <i class="pi pi-th-large nav-icon"></i>
-          <span>{{ 'SIDEBAR.DASHBOARD' | translate }}</span>
-        </a>
-        <a routerLink="/tasks" routerLinkActive="active">
-          <i class="pi pi-check-square nav-icon"></i>
-          <span>{{ 'SIDEBAR.TASKS' | translate }}</span>
-        </a>
-        <a routerLink="/settings" routerLinkActive="active">
-          <i class="pi pi-cog nav-icon"></i>
-          <span>{{ 'SIDEBAR.SETTINGS' | translate }}</span>
-        </a>
-        <a routerLink="/connections" routerLinkActive="active">
-          <i class="pi pi-user-plus nav-icon"></i>
-          <span>{{ 'SIDEBAR.CONNECTIONS' | translate }}</span>
-        </a>
-        @if (isAdmin) {
-          <a routerLink="/users" routerLinkActive="active">
-            <i class="pi pi-user-edit nav-icon"></i>
-            <span>{{ 'SIDEBAR.USERS' | translate }}</span>
-          </a>
+        @for (item of menuItems; track item.route) {
+          @if (!item.adminOnly || isAdmin) {
+            <a [routerLink]="item.route" routerLinkActive="active">
+              <i [class]="item.icon + ' nav-icon'"></i>
+              <span>{{ item.label | translate }}</span>
+            </a>
+          }
         }
       </nav>
     </div>

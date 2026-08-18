@@ -271,11 +271,14 @@ describe('Connections', () => {
       expect(mockConnectionService.getConnections).toHaveBeenCalledWith('', 1, 20);
     });
 
-    it('should open and close the remove modal', () => {
+    it('should open the remove modal and set the candidate', () => {
       component.openRemoveModal(mockConnections[0]);
       expect(component.showRemoveModal).toBe(true);
       expect(component.removeCandidate).toBe(mockConnections[0]);
+    });
 
+    it('should close the remove modal and clear the candidate', () => {
+      component.openRemoveModal(mockConnections[0]); // Setup state
       component.closeRemoveModal();
       expect(component.showRemoveModal).toBe(false);
       expect(component.removeCandidate).toBeNull();

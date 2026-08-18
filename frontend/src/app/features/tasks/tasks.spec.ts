@@ -11,7 +11,6 @@ import { of, throwError, Subject } from 'rxjs';
 import { Task, TaskStatus, TaskPriority, TaskFilterStatus, TaskFormModel } from '@core/models';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { TaskTimeframe } from './tasks';
-
 import { TranslateService, provideTranslateService, LangChangeEvent } from '@ngx-translate/core';
 import { provideRouter } from '@angular/router';
 
@@ -395,7 +394,7 @@ describe('Tasks', () => {
       const testDate = new Date(2026, 7, 11, 10, 15, 0); // Local date
       const formatted = component.getFormattedDateForInput(testDate);
       expect(formatted).toBe('2026-08-11T10:15');
-      
+
       expect(component.getFormattedDateForInput('')).toBe('');
       expect(component.getFormattedDateForInput('invalid')).toBe('');
     });
@@ -433,9 +432,9 @@ describe('Tasks', () => {
       });
 
       it('should calculate correct due soon time string', () => {
-        const task = { dueDate: new Date('2026-08-11T12:15:00Z').toISOString() } as Task; // in 24 hours
-        expect(component.getDueSoonTime(task)).toBe('Due in 2 hours');
- 
+        const task = { dueDate: new Date('2026-08-12T10:15:00Z').toISOString() } as Task; // in 24 hours
+        expect(component.getDueSoonTime(task)).toBe('Due in 24 hours');
+
         const task2 = { dueDate: new Date('2026-08-11T10:45:00Z').toISOString() } as Task; // in 30 mins
         expect(component.getDueSoonTime(task2)).toBe('Due in 30 minutes');
       });
@@ -533,9 +532,8 @@ describe('Tasks', () => {
       expect(filtered.map(t => t._id)).toContain('t2');
     });
 
-    it('should filter by timeframe last-month, month, and next-month', () => {
+    it('should filter by timeframe last-month', () => {
       const today = new Date();
-      
       const lastMonthDate = new Date(today.getFullYear(), today.getMonth() - 1, 15);
       const thisMonthDate = new Date(today.getFullYear(), today.getMonth(), 15);
       const nextMonthDate = new Date(today.getFullYear(), today.getMonth() + 1, 15);
@@ -546,15 +544,38 @@ describe('Tasks', () => {
         { _id: 't_next', dueDate: nextMonthDate.toISOString() } as Task
       ];
 
-      // last-month
       component.activeTimeframeFilter = 'last-month';
       expect(component.allFilteredTasks.map(t => t._id)).toEqual(['t_last']);
+    });
 
-      // month
+    it('should filter by timeframe month', () => {
+      const today = new Date();
+      const lastMonthDate = new Date(today.getFullYear(), today.getMonth() - 1, 15);
+      const thisMonthDate = new Date(today.getFullYear(), today.getMonth(), 15);
+      const nextMonthDate = new Date(today.getFullYear(), today.getMonth() + 1, 15);
+
+      component.tasks = [
+        { _id: 't_last', dueDate: lastMonthDate.toISOString() } as Task,
+        { _id: 't_this', dueDate: thisMonthDate.toISOString() } as Task,
+        { _id: 't_next', dueDate: nextMonthDate.toISOString() } as Task
+      ];
+
       component.activeTimeframeFilter = 'month';
       expect(component.allFilteredTasks.map(t => t._id)).toEqual(['t_this']);
+    });
 
-      // next-month
+    it('should filter by timeframe next-month', () => {
+      const today = new Date();
+      const lastMonthDate = new Date(today.getFullYear(), today.getMonth() - 1, 15);
+      const thisMonthDate = new Date(today.getFullYear(), today.getMonth(), 15);
+      const nextMonthDate = new Date(today.getFullYear(), today.getMonth() + 1, 15);
+
+      component.tasks = [
+        { _id: 't_last', dueDate: lastMonthDate.toISOString() } as Task,
+        { _id: 't_this', dueDate: thisMonthDate.toISOString() } as Task,
+        { _id: 't_next', dueDate: nextMonthDate.toISOString() } as Task
+      ];
+
       component.activeTimeframeFilter = 'next-month';
       expect(component.allFilteredTasks.map(t => t._id)).toEqual(['t_next']);
     });
@@ -703,13 +724,15 @@ describe('Tasks', () => {
       expect(component.isDueNextMonth('')).toBe(false);
     });
 
-    it('should check isDueThisWeek correctly', () => {
+    it('should return true in isDueThisWeek for a date inside the current week', () => {
       const today = new Date();
       const currentDay = today.getDay();
       const diffToMon = today.getDate() - currentDay + (currentDay === 0 ? -6 : 1);
       const monday = new Date(today.setDate(diffToMon));
       expect(component.isDueThisWeek(monday.toISOString())).toBe(true);
+    });
 
+    it('should return false in isDueThisWeek for a date outside the current week', () => {
       const farFuture = new Date();
       farFuture.setDate(farFuture.getDate() + 20);
       expect(component.isDueThisWeek(farFuture.toISOString())).toBe(false);
@@ -718,12 +741,12 @@ describe('Tasks', () => {
     it('should check isDueLastMonth edge cases for January roll-back', () => {
       const mockDate = new Date('2026-01-15T12:00:00Z');
       const dueInDec = new Date('2025-12-15T12:00:00Z');
-      
+
       jasmine.clock().install();
       jasmine.clock().mockDate(mockDate);
-      
+
       expect(component.isDueLastMonth(dueInDec.toISOString())).toBe(true);
-      
+
       jasmine.clock().uninstall();
     });
   });
@@ -1000,9 +1023,9 @@ describe('Tasks', () => {
         container: { id: 'custom-status' },
         previousContainer: { id: 'todo' }
       } as unknown as CdkDragDrop<Task[]>;
-      
+
       mockTaskService.updateTask.and.returnValue(of({ success: true, data: task }));
-      
+
       component.onDrop(event);
       expect(mockToastService.show).toHaveBeenCalledWith(
         'TASKS.TOAST.MOVE_SUCCESS',
@@ -1019,7 +1042,7 @@ describe('Tasks', () => {
     it('should check isDueThisWeek on Sunday', () => {
       jasmine.clock().install();
       jasmine.clock().mockDate(new Date(2026, 7, 16)); // August 16, 2026 (Sunday)
-      
+
       const dueStr = new Date(2026, 7, 15).toISOString();
       expect(component.isDueThisWeek(dueStr)).toBe(true);
 
@@ -1043,7 +1066,7 @@ describe('Tasks', () => {
       spyOnProperty(component.taskForm, 'valid', 'get').and.returnValue(true);
       component.editingTaskId = null;
       component.taskModel = { title: 'T', description: '', priority: TaskPriority.LOW, dueDate: '', status: undefined as unknown as TaskStatus };
-      
+
       mockTaskService.createTask.and.returnValue(of({ success: true, data: {} as Task }));
       component.addTask();
       expect(mockTaskService.createTask).toHaveBeenCalledWith(jasmine.objectContaining({ status: 'todo' }));

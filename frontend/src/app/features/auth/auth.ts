@@ -16,7 +16,6 @@ import {
   emailTypoValidator,
   strictEmailValidator
 } from '../../shared/validators/form.validators';
-
 import { LoginRequest, RegisterRequest } from '@core/models';
 
 // ── Component ─────────────────────────────────────────────────────────────────
