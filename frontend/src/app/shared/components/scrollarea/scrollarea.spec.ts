@@ -36,7 +36,6 @@ describe('ScrollArea Components', () => {
     expect(scrollAreaComponent.style).toBe('overflow: hidden;');
   });
 
-
   it('should create ScrollAreaContent component', () => {
     const fixture = TestBed.createComponent(ScrollAreaContent);
     expect(fixture.componentInstance).toBeTruthy();

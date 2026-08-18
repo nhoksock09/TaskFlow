@@ -6,22 +6,11 @@
         <h3>{{ 'TASKS.TITLE' | translate }}</h3>
         <div class="header-actions">
           <div class="search-bar">
-            <input
-              type="text"
-              pInputText
-              [(ngModel)]="searchQuery"
-              (input)="searchQuery.trim() === '' ? onSearch() : null"
-              (keyup.enter)="onSearch()"
-              [placeholder]="'TASKS.SEARCH_PLACEHOLDER' | translate"
-              class="search-input"
-            />
-            <p-button
-              styleClass="search-icon-btn"
-              [text]="true"
-              type="button"
-              (click)="onSearch()"
-              [title]="'COMMON.BTN.SEARCH' | translate"
-            >
+            <input type="text" pInputText [(ngModel)]="searchQuery"
+              (input)="searchQuery.trim() === '' ? onSearch() : null" (keyup.enter)="onSearch()"
+              [placeholder]="'TASKS.SEARCH_PLACEHOLDER' | translate" class="search-input" />
+            <p-button styleClass="search-icon-btn" [text]="true" type="button" (click)="onSearch()"
+              [title]="'COMMON.BTN.SEARCH' | translate">
               <i class="pi pi-search"></i>
             </p-button>
           </div>
@@ -31,38 +20,20 @@
       <div class="filters-container">
         <div class="filter-item">
           <!-- Dropdown 1: Priority -->
-          <p-select
-            [(ngModel)]="activeFilter"
-            [options]="priorityFilterOptions"
-            optionLabel="label"
-            optionValue="value"
-            styleClass="w-full"
-            appendTo="body"
-          >
+          <p-select [(ngModel)]="activeFilter" [options]="priorityFilterOptions" optionLabel="label" optionValue="value"
+            styleClass="w-full" appendTo="body">
           </p-select>
         </div>
         <div class="filter-item">
           <!-- Dropdown 2: Status -->
-          <p-select
-            [(ngModel)]="activeStatusFilter"
-            [options]="statusFilterOptions"
-            optionLabel="label"
-            optionValue="value"
-            styleClass="w-full"
-            appendTo="body"
-          >
+          <p-select [(ngModel)]="activeStatusFilter" [options]="statusFilterOptions" optionLabel="label"
+            optionValue="value" styleClass="w-full" appendTo="body">
           </p-select>
         </div>
         <div class="filter-item">
           <!-- Dropdown 3: Timeframe -->
-          <p-select
-            [(ngModel)]="activeTimeframeFilter"
-            [options]="timeframeOptions"
-            optionLabel="label"
-            optionValue="value"
-            styleClass="w-full"
-            appendTo="body"
-          >
+          <p-select [(ngModel)]="activeTimeframeFilter" [options]="timeframeOptions" optionLabel="label"
+            optionValue="value" styleClass="w-full" appendTo="body">
           </p-select>
         </div>
       </div>
@@ -75,113 +46,65 @@
             <div class="header-left">
               <span class="status-dot todo"></span>
               <h4>{{ 'TASKS.COLUMN_TODO' | translate }}</h4>
-              <p-badge
-                [value]="getTasksCountByStatus(TaskStatus.TODO)"
-                severity="secondary"
-              ></p-badge>
+              <p-badge [value]="getTasksCountByStatus(TaskStatus.TODO)" severity="secondary"></p-badge>
             </div>
-            <p-button
-              icon="pi pi-plus"
-              [text]="true"
-              [rounded]="true"
-              size="small"
-              (click)="openAddModal(TaskStatus.TODO)"
-              [title]="'TASKS.ADD_TITLE' | translate"
-            ></p-button>
+            <p-button icon="pi pi-plus" [text]="true" [rounded]="true" size="small"
+              (click)="openAddModal(TaskStatus.TODO)" [title]="'TASKS.ADD_TITLE' | translate"></p-button>
           </div>
 
-          <div
-            class="column-tasks-container"
-            cdkDropList
-            [id]="TaskStatus.TODO"
-            [cdkDropListData]="getTasksByStatus(TaskStatus.TODO)"
-            (cdkDropListDropped)="onDrop($event)"
-          >
+          <div class="column-tasks-container" cdkDropList [id]="TaskStatus.TODO"
+            [cdkDropListData]="getTasksByStatus(TaskStatus.TODO)" (cdkDropListDropped)="onDrop($event)">
             <p-scrollarea class="w-full">
               <p-scrollarea-content class="space-y-3 pr-2">
                 @for (task of getTasksByStatus(TaskStatus.TODO); track task._id) {
-                  <div
-                    class="task-card"
-                    cdkDrag
-                    [cdkDragData]="task"
-                    [class.priority-high]="task.priority === 'high'"
-                    [class.priority-medium]="task.priority === 'medium'"
-                    [class.priority-low]="task.priority === 'low'"
-                    [class.task-overdue]="isOverdue(task)"
-                  >
-                    <div class="task-card-header">
-                      <h5>{{ task.title }}</h5>
-                      <div class="task-card-header-right">
-                        @if (isOverdue(task)) {
-                          <p-tag
-                            class="overdue-tag"
-                            [value]="'TASKS.OVERDUE' | translate"
-                            severity="danger"
-                            icon="pi pi-exclamation-triangle"
-                          ></p-tag>
-                        }
-                        @if (!isOverdue(task) && isDueSoon(task)) {
-                          <p-tag
-                            class="due-soon-tag"
-                            [value]="'TASKS.DUE_SOON' | translate"
-                            severity="warn"
-                            icon="pi pi-clock"
-                          ></p-tag>
-                        }
-                        <!-- Actions -->
-                        <div class="task-card-actions">
-                          <p-button
-                            icon="pi pi-pencil"
-                            [text]="true"
-                            [rounded]="true"
-                            severity="secondary"
-                            size="small"
-                            (click)="editTask(task)"
-                            [title]="'COMMON.BTN.EDIT' | translate"
-                          ></p-button>
-                          <p-button
-                            icon="pi pi-trash"
-                            [text]="true"
-                            [rounded]="true"
-                            severity="danger"
-                            size="small"
-                            (click)="deleteTask(task._id!)"
-                            [title]="'COMMON.BTN.DELETE' | translate"
-                          ></p-button>
-                        </div>
+                <div class="task-card" cdkDrag [cdkDragData]="task" [class.priority-high]="task.priority === 'high'"
+                  [class.priority-medium]="task.priority === 'medium'" [class.priority-low]="task.priority === 'low'"
+                  [class.task-overdue]="isOverdue(task)">
+                  <div class="task-card-header">
+                    <h5>{{ task.title }}</h5>
+                    <div class="task-card-header-right">
+                      @if (isOverdue(task)) {
+                      <p-tag class="overdue-tag" [value]="'TASKS.OVERDUE' | translate" severity="danger"
+                        icon="pi pi-exclamation-triangle"></p-tag>
+                      }
+                      @if (!isOverdue(task) && isDueSoon(task)) {
+                      <p-tag class="due-soon-tag" [value]="'TASKS.DUE_SOON' | translate" severity="warn"
+                        icon="pi pi-clock"></p-tag>
+                      }
+                      <!-- Actions -->
+                      <div class="task-card-actions">
+                        <p-button icon="pi pi-pencil" [text]="true" [rounded]="true" severity="secondary" size="small"
+                          (click)="editTask(task)" [title]="'COMMON.BTN.EDIT' | translate"></p-button>
+                        <p-button icon="pi pi-trash" [text]="true" [rounded]="true" severity="danger" size="small"
+                          (click)="deleteTask(task._id!)" [title]="'COMMON.BTN.DELETE' | translate"></p-button>
                       </div>
                     </div>
-                    @if (task.description) {
-                      <p class="task-card-desc">{{ task.description }}</p>
-                    }
+                  </div>
+                  @if (task.description) {
+                  <p class="task-card-desc">{{ task.description }}</p>
+                  }
 
-                    <div class="task-card-footer">
-                      <p-tag
-                        class="priority-tag"
-                        [value]="TASK_PRIORITY_MAP[task.priority] | translate"
-                        [severity]="
+                  <div class="task-card-footer">
+                    <p-tag class="priority-tag" [value]="TASK_PRIORITY_MAP[task.priority] | translate" [severity]="
                           task.priority === 'high'
                             ? 'danger'
                             : task.priority === 'medium'
                               ? 'warn'
                               : 'info'
-                        "
-                      ></p-tag>
-                      <span class="due-date" [class.overdue]="isOverdue(task)">
-                        <i class="pi pi-calendar"></i> {{ formatDate(task.dueDate) }}
-                      </span>
-                    </div>
+                        "></p-tag>
+                    <span class="due-date" [class.overdue]="isOverdue(task)">
+                      <i class="pi pi-calendar"></i> {{ formatDate(task.dueDate) }}
+                    </span>
                   </div>
+                </div>
                 }
                 @if (getTasksCountByStatus(TaskStatus.TODO) === 0) {
-                  <div class="column-empty-message">
-                    {{ 'TASKS.NO_TASKS' | translate }}
-                  </div>
+                <div class="column-empty-message">
+                  {{ 'TASKS.NO_TASKS' | translate }}
+                </div>
                 }
               </p-scrollarea-content>
-              <p-scrollarea-scrollbar orientation="vertical"
-                ><p-scrollarea-handle
-              /></p-scrollarea-scrollbar>
+              <p-scrollarea-scrollbar orientation="vertical"><p-scrollarea-handle /></p-scrollarea-scrollbar>
             </p-scrollarea>
           </div>
         </div>
@@ -192,105 +115,63 @@
             <div class="header-left">
               <span class="status-dot in-progress"></span>
               <h4>{{ 'TASKS.COLUMN_PROGRESS' | translate }}</h4>
-              <p-badge
-                [value]="getTasksCountByStatus(TaskStatus.IN_PROGRESS)"
-                severity="secondary"
-              ></p-badge>
+              <p-badge [value]="getTasksCountByStatus(TaskStatus.IN_PROGRESS)" severity="secondary"></p-badge>
             </div>
           </div>
 
-          <div
-            class="column-tasks-container"
-            cdkDropList
-            [id]="TaskStatus.IN_PROGRESS"
-            [cdkDropListData]="getTasksByStatus(TaskStatus.IN_PROGRESS)"
-            (cdkDropListDropped)="onDrop($event)"
-          >
+          <div class="column-tasks-container" cdkDropList [id]="TaskStatus.IN_PROGRESS"
+            [cdkDropListData]="getTasksByStatus(TaskStatus.IN_PROGRESS)" (cdkDropListDropped)="onDrop($event)">
             <p-scrollarea class="w-full">
               <p-scrollarea-content class="space-y-3 pr-2">
                 @for (task of getTasksByStatus(TaskStatus.IN_PROGRESS); track task._id) {
-                  <div
-                    class="task-card"
-                    cdkDrag
-                    [cdkDragData]="task"
-                    [class.priority-high]="task.priority === 'high'"
-                    [class.priority-medium]="task.priority === 'medium'"
-                    [class.priority-low]="task.priority === 'low'"
-                    [class.task-overdue]="isOverdue(task)"
-                  >
-                    <div class="task-card-header">
-                      <h5>{{ task.title }}</h5>
-                      <div class="task-card-header-right">
-                        @if (isOverdue(task)) {
-                          <p-tag
-                            class="overdue-tag"
-                            [value]="'TASKS.OVERDUE' | translate"
-                            severity="danger"
-                            icon="pi pi-exclamation-triangle"
-                          ></p-tag>
-                        }
-                        @if (!isOverdue(task) && isDueSoon(task)) {
-                          <p-tag
-                            class="due-soon-tag"
-                            [value]="'TASKS.DUE_SOON' | translate"
-                            severity="warn"
-                            icon="pi pi-clock"
-                          ></p-tag>
-                        }
-                        <!-- Actions -->
-                        <div class="task-card-actions">
-                          <p-button
-                            icon="pi pi-pencil"
-                            [text]="true"
-                            [rounded]="true"
-                            severity="secondary"
-                            size="small"
-                            (click)="editTask(task)"
-                            [title]="'COMMON.BTN.EDIT' | translate"
-                          ></p-button>
-                          <p-button
-                            icon="pi pi-trash"
-                            [text]="true"
-                            [rounded]="true"
-                            severity="danger"
-                            size="small"
-                            (click)="deleteTask(task._id!)"
-                            [title]="'COMMON.BTN.DELETE' | translate"
-                          ></p-button>
-                        </div>
+                <div class="task-card" cdkDrag [cdkDragData]="task" [class.priority-high]="task.priority === 'high'"
+                  [class.priority-medium]="task.priority === 'medium'" [class.priority-low]="task.priority === 'low'"
+                  [class.task-overdue]="isOverdue(task)">
+                  <div class="task-card-header">
+                    <h5>{{ task.title }}</h5>
+                    <div class="task-card-header-right">
+                      @if (isOverdue(task)) {
+                      <p-tag class="overdue-tag" [value]="'TASKS.OVERDUE' | translate" severity="danger"
+                        icon="pi pi-exclamation-triangle"></p-tag>
+                      }
+                      @if (!isOverdue(task) && isDueSoon(task)) {
+                      <p-tag class="due-soon-tag" [value]="'TASKS.DUE_SOON' | translate" severity="warn"
+                        icon="pi pi-clock"></p-tag>
+                      }
+                      <!-- Actions -->
+                      <div class="task-card-actions">
+                        <p-button icon="pi pi-pencil" [text]="true" [rounded]="true" severity="secondary" size="small"
+                          (click)="editTask(task)" [title]="'COMMON.BTN.EDIT' | translate"></p-button>
+                        <p-button icon="pi pi-trash" [text]="true" [rounded]="true" severity="danger" size="small"
+                          (click)="deleteTask(task._id!)" [title]="'COMMON.BTN.DELETE' | translate"></p-button>
                       </div>
                     </div>
-                    @if (task.description) {
-                      <p class="task-card-desc">{{ task.description }}</p>
-                    }
+                  </div>
+                  @if (task.description) {
+                  <p class="task-card-desc">{{ task.description }}</p>
+                  }
 
-                    <div class="task-card-footer">
-                      <p-tag
-                        class="priority-tag"
-                        [value]="TASK_PRIORITY_MAP[task.priority] | translate"
-                        [severity]="
+                  <div class="task-card-footer">
+                    <p-tag class="priority-tag" [value]="TASK_PRIORITY_MAP[task.priority] | translate" [severity]="
                           task.priority === 'high'
                             ? 'danger'
                             : task.priority === 'medium'
                               ? 'warn'
                               : 'info'
-                        "
-                      ></p-tag>
-                      <span class="due-date" [class.overdue]="isOverdue(task)">
-                        <i class="pi pi-calendar"></i> {{ formatDate(task.dueDate) }}
-                      </span>
-                    </div>
+                        "></p-tag>
+                    <span class="due-date" [class.overdue]="isOverdue(task)">
+                      <i class="pi pi-calendar"></i> {{ formatDate(task.dueDate) }}
+                    </span>
                   </div>
+                </div>
                 }
                 @if (getTasksCountByStatus(TaskStatus.IN_PROGRESS) === 0) {
-                  <div class="column-empty-message">
-                    {{ 'TASKS.NO_TASKS' | translate }}
-                  </div>
+                <div class="column-empty-message">
+                  {{ 'TASKS.NO_TASKS' | translate }}
+                </div>
                 }
               </p-scrollarea-content>
-              <p-scrollarea-scrollbar orientation="vertical"
-                ><p-scrollarea-handle
-              /></p-scrollarea-scrollbar>
+              <p-scrollarea-scrollbar orientation="vertical"><p-scrollarea-handle /></p-scrollarea-scrollbar>
             </p-scrollarea>
           </div>
         </div>
@@ -301,103 +182,62 @@
             <div class="header-left">
               <span class="status-dot completed"></span>
               <h4>{{ 'TASKS.COLUMN_DONE' | translate }}</h4>
-              <p-badge
-                [value]="getTasksCountByStatus(TaskStatus.COMPLETED)"
-                severity="secondary"
-              ></p-badge>
+              <p-badge [value]="getTasksCountByStatus(TaskStatus.COMPLETED)" severity="secondary"></p-badge>
             </div>
           </div>
 
-          <div
-            class="column-tasks-container"
-            cdkDropList
-            [id]="TaskStatus.COMPLETED"
-            [cdkDropListData]="getTasksByStatus(TaskStatus.COMPLETED)"
-            (cdkDropListDropped)="onDrop($event)"
-          >
+          <div class="column-tasks-container" cdkDropList [id]="TaskStatus.COMPLETED"
+            [cdkDropListData]="getTasksByStatus(TaskStatus.COMPLETED)" (cdkDropListDropped)="onDrop($event)">
             <p-scrollarea class="w-full">
               <p-scrollarea-content class="space-y-3 pr-2">
                 @for (task of getTasksByStatus(TaskStatus.COMPLETED); track task._id) {
-                  <div
-                    class="task-card completed"
-                    cdkDrag
-                    [cdkDragData]="task"
-                    [class.priority-high]="task.priority === 'high'"
-                    [class.priority-medium]="task.priority === 'medium'"
-                    [class.priority-low]="task.priority === 'low'"
-                  >
-                    <div class="task-card-header">
-                      <h5>{{ task.title }}</h5>
-                      <div class="task-card-header-right">
-                        @if (isOverdue(task)) {
-                          <p-tag
-                            class="overdue-tag"
-                            [value]="'TASKS.OVERDUE' | translate"
-                            severity="danger"
-                            icon="pi pi-exclamation-triangle"
-                          ></p-tag>
-                        }
-                        @if (!isOverdue(task) && isDueSoon(task)) {
-                          <p-tag
-                            class="due-soon-tag"
-                            [value]="'TASKS.DUE_SOON' | translate"
-                            severity="warn"
-                            icon="pi pi-clock"
-                          ></p-tag>
-                        }
-                        <!-- Actions -->
-                        <div class="task-card-actions">
-                          <p-button
-                            icon="pi pi-pencil"
-                            [text]="true"
-                            [rounded]="true"
-                            severity="secondary"
-                            size="small"
-                            (click)="editTask(task)"
-                            [title]="'COMMON.BTN.EDIT' | translate"
-                          ></p-button>
-                          <p-button
-                            icon="pi pi-trash"
-                            [text]="true"
-                            [rounded]="true"
-                            severity="danger"
-                            size="small"
-                            (click)="deleteTask(task._id!)"
-                            [title]="'COMMON.BTN.DELETE' | translate"
-                          ></p-button>
-                        </div>
+                <div class="task-card completed" cdkDrag [cdkDragData]="task"
+                  [class.priority-high]="task.priority === 'high'" [class.priority-medium]="task.priority === 'medium'"
+                  [class.priority-low]="task.priority === 'low'">
+                  <div class="task-card-header">
+                    <h5>{{ task.title }}</h5>
+                    <div class="task-card-header-right">
+                      @if (isOverdue(task)) {
+                      <p-tag class="overdue-tag" [value]="'TASKS.OVERDUE' | translate" severity="danger"
+                        icon="pi pi-exclamation-triangle"></p-tag>
+                      }
+                      @if (!isOverdue(task) && isDueSoon(task)) {
+                      <p-tag class="due-soon-tag" [value]="'TASKS.DUE_SOON' | translate" severity="warn"
+                        icon="pi pi-clock"></p-tag>
+                      }
+                      <!-- Actions -->
+                      <div class="task-card-actions">
+                        <p-button icon="pi pi-pencil" [text]="true" [rounded]="true" severity="secondary" size="small"
+                          (click)="editTask(task)" [title]="'COMMON.BTN.EDIT' | translate"></p-button>
+                        <p-button icon="pi pi-trash" [text]="true" [rounded]="true" severity="danger" size="small"
+                          (click)="deleteTask(task._id!)" [title]="'COMMON.BTN.DELETE' | translate"></p-button>
                       </div>
                     </div>
-                    @if (task.description) {
-                      <p class="task-card-desc">{{ task.description }}</p>
-                    }
-                    <div class="task-card-footer">
-                      <p-tag
-                        class="priority-tag"
-                        [value]="TASK_PRIORITY_MAP[task.priority] | translate"
-                        [severity]="
+                  </div>
+                  @if (task.description) {
+                  <p class="task-card-desc">{{ task.description }}</p>
+                  }
+                  <div class="task-card-footer">
+                    <p-tag class="priority-tag" [value]="TASK_PRIORITY_MAP[task.priority] | translate" [severity]="
                           task.priority === 'high'
                             ? 'danger'
                             : task.priority === 'medium'
                               ? 'warn'
                               : 'info'
-                        "
-                      ></p-tag>
-                      <span class="due-date">
-                        <i class="pi pi-calendar"></i> {{ formatDate(task.dueDate) }}
-                      </span>
-                    </div>
+                        "></p-tag>
+                    <span class="due-date">
+                      <i class="pi pi-calendar"></i> {{ formatDate(task.dueDate) }}
+                    </span>
                   </div>
+                </div>
                 }
                 @if (getTasksCountByStatus(TaskStatus.COMPLETED) === 0) {
-                  <div class="column-empty-message">
-                    {{ 'TASKS.NO_TASKS' | translate }}
-                  </div>
+                <div class="column-empty-message">
+                  {{ 'TASKS.NO_TASKS' | translate }}
+                </div>
                 }
               </p-scrollarea-content>
-              <p-scrollarea-scrollbar orientation="vertical"
-                ><p-scrollarea-handle
-              /></p-scrollarea-scrollbar>
+              <p-scrollarea-scrollbar orientation="vertical"><p-scrollarea-handle /></p-scrollarea-scrollbar>
             </p-scrollarea>
           </div>
         </div>
@@ -407,68 +247,50 @@
 
   <!-- Add/Edit Task Modal -->
   @if (showAddEditModal) {
-    <div class="modal-overlay" (click)="closeAddEditModal()">
-      <div class="modal-card" (click)="$event.stopPropagation()">
-        <div class="card-header">
-          <div class="header-icon">
-            <i class="pi" [class.pi-pencil]="editingTaskId" [class.pi-plus]="!editingTaskId"></i>
-          </div>
-          <h2>{{ (editingTaskId ? 'TASKS.EDIT_TITLE' : 'TASKS.ADD_TITLE') | translate }}</h2>
+  <div class="modal-overlay" (click)="closeAddEditModal()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <div class="card-header">
+        <div class="header-icon">
+          <i class="pi" [class.pi-pencil]="editingTaskId" [class.pi-plus]="!editingTaskId"></i>
         </div>
-        <form [formGroup]="taskForm" (ngSubmit)="addTask()">
-          <formly-form [form]="taskForm" [fields]="taskFields" [model]="taskModel"> </formly-form>
-          <div class="modal-actions">
-            <p-button
-              type="button"
-              styleClass="btn-cancel"
-              (click)="closeAddEditModal()"
-              [label]="'COMMON.BTN.CANCEL' | translate"
-            ></p-button>
-            <p-button
-              type="submit"
-              styleClass="btn-confirm"
-              [label]="(editingTaskId ? 'COMMON.BTN.SAVE' : 'TASKS.ADD_TITLE') | translate"
-            ></p-button>
-          </div>
-        </form>
+        <h2>{{ (editingTaskId ? 'TASKS.EDIT_TITLE' : 'TASKS.ADD_TITLE') | translate }}</h2>
       </div>
+      <form [formGroup]="taskForm" (ngSubmit)="addTask()">
+        <formly-form [form]="taskForm" [fields]="taskFields" [model]="taskModel"> </formly-form>
+        <div class="modal-actions">
+          <p-button type="button" styleClass="btn-cancel" (click)="closeAddEditModal()"
+            [label]="'COMMON.BTN.CANCEL' | translate"></p-button>
+          <p-button type="submit" styleClass="btn-confirm"
+            [label]="(editingTaskId ? 'COMMON.BTN.SAVE' : 'TASKS.ADD_TITLE') | translate"></p-button>
+        </div>
+      </form>
     </div>
+  </div>
   }
 
   <!-- Delete Confirmation Modal -->
   @if (showDeleteModal) {
-    <div class="modal-overlay" (click)="closeDeleteModal()">
-      <div class="modal-card" (click)="$event.stopPropagation()">
-        <div class="card-header">
-          <h2>{{ 'TASKS.CONFIRM_DELETE_TITLE' | translate }}</h2>
-        </div>
-        <div class="modal-body">
-          <p>{{ 'TASKS.CONFIRM_DELETE_MSG' | translate }}</p>
-          <div
-            class="task-preview"
-            [class.priority-high]="taskToDelete?.priority === 'high'"
-            [class.priority-medium]="taskToDelete?.priority === 'medium'"
-            [class.priority-low]="taskToDelete?.priority === 'low' || !taskToDelete?.priority"
-          >
-            <h4>{{ taskToDelete?.title }}</h4>
-            <p>{{ taskToDelete?.description }}</p>
-          </div>
-        </div>
-        <div class="modal-actions">
-          <p-button
-            type="button"
-            styleClass="btn-cancel"
-            (click)="closeDeleteModal()"
-            [label]="'COMMON.BTN.CANCEL' | translate"
-          ></p-button>
-          <p-button
-            type="button"
-            styleClass="btn-confirm btn-danger"
-            (click)="confirmDelete()"
-            [label]="'COMMON.BTN.DELETE' | translate"
-          ></p-button>
+  <div class="modal-overlay" (click)="closeDeleteModal()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <div class="card-header">
+        <h2>{{ 'TASKS.CONFIRM_DELETE_TITLE' | translate }}</h2>
+      </div>
+      <div class="modal-body">
+        <p>{{ 'TASKS.CONFIRM_DELETE_MSG' | translate }}</p>
+        <div class="task-preview" [class.priority-high]="taskToDelete?.priority === 'high'"
+          [class.priority-medium]="taskToDelete?.priority === 'medium'"
+          [class.priority-low]="taskToDelete?.priority === 'low' || !taskToDelete?.priority">
+          <h4>{{ taskToDelete?.title }}</h4>
+          <p>{{ taskToDelete?.description }}</p>
         </div>
       </div>
+      <div class="modal-actions">
+        <p-button type="button" styleClass="btn-cancel" (click)="closeDeleteModal()"
+          [label]="'COMMON.BTN.CANCEL' | translate"></p-button>
+        <p-button type="button" styleClass="btn-confirm btn-danger" (click)="confirmDelete()"
+          [label]="'COMMON.BTN.DELETE' | translate"></p-button>
+      </div>
     </div>
+  </div>
   }
 </div>

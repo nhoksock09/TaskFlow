@@ -1,26 +1,13 @@
 <div class="layout">
-  <app-sidebar
-    [user]="user"
-    [isCollapsed]="isSidebarCollapsed"
-    class="sidebar"
-    [class.collapsed]="isSidebarCollapsed"
-    (toggleRequest)="toggleSidebar()"
-  ></app-sidebar>
+  <app-sidebar [user]="user" [isCollapsed]="isSidebarCollapsed" class="sidebar" [class.collapsed]="isSidebarCollapsed"
+    (toggleRequest)="toggleSidebar()"></app-sidebar>
 
-  <div
-    class="sidebar-backdrop"
-    [class.active]="!isSidebarCollapsed"
-    (click)="closeSidebarOnMobile()"
-  ></div>
+  <div class="sidebar-backdrop" [class.active]="!isSidebarCollapsed" (click)="closeSidebarOnMobile()"></div>
 
   <div class="content">
     <header class="header">
       <div class="header-left">
-        <p-button
-          class="mobile-menu-btn-host"
-          styleClass="mobile-menu-btn"
-          (click)="toggleSidebar()"
-        >
+        <p-button class="mobile-menu-btn-host" styleClass="mobile-menu-btn" (click)="toggleSidebar()">
           <i class="pi pi-bars"></i>
         </p-button>
         <div>
@@ -29,21 +16,14 @@
         </div>
       </div>
       <div class="header-right">
-        <p-select
-          [(ngModel)]="currentLang"
-          [options]="langOptions"
-          optionLabel="label"
-          optionValue="value"
-          (onChange)="onLangChange($event.value)"
-          styleClass="lang-select"
-          appendTo="body"
-        ></p-select>
+        <p-select [(ngModel)]="currentLang" [options]="langOptions" optionLabel="label" optionValue="value"
+          (onChange)="onLangChange($event.value)" styleClass="lang-select" appendTo="body"></p-select>
 
         <p-button styleClass="theme-toggle-btn" (click)="toggleTheme()">
           @if (!isDarkMode) {
-            <i class="pi pi-moon"></i>
+          <i class="pi pi-moon"></i>
           } @else {
-            <i class="pi pi-sun"></i>
+          <i class="pi pi-sun"></i>
           }
         </p-button>
         <p-button styleClass="logout-btn" (click)="logout()" [title]="'HEADER.LOGOUT' | translate">

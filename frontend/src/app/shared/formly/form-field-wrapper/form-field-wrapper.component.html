@@ -1,23 +1,20 @@
 <div class="form-group">
   <!-- Label -->
   @if (props.label && props['hideLabel'] !== true) {
-    <label [attr.for]="id">
-      {{ props.label }}
-      @if (props.required && props['hideRequiredMarker'] !== true) {
-        <span class="required">*</span>
-      }
-    </label>
+  <label [attr.for]="id">
+    {{ props.label }}
+    @if (props.required && props['hideRequiredMarker'] !== true) {
+    <span class="required">*</span>
+    }
+  </label>
   }
 
   <!-- Field Container -->
-  <div
-    [class.input-wrapper]="isWrapped()"
-    [class.has-left-icon]="isWrapped() && getLeftIcon()"
-    [class.input-error]="showError"
-  >
+  <div [class.input-wrapper]="isWrapped()" [class.has-left-icon]="isWrapped() && getLeftIcon()"
+    [class.input-error]="showError">
     <!-- Left Icon -->
     @if (isWrapped() && getLeftIcon()) {
-      <i [class]="getLeftIcon()"></i>
+    <i [class]="getLeftIcon()"></i>
     }
 
     <!-- Field Control -->
@@ -25,33 +22,29 @@
 
     <!-- Right Password Eye Toggle -->
     @if (isWrapped() && isPassword()) {
-      <p-button
-        styleClass="eye-btn"
-        type="button"
-        (click)="togglePassword($event)"
-        attr.aria-label="{{ hidePassword ? 'Show password' : 'Hide password' }}"
-      >
-        <i [class]="hidePassword ? 'ph-light ph-eye-slash' : 'ph-light ph-eye'"></i>
-      </p-button>
+    <p-button styleClass="eye-btn" type="button" (click)="togglePassword($event)"
+      attr.aria-label="{{ hidePassword ? 'Show password' : 'Hide password' }}">
+      <i [class]="hidePassword ? 'ph-light ph-eye-slash' : 'ph-light ph-eye'"></i>
+    </p-button>
     }
 
     <!-- Right Datepicker Calendar Icon -->
     @if (isWrapped() && isDatepicker()) {
-      <i class="pi pi-calendar datepicker-icon"></i>
+    <i class="pi pi-calendar datepicker-icon"></i>
     }
   </div>
 
   <!-- Password Requirements Checklist -->
   @if (props['showRequirements']) {
-    <app-password-requirements [value]="formControl.value || ''"></app-password-requirements>
+  <app-password-requirements [value]="formControl.value || ''"></app-password-requirements>
   }
 
   <!-- Error Message -->
   @if (showError) {
-    <div class="error-message">
-      <small class="error-msg">
-        <formly-validation-message [field]="field"></formly-validation-message>
-      </small>
-    </div>
+  <div class="error-message">
+    <small class="error-msg">
+      <formly-validation-message [field]="field"></formly-validation-message>
+    </small>
+  </div>
   }
 </div>

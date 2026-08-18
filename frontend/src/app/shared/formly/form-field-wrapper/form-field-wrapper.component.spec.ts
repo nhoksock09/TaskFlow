@@ -181,7 +181,7 @@ describe('FormFieldWrapperComponent', () => {
     fixture.destroy();
     fixture = TestBed.createComponent(FormFieldWrapperComponent);
     component = fixture.componentInstance;
-    
+
     component.field = {
       key: 'name',
       type: 'input',

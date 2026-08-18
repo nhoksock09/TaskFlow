@@ -17,6 +17,7 @@ describe('PasswordRequirementsComponent', () => {
     fixture = TestBed.createComponent(PasswordRequirementsComponent);
     component = fixture.componentInstance;
   });
+
   afterEach(() => {
     fixture.destroy();
     TestBed.resetTestingModule();

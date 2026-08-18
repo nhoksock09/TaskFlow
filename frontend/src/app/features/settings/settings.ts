@@ -169,7 +169,7 @@ export class Settings implements OnInit {
     const currentName = (this.user?.name || '').trim();
     const currentDob = this.user?.dateOfBirth ? new Date(this.user.dateOfBirth).toISOString().split('T')[0] : '';
     const normalizedName = (this.profileModel.name || '').trim();
-    
+
     let normalizedDob = '';
     if (this.profileModel.dateOfBirth instanceof Date) {
       normalizedDob = this.getFormattedDateOnly(this.profileModel.dateOfBirth);

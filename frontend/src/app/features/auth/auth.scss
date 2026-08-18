@@ -74,9 +74,7 @@
             font-size: 14px;
             flex-shrink: 0;
 
-            i {
-                font-size: 12px;
-            }
+            i { font-size: 12px; }
         }
 
         p {
@@ -165,9 +163,7 @@
         justify-content: center;
         box-shadow: none;
 
-        .p-button-label {
-            font-weight: 600;
-        }
+        .p-button-label { font-weight: 600; }
     }
 
     .auth-tabs .p-button {
@@ -196,9 +192,7 @@
         margin-top: 16px;
         transition: background .25s, transform .2s, box-shadow .2s;
 
-        .p-button-label {
-            font-size: 15px;
-        }
+        .p-button-label { font-size: 15px; }
 
         &:hover {
             background: var(--indigo-700);

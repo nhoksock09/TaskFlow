@@ -12,7 +12,8 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  min-width: 0; /* Prevent flex child overflow */
+  min-width: 0;
+  /* Prevent flex child overflow */
   overflow: hidden;
   transition: margin-left 0.3s vars.$ease-standard, width 0.3s vars.$ease-standard, flex 0.3s vars.$ease-standard;
 }
@@ -132,6 +133,7 @@
       display: flex;
       align-items: center;
     }
+
     .p-select-dropdown {
       color: var(--text-secondary);
       width: 2rem;
@@ -148,9 +150,9 @@ main {
   transition: background vars.$transition-slow;
   /* Hide scrollbar but keep scroll functionality */
   @include mixins.hide-scrollbar;
-}
 
-main > * {
-  display: block;
-  animation: routeFadeIn 0.3s vars.$ease-standard both; // keyframe defined once in styles/_animations.scss
+  &>* {
+    display: block;
+    animation: routeFadeIn 0.3s vars.$ease-standard both; // keyframe defined once in styles/_animations.scss
+  }
 }

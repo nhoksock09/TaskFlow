@@ -11,10 +11,7 @@ import { authGuard } from './core/guards/auth.guard';
 import { adminGuard } from './core/guards/admin.guard';
 
 export const routes: Routes = [
-  {
-    path: '',
-    component: Auth
-  },
+  { path: '', component: Auth },
   {
     path: '',
     component: MainLayout,
@@ -56,4 +53,4 @@ export const routes: Routes = [
     path: '**',
     redirectTo: ''
   }
-];
+];

@@ -224,7 +224,7 @@ export class Auth implements OnInit {
       this.registerForm.markAllAsTouched();
       return;
     }
-    
+
     const payload = { ...this.registerModel };
     if (payload.dateOfBirth instanceof Date) {
       payload.dateOfBirth = this.getFormattedDateOnly(payload.dateOfBirth);

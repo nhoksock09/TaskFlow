@@ -644,17 +644,17 @@ export class Tasks implements OnInit {
     if (!dateString) return '';
     const date = new Date(dateString);
     if (isNaN(date.getTime())) return '';
-    
+
     const hours = String(date.getHours()).padStart(2, '0');
     const minutes = String(date.getMinutes()).padStart(2, '0');
-    
+
     const locale = this.translateService.currentLang() === 'vi' ? 'vi-VN' : 'en-US';
     const formattedDate = date.toLocaleDateString(locale, {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric'
     });
-    
+
     return `${hours}:${minutes} ${formattedDate}`;
   }
 }

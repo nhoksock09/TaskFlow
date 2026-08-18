@@ -13,41 +13,29 @@
         </p-button>
       </div>
       <div class="btn-save-container">
-        <p-button
-          type="submit"
-          styleClass="btn-save"
-          [label]="'COMMON.BTN.SAVE' | translate"
-        ></p-button>
+        <p-button type="submit" styleClass="btn-save" [label]="'COMMON.BTN.SAVE' | translate"></p-button>
       </div>
     </form>
   </div>
 
   <!-- Change Password Modal -->
   @if (showPasswordModal) {
-    <div class="modal-overlay" (click)="closePasswordModal()">
-      <div class="modal-card" (click)="$event.stopPropagation()">
-        <div class="card-header">
-          <div class="header-icon"><i class="pi pi-lock"></i></div>
-          <h2>{{ 'SETTINGS.MODAL_TITLE' | translate }}</h2>
-        </div>
-        <form [formGroup]="passwordForm" (ngSubmit)="onChangePassword()">
-          <formly-form [form]="passwordForm" [fields]="passwordFields" [model]="passwordModel">
-          </formly-form>
-          <div class="modal-actions">
-            <p-button
-              type="button"
-              styleClass="btn-cancel"
-              (click)="closePasswordModal()"
-              [label]="'COMMON.CANCEL' | translate"
-            ></p-button>
-            <p-button
-              type="submit"
-              styleClass="btn-confirm"
-              [label]="'COMMON.CONFIRM' | translate"
-            ></p-button>
-          </div>
-        </form>
+  <div class="modal-overlay" (click)="closePasswordModal()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <div class="card-header">
+        <div class="header-icon"><i class="pi pi-lock"></i></div>
+        <h2>{{ 'SETTINGS.MODAL_TITLE' | translate }}</h2>
       </div>
+      <form [formGroup]="passwordForm" (ngSubmit)="onChangePassword()">
+        <formly-form [form]="passwordForm" [fields]="passwordFields" [model]="passwordModel">
+        </formly-form>
+        <div class="modal-actions">
+          <p-button type="button" styleClass="btn-cancel" (click)="closePasswordModal()"
+            [label]="'COMMON.CANCEL' | translate"></p-button>
+          <p-button type="submit" styleClass="btn-confirm" [label]="'COMMON.CONFIRM' | translate"></p-button>
+        </div>
+      </form>
     </div>
+  </div>
   }
 </div>

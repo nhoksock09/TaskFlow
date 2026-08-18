@@ -93,10 +93,8 @@
 }
 
 .search-box {
-  @include mixins.search-box(
-    $focus-border-color: var(--indigo-600),
-    $focus-shadow-color-rgb: var(--primary-rgb)
-  );
+  @include mixins.search-box($focus-border-color: var(--indigo-600),
+    $focus-shadow-color-rgb: var(--primary-rgb));
 }
 
 .filter-row {

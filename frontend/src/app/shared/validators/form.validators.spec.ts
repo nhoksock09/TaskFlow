@@ -11,7 +11,7 @@ describe('Form Validators', () => {
     it('should return null if value is empty', () => {
       const control = { value: '' } as AbstractControl;
       expect(fullNameValidator(control)).toBeNull();
-      
+
       const controlNull = { value: null } as unknown as AbstractControl;
       expect(fullNameValidator(controlNull)).toBeNull();
     });
@@ -100,7 +100,7 @@ describe('Form Validators', () => {
     it('should return gmailCoTypo if email ends with @gmail.co', () => {
       const control = { value: 'test@gmail.co' } as AbstractControl;
       expect(emailTypoValidator(control)).toEqual({ gmailCoTypo: true });
-      
+
       const controlCaps = { value: 'TEST@GMAIL.CO ' } as AbstractControl; // test trim and caps
       expect(emailTypoValidator(controlCaps)).toEqual({ gmailCoTypo: true });
     });
