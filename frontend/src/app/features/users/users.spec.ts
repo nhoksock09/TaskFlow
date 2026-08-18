@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 import { Users } from './users';
 import { UserService } from '../../core/services/user.service';
 import { ToastService } from '../../core/services/toast.service';
@@ -291,5 +290,4 @@ describe('Users', () => {
       expect(component.totalPages).toBe(1);
     });
   });
-
 });

@@ -365,7 +365,7 @@ describe('Dashboard', () => {
       expect(formatted).toContain('11/08/2026');
 
       expect(component.formatDate('')).toBe('');
-expect(component.formatDate('invalid')).toBe('');
+      expect(component.formatDate('invalid')).toBe('');
     });
   });
 
@@ -422,7 +422,7 @@ expect(component.formatDate('invalid')).toBe('');
 
       const beforeWeek = new Date(startOfWeek);
       beforeWeek.setDate(startOfWeek.getDate() - 1);
-      
+
       const afterWeek = new Date(startOfWeek);
       afterWeek.setDate(startOfWeek.getDate() + 8);
 

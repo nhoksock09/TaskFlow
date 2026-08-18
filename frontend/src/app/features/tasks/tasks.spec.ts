@@ -940,7 +940,7 @@ describe('Tasks', () => {
       expect(sorted.length).toBe(2);
     });
 
-    it('should cover unreachable sorting branches using mock helpers', () => {
+    it('should sort correctly when multiple tasks are mocked as overdue', () => {
       const overdueSpy = spyOn(component, 'isOverdue').and.returnValue(true);
       component.tasks = [
         { _id: 't1', status: TaskStatus.TODO, dueDate: '' } as Task,
@@ -948,14 +948,22 @@ describe('Tasks', () => {
         { _id: 't3', status: TaskStatus.TODO, dueDate: new Date().toISOString() } as Task
       ];
       component.activeTimeframeFilter = 'all';
-      let sorted = component.allFilteredTasks;
+      const sorted = component.allFilteredTasks;
       expect(sorted.length).toBe(3);
-      (component.isOverdue as jasmine.Spy).and.callThrough();
+      overdueSpy.and.callThrough();
+    });
 
+    it('should sort correctly when multiple tasks are mocked as urgent', () => {
       const urgentSpy = spyOn(component, 'isUrgent').and.returnValue(true);
-      sorted = component.allFilteredTasks;
+      component.tasks = [
+        { _id: 't1', status: TaskStatus.TODO, dueDate: '' } as Task,
+        { _id: 't2', status: TaskStatus.TODO, dueDate: '' } as Task,
+        { _id: 't3', status: TaskStatus.TODO, dueDate: new Date().toISOString() } as Task
+      ];
+      component.activeTimeframeFilter = 'all';
+      const sorted = component.allFilteredTasks;
       expect(sorted.length).toBe(3);
-      (component.isUrgent as jasmine.Spy).and.callThrough();
+      urgentSpy.and.callThrough();
     });
 
     it('should sort tasks with date before tasks without date when task without date is first in array', () => {
